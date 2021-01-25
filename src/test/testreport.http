@@ -1,0 +1,19 @@
+#@servername =  http://localhost:3100
+@servername =  http://117.54.7.227/arov2/api/
+
+### Test Ping
+GET {{servername}}/ping HTTP/1.1
+
+### Test Category
+GET {{servername}}/general/report/viewer/listcategory HTTP/1.1
+
+### Test Name
+GET {{servername}}/general/report/viewer/listname?category=Buku Besar
+
+
+### Test Name
+GET {{servername}}/general/report/viewer/listname?category=Buku Besar
+
+### Test accountadd/create
+POST {{servername}}/getbody HTTP/1.1
+Content-Type: application/json

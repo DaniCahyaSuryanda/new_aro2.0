@@ -1,0 +1,14 @@
+@servername =  http://localhost:3100
+#@servername =  http://117.54.7.227/arov2/api/
+
+### Test Ping
+GET {{servername}}/ping HTTP/1.1
+
+### Test List
+GET {{servername}}/gl/params/account/list HTTP/1.1
+
+### Test List
+GET {{servername}}/gl/params/account/list?onlyactive=true HTTP/1.1
+
+### Test Load
+GET {{servername}}/gl/params/account/load?accno=1101 HTTP/1.1

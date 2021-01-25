@@ -1,0 +1,22 @@
+[
+{
+    "form": "Pembuatan Jenis Jurnal Baru",
+    
+    "list-caption": "Daftar Jenis Jurnal",
+    "list-jrtype" : "Jenis Jurnal",
+    "list-description" : "Keterangan",
+    "list-isactive": "Aktif",
+    "list-refresh" :"Refresh",
+    "list-new" : "Buat Baru",
+
+    "detail-caption" : "Data Jenis Jurnal",
+    "jrtype" : "Jenis Jurnal",
+    "description" : "Keterangan",
+    "isactive" : "Aktif",
+    "save_button" : "Simpan",
+    "cancel_button": "Batal",
+    "confirm_save" : "Simpan Pembuatan Jenis Jurnal Baru ?",
+    "confirm_yes" : "Simpan",
+    "confirm_no" : "Batal"
+}
+]

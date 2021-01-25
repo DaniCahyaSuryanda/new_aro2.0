@@ -1,0 +1,79 @@
+
+@servername =  http://localhost:3100
+#@servername =  http://117.54.7.227/arov2/api/
+### Test Ping
+GET {{servername}}/ping HTTP/1.1
+
+### Test Account List
+GET {{servername}}/gl/params/account/list HTTP/1.1
+
+### Test Account Edot List
+GET {{servername}}/gl/params/account/edit/list HTTP/1.1
+
+
+### Test accountedit/create
+POST {{servername}}/gl/params/account/edit/create HTTP/1.1
+Content-Type: application/json
+
+{
+ 	"accno" : "1100",
+	"accname" : "Kas Besar2",
+	"acctype": 0,
+	"normaldebit": true,
+	"description": "Akun Kas Besar",
+	"isactive" : true,
+	"validstate" : 1,
+	"lang": "id"
+}
+
+### Test accountedit/create
+POST {{servername}}/gl/params/account/edit/create HTTP/1.1
+Content-Type: application/json
+
+{
+ 	"accno" : "1101",
+	"accname" : "Kas Teller2",
+	"acctype": 0,
+	"normaldebit": true,
+	"description": "Akun Kas Teller",
+	"isactive" : true,
+	"validstate" : 0
+}
+
+### Test accountedit/create
+POST {{servername}}/gl/params/account/edit/create HTTP/1.1
+Content-Type: application/json
+
+{
+ 	"accno" : "1102",
+	"accname" : "Bank BCA",
+	"acctype": 0,
+	"normaldebit": true,
+	"description": "Akun Bank BCA",
+	"isactive" : true,
+	"validstate" : 0
+}
+
+### Test accountedit/create
+POST {{servername}}/gl/params/account/edit/create HTTP/1.1
+Content-Type: application/json
+
+{
+ 	"accno" : "1103",
+	"accname" : "Bank BNI",
+	"acctype": 0,
+	"normaldebit": true,
+	"description": "Akun Bank BNI",
+	"isactive" : false,
+	"validstate" : 1
+}
+
+### Test accountedit/valo\idate
+POST {{servername}}/gl/params/account/edit/validation HTTP/1.1
+Content-Type: application/json
+
+{
+ 	"trxid" : "bvs2u5m20djjro7edn40",
+	"validstate" : 1,
+	"lang" : "id"
+}

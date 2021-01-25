@@ -1,0 +1,18 @@
+{
+    "add_create" : {
+        "get_list" : "/gl/params/jrtype/list",
+        "save_new" : "/gl/params/jrtype/create/add"
+    },
+    "add_create_validation" : {
+        "get_list" : "/gl/params/jrtype/create/listnotvalid",
+        "save_otor" : "/gl/params/jrtype/create/validation"
+    },
+    "edit_create" : {
+        "get_list" : "/gl/params/jrtype/list",
+        "save_new" : "/gl/params/jrtype/edit/add"
+    },
+    "edit_create_validation" : {
+        "get_list" : "/gl/params/jrtype/edit/listnotvalid",
+        "save_otor" : "/gl/params/jrtype/edit/validation"
+    }
+}

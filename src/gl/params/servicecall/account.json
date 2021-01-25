@@ -1,0 +1,18 @@
+{
+    "add_create" : {
+        "get_list" : "/gl/params/account/list",
+        "save_new" : "/gl/params/account/create/add"
+    },
+    "add_create_validation" : {
+        "get_list" : "/gl/params/account/create/listnotvalid",
+        "save_otor" : "/gl/params/account/create/validation"
+    },
+    "edit_create" : {
+        "get_list" : "/gl/params/account/list",
+        "save_new" : "/gl/params/account/edit/add"
+    },
+    "edit_create_validation" : {
+        "get_list" : "/gl/params/account/edit/listnotvalid",
+        "save_otor" : "/gl/params/account/edit/validation"
+    }
+}
