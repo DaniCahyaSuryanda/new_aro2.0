@@ -59,6 +59,7 @@ const ReportStrucValidasi = () => {
   const [withItemGroup, setWithItemGroup] = useState(false);
   const [formEditItem, setFormEditItem] = useState();
   const [indexEdit, setIndexEdit] = useState(false);
+  const [modal, setModal] = useState(false);
   const {
     register: register2,
     handleSubmit: handleSubmit2,
@@ -141,6 +142,7 @@ const ReportStrucValidasi = () => {
     setIndexEdit(index);
     setWithItemGroup(param.isgeneral);
   };
+
   const itemGroup = (e) => {
     setWithItemGroup(e);
   };
@@ -213,39 +215,39 @@ const ReportStrucValidasi = () => {
     setDataSend(sendData);
   };
 
-  // const confirmSave = () => {
-  //   axios
-  //     .post(
-  //       `http://117.54.7.227/arov2/api/gl/params/accountstructure/add/create`,
-  //       dataSend
-  //     )
-  //     .then((res) => {
-  //       console.log("tes", res.data);
-  //       if (res.data.rescode === 0) {
-  //         setMessType("success");
-  //         setMessage(Jsonjurnaladdvalidasi[0].message_success);
-  //         reset();
-  //         setModal(false);
-  //         setDataSend(null);
-  //         setItems(null);
-  //         setTimeout(() => {
-  //           setMessType(null);
-  //           setMessage(null);
-  //         }, 5000);
-  //       } else {
-  //         setModal(false);
-  //         setMessType("danger");
-  //         setMessage(res.data.errdescription);
-  //         setTimeout(() => {
-  //           setMessType(null);
-  //           setMessage(null);
-  //         }, 5000);
-  //       }
-  //     })
-  //     .catch(function (error) {
-  //       console.log(error);
-  //     });
-  // };
+  const confirmSave = () => {
+    axios
+      .post(
+        `${global.config.API_URL}gl/params/accountstructure/edit/create`,
+        dataSend
+      )
+      .then((res) => {
+        console.log("tes", res.data);
+        if (res.data.rescode === 0) {
+          setMessType("success");
+          setMessage(Jsonjurnaladdvalidasi[0].message_success);
+          reset();
+          setModal(false);
+          setDataSend(null);
+          setItems(null);
+          setTimeout(() => {
+            setMessType(null);
+            setMessage(null);
+          }, 5000);
+        } else {
+          setModal(false);
+          setMessType("danger");
+          setMessage(res.data.errdescription);
+          setTimeout(() => {
+            setMessType(null);
+            setMessage(null);
+          }, 5000);
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
 
   return (
     <>
@@ -535,7 +537,7 @@ const ReportStrucValidasi = () => {
                         {Jsonjurnaladdvalidasi[0].hide}
                       </CButton>
                       <CButton
-                        // onClick={() => setModalOtor(!modalOtor)}
+                        onClick={() => setModal(true)}
                         type="submit"
                         style={{ float: "right" }}
                         size="sm"
@@ -548,6 +550,23 @@ const ReportStrucValidasi = () => {
                     </CCol>
                   </CRow>
                 </CForm>
+                <CModal show={modal} onClose={setModal}>
+                  <CModalBody>
+                    <h3>{Jsonjurnaladdvalidasi[0].confirm_save}</h3>
+                  </CModalBody>
+                  <CModalFooter>
+                    <CButton
+                      type="submit"
+                      onClick={() => confirmSave()}
+                      color="primary"
+                    >
+                      {Jsonjurnaladdvalidasi[0].save_button}
+                    </CButton>{" "}
+                    <CButton color="danger" onClick={() => setModal(false)}>
+                      {Jsonjurnaladdvalidasi[0].confirm_no}
+                    </CButton>
+                  </CModalFooter>
+                </CModal>
               </CCardBody>
             </CCard>
           </CCol>
@@ -720,34 +739,6 @@ const ReportStrucValidasi = () => {
             }}
           >
             Batal
-          </CButton>
-        </CModalFooter>
-      </CModal>
-
-      <CModal show={modalOtor} onClose={() => setModalOtor(false)}>
-        <CModalBody>
-          <h4>{Jsonjurnaladdvalidasi[0].confirm_otor}</h4>
-        </CModalBody>
-        <CModalFooter>
-          <CButton type="submit" color="primary">
-            {Jsonjurnaladdvalidasi[0].confirm_otor_yes}
-          </CButton>{" "}
-          <CButton color="danger" onClick={() => setModalOtor(false)}>
-            {Jsonjurnaladdvalidasi[0].confirm_otor_no}
-          </CButton>
-        </CModalFooter>
-      </CModal>
-
-      <CModal show={modalRej} onClose={() => setModalRej(false)}>
-        <CModalBody>
-          <h4>{Jsonjurnaladdvalidasi[0].confirm_reject}</h4>
-        </CModalBody>
-        <CModalFooter>
-          <CButton type="submit" color="primary">
-            {Jsonjurnaladdvalidasi[0].confirm_reject_yes}
-          </CButton>{" "}
-          <CButton color="danger" onClick={() => setModalRej(false)}>
-            {Jsonjurnaladdvalidasi[0].confirm_reject_no}
           </CButton>
         </CModalFooter>
       </CModal>

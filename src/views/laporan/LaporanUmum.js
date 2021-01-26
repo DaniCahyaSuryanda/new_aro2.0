@@ -28,7 +28,7 @@ import CIcon from "@coreui/icons-react";
 //   { key: "detail_startdate", label: JsonLaporanUmum.detail_startdate },
 //   { key: "detail_enddate", label: JsonLaporanUmum.detail_enddate },
 // ];
-
+import { useSelector } from "react-redux";
 const LaporanUmum = () => {
   const { handleSubmit, register, reset, control } = useForm();
   const [dataKategori, setDataKategori] = useState(null);
@@ -37,7 +37,7 @@ const LaporanUmum = () => {
   const [dataFilter, setDataFilter] = useState(null);
   const [dataGrid, setDataGrid] = useState(null);
   const [dataButton, setDataButton] = useState(null);
-
+  const darkMode = useSelector((state) => state.darkMode);
   useEffect(() => {
     if (dataKategori == null) {
       SetDataKategori();
@@ -248,30 +248,6 @@ const LaporanUmum = () => {
 
   return (
     <>
-      {/* {items && (
-        <CCard>
-          <CCardHeader>
-            <h6>{JsonLaporanUmum.detail_preview}</h6>
-          </CCardHeader>
-          <CCardBody>
-            <CDataTable
-              fields={fields}
-              hover
-              striped
-              bordered
-              columnFilter
-              itemsPerPage={5}
-              pagination
-            />
-          </CCardBody>
-          <CCardFooter>
-            <CButton size="sm" color="warning" onClick={() => setItems(false)}>
-              <CIcon name="cil-chevron-left" /> {JsonLaporanUmum.back}
-            </CButton>
-          </CCardFooter>
-        </CCard>
-      )} */}
-
       {dataKategori && (
         <CRow>
           <CCol xl="12">
@@ -301,6 +277,24 @@ const LaporanUmum = () => {
                                 setOptionNama(e.value);
                               }}
                               options={dataKategori}
+                              theme={(theme) => ({
+                                ...theme,
+                                colors: {
+                                  ...theme.colors,
+                                  primary: darkMode
+                                    ? "black"
+                                    : theme.colors.primary,
+                                  primary25: darkMode
+                                    ? "black"
+                                    : theme.colors.primary25,
+                                  dangerLight: darkMode
+                                    ? "black"
+                                    : theme.colors.dangerLight,
+                                  neutral0: darkMode
+                                    ? "#2a2b36"
+                                    : theme.colors.neutral0,
+                                },
+                              })}
                             />
                           )}
                         />

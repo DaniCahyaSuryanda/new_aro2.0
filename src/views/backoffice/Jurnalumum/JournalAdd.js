@@ -8,20 +8,20 @@ import {
   CCol,
   CForm,
   CFormGroup,
-  CTextarea,
-  CInput,
-  CInputCheckbox,
   CLabel,
   CSelect,
   CRow,
   CModal,
   CModalBody,
   CModalFooter,
-  CModalHeader,
-  CModalTitle,
   CAlert,
   CDataTable,
   CBadge,
+  CToast,
+  CToaster,
+  CToastHeader,
+  CToastBody,
+  CModalHeader,
 } from "@coreui/react";
 
 import getFormattedDate from "utils/utils";
@@ -32,7 +32,8 @@ import axios from "axios";
 import Select from "react-select";
 import CIcon from "@coreui/icons-react";
 import { useForm, Controller } from "react-hook-form";
-import JurnalTypeAdd from "../../../gl/transaction/lang/id/journaladdcreate.json";
+import JurnalTypeAdd from "gl/transaction/lang/id/journaladdcreate.json";
+import JsonMessage from "componenJson/message.json";
 
 // import { cilColorBorder } from '@coreui/icons'
 
@@ -51,6 +52,7 @@ const fields = [
 const JenisJurnalAdd = () => {
   const [startDate, setStartDate] = useState("");
   const [modal, setModal] = useState(false);
+  const [modalEditItem, setModalEditItem] = useState(false);
   const [dataAkun, setDataAkun] = useState([]);
   const [messType, setMessType] = useState("");
   const [message, setMessage] = useState("");
@@ -64,6 +66,9 @@ const JenisJurnalAdd = () => {
   const [indexEdit, setIndexEdit] = useState(false);
   const [optionAcc, setOptionAcc] = useState([]);
   const [optionJurnal, setOptionJurnal] = useState([]);
+  const [toatsHeader, setToatsHeader] = useState(null);
+  const [toatsType, setToatsType] = useState(false);
+  const [toats, setToats] = useState(null);
   const {
     register: register2,
     handleSubmit: handleSubmit2,
@@ -84,24 +89,7 @@ const JenisJurnalAdd = () => {
     control: control,
   } = useForm();
 
-  // const changeField = (field, value) => {
-  //   const auxData = { ...startDate };
-  //   auxData[field] = value;
-  //   setStartDate(auxData);
-  // };
-
-  // const handleSubmit3 = (e) => {
-  //   e.persist();
-  //   e.nativeEvent.preventDefault();
-  //   const transformedValues = {};
-  //   Object.keys(data).forEach((key) => {
-  //     transformedValues[key] = formatDateForServer(startDate[key]);
-  //   });
-  //   console.log(transformedValues);
-  // };
-
   const onSubmit = (data) => {
-    // alert(JSON.stringify(data))
     let detail = [];
     dataAkun.map((row) => {
       detail.push({
@@ -136,8 +124,11 @@ const JenisJurnalAdd = () => {
       .then((res) => {
         console.log("tes", res.data);
         if (res.data.rescode === 0) {
-          setMessType("success");
-          setMessage("Jurnal berhasil di simpan");
+          setMessType(JsonMessage.messagetype_success);
+          setMessage(JsonMessage.journaladd_success);
+          setToatsType(JsonMessage.toatscolor_success);
+          setToatsHeader(JsonMessage.toatsheader_success);
+          setToats(JsonMessage.journaladd_success);
           reset();
           setModal(false);
           setDataSend(null);
@@ -149,11 +140,17 @@ const JenisJurnalAdd = () => {
           }, 5000);
         } else {
           setModal(false);
-          setMessType("danger");
+          setMessType(JsonMessage.messagetype_err);
+          setToatsType(JsonMessage.toatscolor_err);
+          setToatsHeader(JsonMessage.toatsheader_err);
+          setToats(res.data.errdescription);
           setMessage(res.data.errdescription);
           setTimeout(() => {
             setMessType(null);
             setMessage(null);
+            setToatsType(null);
+            setToatsHeader(null);
+            setToats(null);
           }, 5000);
         }
       })
@@ -186,10 +183,13 @@ const JenisJurnalAdd = () => {
   };
 
   const saveEditDetail = (param) => {
+    console.log(param);
     let data = [...dataAkun];
+    let accnoValue = param.detailitem_accno.value;
     let accname = accNo.find(({ accno }) => {
-      return accno == param.detailitem_accno.value;
+      return accno == accnoValue;
     });
+
     data[indexEdit] = {
       detailitem_debit: param.detailitem_debit,
       detailitem_description: param.detailitem_description,
@@ -198,6 +198,7 @@ const JenisJurnalAdd = () => {
       detailitem_credit: param.detailitem_credit,
     };
     setDataAkun(data);
+    setModalEditItem(false);
     reset3();
     setEditFormItem(false);
   };
@@ -211,9 +212,10 @@ const JenisJurnalAdd = () => {
     console.log(dataAkun);
   };
 
-  const ubahItem = (items, index) => {
-    setItems(items);
-    setEditFormItem(true);
+  const ubahItem = (param, index) => {
+    // setItems(param);
+    setModalEditItem(true);
+    setEditFormItem(param);
     setIndexEdit(index);
   };
 
@@ -261,10 +263,10 @@ const JenisJurnalAdd = () => {
       });
   };
 
-  const itemGroup = (e) => {
-    console.log(e);
-    setWithItemGroup(e);
-  };
+  // const itemGroup = (e) => {
+  //   console.log(e);
+  //   setWithItemGroup(e);
+  // };
 
   return (
     <>
@@ -274,6 +276,16 @@ const JenisJurnalAdd = () => {
             <CAlert color={messType}>{message}</CAlert>
           </CCol>
         </CRow>
+      )}
+      {toats && (
+        <CToaster position="top-right">
+          <CToast show={true}>
+            <CToastHeader className={toatsType}>
+              <h6>{toatsHeader}</h6>
+            </CToastHeader>
+            <CToastBody>{toats}</CToastBody>
+          </CToast>
+        </CToaster>
       )}
       {accNo && jurnal && (
         <CCard color="light">
@@ -445,7 +457,7 @@ const JenisJurnalAdd = () => {
                                   </CBadge>
                                 </td>
                               ),
-                            Aksi: (items, index) => {
+                            Aksi: (param, index) => {
                               return (
                                 <td>
                                   <div className="btn-group">
@@ -454,7 +466,7 @@ const JenisJurnalAdd = () => {
                                       variant="outline"
                                       shape="square"
                                       size="sm"
-                                      onClick={() => ubahItem(items, index)}
+                                      onClick={() => ubahItem(param, index)}
                                     >
                                       {JurnalTypeAdd.action_button_edit}
                                     </CButton>
@@ -492,7 +504,11 @@ const JenisJurnalAdd = () => {
                     <CButton type="reset" color="danger" className="mr-3">
                       <CIcon name="cil-x" /> {JurnalTypeAdd.cancel_button}
                     </CButton>
-                    <CButton type="submit" color="primary">
+                    <CButton
+                      type="submit"
+                      color="primary"
+                      style={{ float: "right" }}
+                    >
                       <CIcon name="cil-save" /> {JurnalTypeAdd.save_button}
                     </CButton>
                   </CCardFooter>
@@ -517,267 +533,265 @@ const JenisJurnalAdd = () => {
               </CCard>
             </CCol>
           </CRow>
-          {formItem && (
-            <CRow>
-              <CCol>
-                <CCard>
-                  <CCardHeader>
-                    <h6>{JurnalTypeAdd.detailitem_caption}</h6>
-                  </CCardHeader>
-                  <CCardBody className="mb-4">
-                    <CForm
-                      encType="multipart/form-data"
-                      className="form-horizontal"
-                      color="light"
-                      onSubmit={handleSubmit2(saveDetail)}
-                    >
-                      <CRow>
-                        <CCol lg="6" md="6" sm="12">
-                          <CFormGroup row>
-                            <CCol>
-                              <CLabel htmlFor="text-input">
-                                {JurnalTypeAdd.detailitem_accno}
-                              </CLabel>
-                            </CCol>
-                            <CCol xs="12" xl="9">
-                              <Controller
-                                name="detailitem_accno"
-                                as={Select}
-                                options={optionAcc}
-                                control={control2}
-                                defaultValue=""
-                                id="detailitem_accno"
-                              />
-                            </CCol>
-                          </CFormGroup>
-                        </CCol>
-                        <CCol lg="6" md="6" sm="12">
-                          <CFormGroup row>
-                            <CCol>
-                              <CLabel htmlFor="text-input">
-                                {JurnalTypeAdd.detailitem_description}
-                              </CLabel>
-                            </CCol>
-                            <CCol xs="12" xl="9">
-                              <input
-                                className="form-control"
-                                id="detailitem_description"
-                                name="detailitem_description"
-                                ref={register2}
-                                defaultValue={""}
-                                rows="4"
-                              ></input>
-                            </CCol>
-                          </CFormGroup>
-                        </CCol>
-                      </CRow>
-                      <CRow>
-                        <CCol lg="6" md="6" sm="12">
-                          <CFormGroup row>
-                            <CCol>
-                              <CLabel htmlFor="text-input">
-                                {JurnalTypeAdd.detailitem_debit}
-                              </CLabel>
-                            </CCol>
-                            <CCol xs="12" xl="9">
-                              <input
-                                type="number"
-                                className="form-control"
-                                id="detailitem_debit"
-                                name="detailitem_debit"
-                                ref={register2({ valueAsNumber: true })}
-                                //  defaultValue=""
-                              />
-                            </CCol>
-                          </CFormGroup>
-                        </CCol>
-                        <CCol lg="6" md="6" sm="12">
-                          <CFormGroup row>
-                            <CCol>
-                              <CLabel htmlFor="text-input">
-                                {JurnalTypeAdd.detailitem_credit}
-                              </CLabel>
-                            </CCol>
-                            <CCol xs="12" xl="9">
-                              <input
-                                type="number"
-                                className="form-control"
-                                id="detailitem_credit"
-                                name="detailitem_credit"
-                                ref={register2({ valueAsNumber: true })}
-                                //  defaultValue={""}
-                              />
-                            </CCol>
-                          </CFormGroup>
-                        </CCol>
-                      </CRow>
-                      <hr></hr>
-                      <CRow>
-                        <CCol>
-                          <CButton
-                            size="sm"
-                            color="danger"
-                            onClick={() => setFormItem(false)}
-                            className="mr-3"
-                          >
-                            <CIcon name="cil-x" /> {JurnalTypeAdd.cancel_button}
-                          </CButton>
-                          <CButton
-                            size="sm"
-                            type="submit"
-                            className="float-right"
-                            color="primary"
-                          >
-                            <CIcon name="cil-save" />{" "}
-                            {JurnalTypeAdd.save_button}
-                          </CButton>
-                        </CCol>
-                      </CRow>
-                    </CForm>
-                  </CCardBody>
-                </CCard>
-              </CCol>
-            </CRow>
-          )}
 
-          {editFormItem && (
-            <CRow>
-              <CCol>
-                <CCard>
-                  <CCardHeader>
-                    <h6>{JurnalTypeAdd.detail_caption}</h6>
-                  </CCardHeader>
-                  <CCardBody className="mb-4">
-                    <CForm
-                      encType="multipart/form-data"
-                      className="form-horizontal"
-                      color="light"
-                      onSubmit={handleSubmit3(saveEditDetail)}
-                    >
-                      <CRow>
-                        <CCol lg="6" md="6" sm="12">
-                          <CFormGroup row>
-                            <CCol>
-                              <CLabel htmlFor="text-input">
-                                {JurnalTypeAdd.detailitem_accno}
-                              </CLabel>
-                            </CCol>
-                            <CCol xs="12" xl="9">
-                              <Controller
-                                name="detailitem_accno"
-                                as={Select}
-                                options={optionAcc}
-                                control={control3}
-                                defaultValue={{
-                                  value: items.detailitem_accno,
-                                  label:
-                                    items.detailitem_accno +
-                                    " - " +
-                                    items.detailitem_accname,
-                                }}
-                                id="detailitem_accno"
-                              />
-                            </CCol>
-                          </CFormGroup>
-                        </CCol>
-                        <CCol lg="6" md="6" sm="12">
-                          <CFormGroup row>
-                            <CCol>
-                              <CLabel htmlFor="text-input">
-                                {JurnalTypeAdd.detailitem_description}
-                              </CLabel>
-                            </CCol>
-                            <CCol xs="12" xl="9">
-                              <textarea
-                                className="form-control"
-                                id="detailitem_description"
-                                name="detailitem_description"
-                                ref={register3}
-                                defaultValue={items.detailitem_description}
-                                rows="4"
-                              ></textarea>
-                            </CCol>
-                          </CFormGroup>
-                        </CCol>
-                      </CRow>
-                      <CRow>
-                        <CCol lg="6" md="6" sm="12">
-                          <CFormGroup row>
-                            <CCol>
-                              <CLabel htmlFor="text-input">
-                                {JurnalTypeAdd.detailitem_debit}
-                              </CLabel>
-                            </CCol>
-                            <CCol xs="12" xl="9">
-                              <input
-                                type="number"
-                                className="form-control"
-                                id="detailitem_debit"
-                                name="detailitem_debit"
-                                ref={register3({ valueAsNumber: true })}
-                                defaultValue={items.detailitem_debit}
-                              />
-                            </CCol>
-                          </CFormGroup>
-                        </CCol>
-                        <CCol lg="6" md="6" sm="12">
-                          <CFormGroup row>
-                            <CCol>
-                              <CLabel htmlFor="text-input">
-                                {JurnalTypeAdd.detailitem_credit}
-                              </CLabel>
-                            </CCol>
-                            <CCol xs="12" xl="9">
-                              <input
-                                type="number"
-                                className="form-control"
-                                id="detailitem_credit"
-                                name="detailitem_credit"
-                                ref={register3({ valueAsNumber: true })}
-                                defaultValue={items.detailitem_credit}
-                              />
-                            </CCol>
-                          </CFormGroup>
-                        </CCol>
-                      </CRow>
-                      <CRow>
+          <CModal
+            size="lg"
+            show={formItem}
+            onClose={() => {
+              setFormItem(null);
+            }}
+          >
+            <CModalHeader>
+              <h6>{JurnalTypeAdd.detailitem_caption}</h6>
+            </CModalHeader>
+            {formItem && (
+              <CModalBody>
+                <CForm
+                  encType="multipart/form-data"
+                  className="form-horizontal"
+                  color="light"
+                  onSubmit={handleSubmit2(saveDetail)}
+                >
+                  <CRow>
+                    <CCol lg="6" md="6" sm="12">
+                      <CFormGroup row>
                         <CCol>
-                          <CButton
-                            size="sm"
-                            color="danger"
-                            style={{ float: "rigth" }}
-                            onClick={() => setEditFormItem(false)}
-                            className="mr-3"
-                          >
-                            <CIcon name="cil-scrubber" />{" "}
-                            {JurnalTypeAdd.cancel_button}
-                          </CButton>
-                          <CButton
-                            size="sm"
-                            type="submit"
-                            style={{ float: "rigth" }}
-                            color="primary"
-                          >
-                            <CIcon name="cil-scrubber" />{" "}
-                            {JurnalTypeAdd.save_button}
-                          </CButton>
+                          <CLabel htmlFor="text-input">
+                            {JurnalTypeAdd.detailitem_accno}
+                          </CLabel>
                         </CCol>
-                      </CRow>
-                    </CForm>
-                  </CCardBody>
-                </CCard>
-              </CCol>
-            </CRow>
-          )}
+                        <CCol xs="12" xl="9">
+                          <Controller
+                            name="detailitem_accno"
+                            as={Select}
+                            options={optionAcc}
+                            control={control2}
+                            defaultValue=""
+                            id="detailitem_accno"
+                          />
+                        </CCol>
+                      </CFormGroup>
+                    </CCol>
+                    <CCol lg="6" md="6" sm="12">
+                      <CFormGroup row>
+                        <CCol>
+                          <CLabel htmlFor="text-input">
+                            {JurnalTypeAdd.detailitem_description}
+                          </CLabel>
+                        </CCol>
+                        <CCol xs="12" xl="9">
+                          <input
+                            className="form-control"
+                            id="detailitem_description"
+                            name="detailitem_description"
+                            ref={register2}
+                            defaultValue={""}
+                            rows="4"
+                          ></input>
+                        </CCol>
+                      </CFormGroup>
+                    </CCol>
+                  </CRow>
+                  <CRow>
+                    <CCol lg="6" md="6" sm="12">
+                      <CFormGroup row>
+                        <CCol>
+                          <CLabel htmlFor="text-input">
+                            {JurnalTypeAdd.detailitem_debit}
+                          </CLabel>
+                        </CCol>
+                        <CCol xs="12" xl="9">
+                          <input
+                            type="number"
+                            className="form-control"
+                            id="detailitem_debit"
+                            name="detailitem_debit"
+                            ref={register2({ valueAsNumber: true })}
+                            //  defaultValue=""
+                          />
+                        </CCol>
+                      </CFormGroup>
+                    </CCol>
+                    <CCol lg="6" md="6" sm="12">
+                      <CFormGroup row>
+                        <CCol>
+                          <CLabel htmlFor="text-input">
+                            {JurnalTypeAdd.detailitem_credit}
+                          </CLabel>
+                        </CCol>
+                        <CCol xs="12" xl="9">
+                          <input
+                            type="number"
+                            className="form-control"
+                            id="detailitem_credit"
+                            name="detailitem_credit"
+                            ref={register2({ valueAsNumber: true })}
+                            //  defaultValue={""}
+                          />
+                        </CCol>
+                      </CFormGroup>
+                    </CCol>
+                  </CRow>
+                  <hr></hr>
+                  <CRow>
+                    <CCol>
+                      <CButton
+                        size="sm"
+                        color="danger"
+                        onClick={() => setFormItem(false)}
+                        className="mr-3"
+                      >
+                        <CIcon name="cil-x" /> {JurnalTypeAdd.cancel_button}
+                      </CButton>
+                      <CButton
+                        size="sm"
+                        type="submit"
+                        className="float-right"
+                        color="primary"
+                      >
+                        <CIcon name="cil-save" /> {JurnalTypeAdd.save_button}
+                      </CButton>
+                    </CCol>
+                  </CRow>
+                </CForm>
+              </CModalBody>
+            )}
+          </CModal>
         </CCard>
       )}
+      <CModal
+        size="lg"
+        show={modalEditItem}
+        onClose={() => {
+          setModalEditItem(false);
+          setEditFormItem(null);
+        }}
+      >
+        <CModalHeader>
+          <h6>{JurnalTypeAdd.detail_caption}</h6>
+        </CModalHeader>
+
+        {editFormItem && (
+          <CModalBody>
+            <CForm
+              encType="multipart/form-data"
+              className="form-horizontal"
+              color="light"
+              onSubmit={handleSubmit3(saveEditDetail)}
+            >
+              <CRow>
+                <CCol lg="6" md="6" sm="12">
+                  <CFormGroup row>
+                    <CCol>
+                      <CLabel htmlFor="text-input">
+                        {JurnalTypeAdd.detailitem_accno}
+                      </CLabel>
+                    </CCol>
+                    <CCol xs="12" xl="9">
+                      <Controller
+                        name="detailitem_accno"
+                        as={Select}
+                        options={optionAcc}
+                        control={control3}
+                        defaultValue={{
+                          value: editFormItem.detailitem_accno,
+                          label:
+                            editFormItem.detailitem_accno +
+                            " - " +
+                            editFormItem.detailitem_accname,
+                        }}
+                        id="detailitem_accno"
+                      />
+                    </CCol>
+                  </CFormGroup>
+                </CCol>
+                <CCol lg="6" md="6" sm="12">
+                  <CFormGroup row>
+                    <CCol>
+                      <CLabel htmlFor="text-input">
+                        {JurnalTypeAdd.detailitem_description}
+                      </CLabel>
+                    </CCol>
+                    <CCol xs="12" xl="9">
+                      <textarea
+                        className="form-control"
+                        id="detailitem_description"
+                        name="detailitem_description"
+                        ref={register3}
+                        defaultValue={editFormItem.detailitem_description}
+                        rows="4"
+                      ></textarea>
+                    </CCol>
+                  </CFormGroup>
+                </CCol>
+              </CRow>
+              <CRow>
+                <CCol lg="6" md="6" sm="12">
+                  <CFormGroup row>
+                    <CCol>
+                      <CLabel htmlFor="text-input">
+                        {JurnalTypeAdd.detailitem_debit}
+                      </CLabel>
+                    </CCol>
+                    <CCol xs="12" xl="9">
+                      <input
+                        type="number"
+                        className="form-control"
+                        id="detailitem_debit"
+                        name="detailitem_debit"
+                        ref={register3({ valueAsNumber: true })}
+                        defaultValue={editFormItem.detailitem_debit}
+                      />
+                    </CCol>
+                  </CFormGroup>
+                </CCol>
+                <CCol lg="6" md="6" sm="12">
+                  <CFormGroup row>
+                    <CCol>
+                      <CLabel htmlFor="text-input">
+                        {JurnalTypeAdd.detailitem_credit}
+                      </CLabel>
+                    </CCol>
+                    <CCol xs="12" xl="9">
+                      <input
+                        type="number"
+                        className="form-control"
+                        id="detailitem_credit"
+                        name="detailitem_credit"
+                        ref={register3({ valueAsNumber: true })}
+                        defaultValue={editFormItem.detailitem_credit}
+                      />
+                    </CCol>
+                  </CFormGroup>
+                </CCol>
+              </CRow>
+              <CRow>
+                <CCol>
+                  <CButton
+                    size="sm"
+                    color="danger"
+                    style={{ float: "rigth" }}
+                    onClick={() => setModalEditItem(false)}
+                    className="mr-3"
+                  >
+                    <CIcon name="cil-scrubber" /> {JurnalTypeAdd.cancel_button}
+                  </CButton>
+                  <CButton
+                    size="sm"
+                    type="submit"
+                    style={{ float: "rigth" }}
+                    color="primary"
+                  >
+                    <CIcon name="cil-scrubber" /> {JurnalTypeAdd.save_button}
+                  </CButton>
+                </CCol>
+              </CRow>
+            </CForm>
+          </CModalBody>
+        )}
+      </CModal>
     </>
   );
 };
 
 export default JenisJurnalAdd;
-
-const formatDateForServer = (date) => {
-  const [year, month, day] = date.split("-");
-  return `${year}/${month}/${day}`;
-};

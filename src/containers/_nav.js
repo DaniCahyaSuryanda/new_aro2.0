@@ -38,7 +38,6 @@ const _nav = [
         _tag: "CSidebarNavItem",
         name: "View Laporan",
         to: "/laporan/LaporanUmum",
-        //  icon: <CIcon name="cil-layers" customClasses="c-sidebar-nav-icon" />,
       },
       // {
       //   _tag: "CSidebarNavItem",

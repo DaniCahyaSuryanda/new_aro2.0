@@ -528,80 +528,8 @@ const JenisJurnalAdd = () => {
                           striped
                           bordered
                           columnFilter
-                          itemsPerPage={5}
+                          itemsPerPage={25}
                           pagination
-                          // scopedSlots={{
-                          //   detailitem_isgeneral: (item) =>
-                          //     item.detailitem_isgeneral ? (
-                          //       <td>
-                          //         <CBadge color={"success"}>
-                          //           <CIcon size={"lg"} name={"cilCheck"} />
-                          //         </CBadge>
-                          //       </td>
-                          //     ) : (
-                          //       <td>
-                          //         <CBadge color={"warning"}>
-                          //           <p
-                          //             style={{
-                          //               width: "1.25rem",
-                          //               height: "1.25rem",
-                          //               color: "#fff",
-                          //               margin: "0px",
-                          //               padding: "0px",
-                          //             }}
-                          //           ></p>
-                          //         </CBadge>
-                          //       </td>
-                          //     ),
-                          //   detailitem_isvisible: (item) =>
-                          //     item.detailitem_isvisible ? (
-                          //       <td>
-                          //         <CBadge color={"success"}>
-                          //           <CIcon size={"lg"} name={"cilCheck"} />
-                          //         </CBadge>
-                          //       </td>
-                          //     ) : (
-                          //       <td>
-                          //         <CBadge color={"warning"}>
-                          //           <p
-                          //             style={{
-                          //               width: "1.25rem",
-                          //               height: "1.25rem",
-                          //               color: "#fff",
-                          //               margin: "0px",
-                          //               padding: "0px",
-                          //             }}
-                          //           ></p>
-                          //         </CBadge>
-                          //       </td>
-                          //     ),
-                          //   Aksi: (items, index) => {
-                          //     return (
-                          //       <td>
-                          //         <div className="btn-group">
-                          //           <CButton
-                          //             color="primary"
-                          //             variant="outline"
-                          //             shape="square"
-                          //             size="sm"
-                          //             onClick={() => ubahItem(items, index)}
-                          //           >
-                          //             {JurnalAddValidasi.action_button_edit}
-                          //           </CButton>
-                          //           <CButton
-                          //             color="danger"
-                          //             variant="outline"
-                          //             shape="square"
-                          //             size="sm"
-                          //             onClick={() => deleteItem(index)}
-                          //           >
-                          //             {JurnalAddValidasi.action_button_delete}
-                          //           </CButton>
-                          //         </div>
-                          //       </td>
-                          //     );
-                          //   },
-                          // }}
                         />
                       </CCol>
                     </CRow>
@@ -646,6 +574,7 @@ const JenisJurnalAdd = () => {
                     </CButton>
                   </CModalFooter>
                 </CModal>
+
                 <CModal show={modal_no} onClose={setModal2}>
                   <CModalBody>
                     <h4>{JurnalAddValidasi.confirm_reject}</h4>

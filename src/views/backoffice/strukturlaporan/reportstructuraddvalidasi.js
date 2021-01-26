@@ -454,7 +454,7 @@ const ReportStrucValidasi = () => {
                 <CModalFooter>
                   <CButton
                     type="submit"
-                    onClick={() => setujuOtoritasi(items.trxid)}
+                    onClick={() => setujuOtoritasi(items.asid)}
                     color="primary"
                   >
                     {Jsonjurnaladdvalidasi[0].confirm_otor_yes}
@@ -471,7 +471,7 @@ const ReportStrucValidasi = () => {
                 <CModalFooter>
                   <CButton
                     type="submit"
-                    onClick={() => tolakOtoritasi(items.asid)}
+                    onClick={() => tolakOtoritasi(items.trxid)}
                     color="primary"
                   >
                     {Jsonjurnaladdvalidasi[0].confirm_reject_yes}

@@ -47,6 +47,7 @@ const ReportStrucValidasi = () => {
   const [modal_no, setModal2] = useState(false);
   const [items, setItems] = useState(null);
   const [dataAccountStructure, setDataAccountStructure] = useState(null);
+  const [details, setDetails] = useState([]);
 
   // const [details, setDetails] = useState([])
   //const [items, setItems] = useState(usersData)
@@ -59,7 +60,7 @@ const ReportStrucValidasi = () => {
 
   const getDataEditValidasi = () => {
     axios
-      .get(`${global.config.API_URL}gl/params/accountstructure/add/list`)
+      .get(`${global.config.API_URL}gl/params/accountstructure/edit/list`)
       .then((res) => {
         console.log(res.data.data);
         setDataAccountStructure(res.data.data);
@@ -72,90 +73,173 @@ const ReportStrucValidasi = () => {
   const toggleDetails = (item) => {
     // const position = details.indexOf(index)
     setItems(item);
+    axios
+      .get(
+        `${global.config.API_URL}gl/params/accountstructure/edit/load?trxid=${item.trxid}`
+      )
+      .then((res) => {
+        console.log(res.data.rescode);
+        if (res.data.rescode == 0) {
+          setDetails(res.data.data.detail);
+          console.log(res.data.data.detail);
+        }
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
   };
 
-  const setujuOtoritasi = (noitem) => {
-    setMessType("success");
-    setMessage("Data dengan No item id " + noitem + " berhasil di otorisasi");
-    let data = [...dataAccountStructure];
-    var dataBaru = data.filter(function (data) {
-      return data.asid != noitem;
-    });
-    setDataAccountStructure(dataBaru);
-    setModal(false);
-    setItems(null);
-    setTimeout(() => {
-      setMessType(null);
-      setMessage(null);
-    }, 5000);
-    //  console.log(trxid);
-    //  let data = {
-    //    "trxid" : trxid,
-    //    "validstate" : 1,
-    // }
-    // axios.post(`${global.config.API_URL}gl/params/journaltype/add/validation`,data)
-    //   .then(res => {
-    //     // console.log(res);
-    //     console.log('tes',res.data);
-    //     if(res.data.rescode === 0){
-    //       setMessType('success')
-    //       setMessage('Data dengan Transaksi id '+ trxid +' berhasil di otorisasi')
-    //       setModal(false)
-    //       getDataEditValidasi()
-    //       setItems(null)
-    //       setTimeout(()=>{
-    //         setMessType(null)
-    //         setMessage(null)
-    //       }, 5000)
-    //     }else{
-    //       setMessType('danger')
-    //       setMessage(res.data.errdescription)
-    //       setModal(false)
-    //     }
-    // })
+  const setujuOtoritasi = (trxid) => {
+    console.log("test", trxid);
+    let data = {
+      trxid: trxid,
+      validstate: 1,
+    };
+    axios
+      .post(
+        `${global.config.API_URL}gl/params/accountstructure/edit/validation`,
+        data
+      )
+      .then((res) => {
+        // console.log(res);
+        console.log("tes", res.data);
+        if (res.data.rescode === 0) {
+          setMessType("success");
+          setMessage(
+            "Data dengan Transaksi id " + trxid + " berhasil di otorisasi"
+          );
+          setModal(false);
+          setItems(null);
+          getDataEditValidasi();
+          setTimeout(() => {
+            setMessType(null);
+            setMessage(null);
+          }, 5000);
+        } else {
+          setMessType("danger");
+          window.scrollTo(0, 0);
+          setMessage(res.data.errdescription);
+          setModal(false);
+        }
+      });
   };
 
-  const tolakOtoritasi = (noitem) => {
-    setMessType("success");
-    setMessage("Data dengan No item id " + noitem + " berhasil di tolak");
-    let data = [...dataAccountStructure];
-    var dataBaru = data.filter(function (data) {
-      return data.asid != noitem;
-    });
-    setDataAccountStructure(dataBaru);
-    setModal2(false);
-    setItems(null);
-    setTimeout(() => {
-      setMessType(null);
-      setMessage(null);
-    }, 5000);
-
-    //   console.log(trxid);
-    //   let data = {
-    //     "trxid" : trxid,
-    //     "validstate" : 1,
-    //  }
-    //   axios.post(`${global.config.API_URL}gl/params/journaltype/add/validation`,data)
-    //     .then(res => {
-    //       // console.log(res);
-    //       console.log('tes',res.data);
-    //       if(res.data.rescode === 0){
-    //         setMessType('success')
-    //         setMessage('Data dengan Transaksi id '+ trxid +' berhasil di tolak')
-    //         setModal(false)
-    //         getDataEditValidasi()
-    //         setItems(null)
-    //         setTimeout(()=>{
-    //           setMessType(null)
-    //           setMessage(null)
-    //         }, 5000)
-    //       }else{
-    //         setMessType('danger')
-    //         setMessage(res.data.errdescription)
-    //         setModal(false)
-    //       }
-    //   })
+  const tolakOtoritasi = (trxid) => {
+    console.log(trxid);
+    let data = {
+      trxid: trxid,
+      validstate: 2,
+    };
+    axios
+      .post(
+        `${global.config.API_URL}gl/params/accountstructure/add/validation`,
+        data
+      )
+      .then((res) => {
+        // console.log(res);
+        console.log("tes", res.data);
+        if (res.data.rescode === 0) {
+          setMessType("success");
+          setMessage(
+            "Data dengan Transaksi id " + trxid + " berhasil di tolak"
+          );
+          setModal(false);
+          setItems(null);
+          setTimeout(() => {
+            setMessType(null);
+            setMessage(null);
+          }, 5000);
+        } else {
+          setMessType("danger");
+          setMessage(res.data.errdescription);
+          setModal(false);
+        }
+      });
   };
+
+  // const setujuOtoritasi = (noitem) => {
+  //   let data = [...dataAccountStructure];
+  //   var dataBaru = data.filter(function (data) {
+  //     return data.asid != noitem;
+  //   });
+  //   setMessType("success");
+  //   setMessage("Data dengan No item id " + noitem + " berhasil di otorisasi");
+  //   setDataAccountStructure(dataBaru);
+  //   setModal(false);
+  //   setItems(null);
+  //   setTimeout(() => {
+  //     setMessType(null);
+  //     setMessage(null);
+  //   }, 5000);
+  //  console.log(trxid);
+  //  let data = {
+  //    "trxid" : trxid,
+  //    "validstate" : 1,
+  // }
+  // axios.post(`${global.config.API_URL}gl/params/journaltype/add/validation`,data)
+  //   .then(res => {
+  //     // console.log(res);
+  //     console.log('tes',res.data);
+  //     if(res.data.rescode === 0){
+  //       setMessType('success')
+  //       setMessage('Data dengan Transaksi id '+ trxid +' berhasil di otorisasi')
+  //       setModal(false)
+  //       getDataEditValidasi()
+  //       setItems(null)
+  //       setTimeout(()=>{
+  //         setMessType(null)
+  //         setMessage(null)
+  //       }, 5000)
+  //     }else{
+  //       setMessType('danger')
+  //       setMessage(res.data.errdescription)
+  //       setModal(false)
+  //     }
+  // })
+  // };
+
+  // const tolakOtoritasi = (noitem) => {
+  //   setMessType("success");
+  //   setMessage("Data dengan No item id " + noitem + " berhasil di tolak");
+  //   let data = [...dataAccountStructure];
+  //   var dataBaru = data.filter(function (data) {
+  //     return data.asid != noitem;
+  //   });
+  //   setDataAccountStructure(dataBaru);
+  //   setModal2(false);
+  //   setItems(null);
+  //   setTimeout(() => {
+  //     setMessType(null);
+  //     setMessage(null);
+  //   }, 5000);
+
+  //   console.log(trxid);
+  //   let data = {
+  //     "trxid" : trxid,
+  //     "validstate" : 1,
+  //  }
+  //   axios.post(`${global.config.API_URL}gl/params/journaltype/add/validation`,data)
+  //     .then(res => {
+  //       // console.log(res);
+  //       console.log('tes',res.data);
+  //       if(res.data.rescode === 0){
+  //         setMessType('success')
+  //         setMessage('Data dengan Transaksi id '+ trxid +' berhasil di tolak')
+  //         setModal(false)
+  //         getDataEditValidasi()
+  //         setItems(null)
+  //         setTimeout(()=>{
+  //           setMessType(null)
+  //           setMessage(null)
+  //         }, 5000)
+  //       }else{
+  //         setMessType('danger')
+  //         setMessage(res.data.errdescription)
+  //         setModal(false)
+  //       }
+  //   })
+  // };
 
   return (
     <>
@@ -166,6 +250,7 @@ const ReportStrucValidasi = () => {
           </CCol>
         </CRow>
       )}
+
       {items == null && (
         <CRow>
           <CCol>
@@ -277,6 +362,7 @@ const ReportStrucValidasi = () => {
           </CCol>
         </CRow>
       )}
+
       {items && (
         <CRow>
           <CCol>
@@ -369,7 +455,7 @@ const ReportStrucValidasi = () => {
                   <CRow>
                     <CCol>
                       <CDataTable
-                        items={items.detail}
+                        items={details}
                         fields={fieldsDetail}
                         hover
                         striped
@@ -447,7 +533,7 @@ const ReportStrucValidasi = () => {
                 <CModalFooter>
                   <CButton
                     type="submit"
-                    onClick={() => setujuOtoritasi(items.asid)}
+                    onClick={() => setujuOtoritasi(items.trxid)}
                     color="primary"
                   >
                     {Jsonjurnaladdvalidasi.confirm_otor_yes}
@@ -464,7 +550,7 @@ const ReportStrucValidasi = () => {
                 <CModalFooter>
                   <CButton
                     type="submit"
-                    onClick={() => tolakOtoritasi(items.asid)}
+                    onClick={() => tolakOtoritasi(items.trxid)}
                     color="primary"
                   >
                     {Jsonjurnaladdvalidasi.confirm_reject_yes}
