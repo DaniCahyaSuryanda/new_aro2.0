@@ -4,6 +4,7 @@
  
     "toatsheader_success" : "Berhasil",
     "toatsheader_err" : "Gagal",
+    
     "toatscolor_success" : "bg-success text-white",
     "toatscolor_err" : "bg-danger text-white",
 

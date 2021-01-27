@@ -1,0 +1,38 @@
+{
+    "title" : "Pengkinian Kantor",
+    "trxid" : "No Transaksi",
+    "office_code" : "Kode Kantor",
+    "office_name" : " Nama Kantor",
+    "office_type" : "Jenis Kantor",
+    "cp" : "Kontak Persen",
+    "address" : "Alamat",
+    "isactive" : "Aktif",
+    "phone_number" : "Nomer Telepon",
+    "email" : "Email",
+    
+    "list_refresh" : "Refresh",
+    "list_office_code" : "Kode Kantor",
+    "list_office_name" : " Nama Kantor",
+    "list_office_type" : "Jenis Kantor",
+    "list_cp" : "Kontak Persen",
+    "list_address" : "Alamat",
+    "list_isactive" : "Aktif",
+    "list_phone_number" : "Nomer Telepon",
+    "list_email" : "Email",
+
+    "list_edit" : "Edit",
+    "edit_button" : "Edit",
+
+
+    "hide" : "Kembali",
+
+    "save_button": "Simpan",
+    "cancel_button" : "Reset",
+
+    "confirm_save" : "Simpan Pembuatan Kantor Baru ?",
+
+    "confirm_yes" : "Simpan",
+    "confirm_no" : "Batal"
+
+  
+}

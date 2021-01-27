@@ -47,12 +47,27 @@ const JournalAdd = React.lazy(() =>
 const Journaladdvalidasi = React.lazy(() =>
   import("./views/backoffice/Jurnalumum/JournalAddValidasi")
 );
-const LaporanUmum = React.lazy(() => import("./views/laporan/LaporanUmum"));
+const LaporanUmum = React.lazy(() => import("./views/laporanumum/LaporanUmum"));
+
 const Editorlaporan = React.lazy(() =>
-  import("./views/laporan/Editorlaporan/Editorlaporan")
+  import("./views/pemeliharaan/Editorlaporan/Editorlaporan")
 );
+
+const Manajemenperan = React.lazy(() =>
+  import("./views/pemeliharaan/manajemenperan_Menu/Manajemenperan")
+);
+const Addnewoffice = React.lazy(() =>
+  import("./views/pemeliharaan/manajemenKantor/Addnewoffice")
+);
+const Addnewofficevalidasi = React.lazy(() =>
+  import("./views/pemeliharaan/manajemenKantor/Addnewofficevalidasi")
+);
+const Editoffice = React.lazy(() =>
+  import("./views/pemeliharaan/manajemenKantor/Editoffice")
+);
+
 const routes = [
-  { path: "/", exact: true, name: "" },
+  { path: "/", exact: true, name: "Home" },
   { path: "/dashboard", name: "Dashboard", component: Dashboard },
 
   {
@@ -151,16 +166,43 @@ const routes = [
   { path: "/users", exact: true, name: "Users", component: Users },
   { path: "/users/:id", exact: true, name: "User Details", component: User },
 
-  { path: "/laporan", exact: true, component: LaporanUmum },
+  { path: "/laporanumum", exact: true, component: LaporanUmum },
   {
-    path: "/laporan/LaporanUmum",
+    path: "/laporanumum/LaporanUmum",
     name: "Laporan Umum",
     component: LaporanUmum,
   },
+
   {
-    path: "/laporan/Editorlaporan/Editorlaporan",
+    path: "/pemeliharaan",
+    name: "Pemeliharaan",
+    // component: Manajemenperan,
+    exact: true,
+  },
+  {
+    path: "/pemeliharaan/Editorlaporan",
     name: "Editor Laporan ",
     component: Editorlaporan,
+  },
+  {
+    path: "/pemeliharaan/manajemenperan_Menu/Manajemenperan",
+    name: "Manajemen Peran",
+    component: Manajemenperan,
+  },
+  {
+    path: "/pemeliharaan/manajemenKantor/Addnewoffice",
+    name: "Pembuatan Kantor Baru",
+    component: Addnewoffice,
+  },
+  {
+    path: "/pemeliharaan/manajemenKantor/Addnewofficevalidasi",
+    name: "Otorisasi Pembuatan Kantor Baru",
+    component: Addnewofficevalidasi,
+  },
+  {
+    path: "/pemeliharaan/manajemenKantor/Editoffice",
+    name: "Otorisasi Pembuatan Kantor Baru",
+    component: Editoffice,
   },
 ];
 

@@ -1,0 +1,41 @@
+{
+    "title" : "Otorisasi Pembuatan Kantor Baru",
+    "trxid" : "No Transaksi",
+    "office_code" : "Kode Kantor",
+    "office_name" : " Nama Kantor",
+    "office_type" : "Jenis Kantor",
+    "cp" : "Kontak Persen",
+    "address" : "Alamat",
+    "isactive" : "Aktif",
+    "phone_number" : "Nomer Telepon",
+    "email" : "Email",
+    
+    "list_refresh" : "Refresh",
+    "list_office_code" : "Kode Kantor",
+    "list_office_name" : " Nama Kantor",
+    "list_office_type" : "Jenis Kantor",
+    "list_cp" : "Kontak Persen",
+    "list_address" : "Alamat",
+    "list_isactive" : "Aktif",
+    "list_phone_number" : "Nomer Telepon",
+    "list_email" : "Email",
+
+    "list_otor" : "Otorisasi",
+
+    "otor_button": "Otorisasi",
+    "reject_button" : "Tolak",
+    "hide" : "Kembali",
+
+    "confirm_otor" : "Otorisasi Pembuatan Kantor Baru ?",
+    "confirm_reject" : "Totak Otorisasi Pembuatan Kantor Baru ?",
+
+    "confirm_otor_yes" : "Otorisasi",
+    "confirm_otor_no" :"Batal",
+
+    "confirm_reject_yes" : "Tolak Otorisasi",
+    "confirm_reject_no" : "Batal"
+
+    
+
+  
+}
