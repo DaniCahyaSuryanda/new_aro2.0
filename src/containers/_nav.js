@@ -29,22 +29,28 @@ const _nav = [
   },
 
   {
-    _tag: "CSidebarNavDropdown",
+    _tag: "CSidebarNavItem",
     name: "Laporan Umum",
-    route: "/laporan",
+    to: "/laporanumum/LaporanUmum",
     icon: <CIcon name="cil-notes" customClasses="c-sidebar-nav-icon" />,
+  },
+
+  {
+    _tag: "CSidebarNavDropdown",
+    name: "Pemeliharaan",
+    route: "/pemeliharaan",
+    icon: <CIcon name="cil-settings" customClasses="c-sidebar-nav-icon" />,
     _children: [
       {
         _tag: "CSidebarNavItem",
-        name: "View Laporan",
-        to: "/laporan/LaporanUmum",
+        name: "Editor Laporan",
+        to: "/pemeliharaan/Editorlaporan",
       },
-      // {
-      //   _tag: "CSidebarNavItem",
-      //   name: "Editor Laporan",
-      //   to: "laporan/Editorlaporan/Editorlaporan",
-      //   //  icon: <CIcon name="cil-layers" customClasses="c-sidebar-nav-icon" />,
-      // },
+      {
+        _tag: "CSidebarNavItem",
+        name: "Manajeman Peran",
+        to: "/pemeliharaan/manajemenperan_Menu/Manajemenperan",
+      },
     ],
   },
 ];
