@@ -1,0 +1,44 @@
+{
+    "form": "Authorization Updating Account",
+    
+    "list_caption": "List of Account Needed Authorization",
+    "list_trxid" : "Transaction ID",
+    "list_accno" : "Account Number",
+    "list_accname" : "Account Name",
+    "list_acctype" : "Account Type",
+    "list_normaldebit" : "Normal Discharge",
+    "list_description": "Description",
+    "list_isactive": "Active",
+    
+    "list_refresh" :"Refresh",
+    "list_new" : "Authorization",
+
+    "detail_caption" : "List Authorization Updating Account",
+    "trxid" : "Transaction ID",
+    "accno" : "Account Number",
+    "accname" : "Account Name",
+    "acctype" : "Account Type",
+    "normaldebit" : "Normal Discharge",
+    "description": "Description",
+    "isactive": "Active",
+
+    "otor_button" : "Authorization",
+    "reject_button": "Reject",
+
+    
+    "acctype_0" : "Balance Sheet Account",
+    "acctype_1" : "Non Balance Sheet Account",
+
+    "confirm_otor" : "Authorization Updating Account ?",
+    "confirm_otor_yes" : "Authorization",
+    "confirm_otor_no" : "Cencel",
+    
+    "confirm_reject" : "Reject Authorization Updating Account ?",
+    "confirm_reject_yes" : "Reject Authorization",
+    "confirm_reject_no" : "Cencel",
+
+    "otor_success" : "Authorization Updating Account Approved",
+    "otor_reject" : "Authorization Updating Account Rejected",
+    "hide" : "Back"
+
+}

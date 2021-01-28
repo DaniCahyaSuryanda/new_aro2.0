@@ -1,0 +1,14 @@
+{
+    "messagetype_success" : "success",
+    "messagetype_err" : "danger",
+ 
+    "toatsheader_success" : "Success",
+    "toatsheader_err" : "Failed",
+    "toatscolor_success" : "bg-success text-white",
+    "toatscolor_err" : "bg-danger text-white",
+
+    "journaladd_success" : "Journal Type Successfully Saved",
+    "journaladd_otor" :  "Authorization New Journal Approved",
+    
+    "journaladd_reject" :  "Authorization New Journal Rejected"
+}

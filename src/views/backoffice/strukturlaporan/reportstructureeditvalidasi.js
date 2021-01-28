@@ -3,26 +3,26 @@ import {
   CButton,
   CCard,
   CCardBody,
+  CCardFooter,
   CCardHeader,
   CCol,
   CBadge,
-  CCollapse,
   CDataTable,
   CFormGroup,
-  CInput,
   CInputCheckbox,
   CLabel,
   CModal,
   CModalBody,
   CModalFooter,
   CRow,
-  CTextarea,
   CForm,
-  CAlert,
 } from "@coreui/react";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import Jsonjurnaladdvalidasi from "../../../gl/params/lang/id/reportstructureeditvalidation";
+import Jsonjurnaladdvalidasi from "json/lang/id/Struktur Laporan/edit/reportstructureeditvalidation.json";
+import messageJson from "../../../json/lang/id/Message/message.json";
+import Toast from "../../../component/Toast";
+import { useHistory } from "react-router-dom";
 
 const fields = [
   Jsonjurnaladdvalidasi.list_new,
@@ -41,57 +41,77 @@ const fieldsDetail = [
 ];
 
 const ReportStrucValidasi = () => {
-  const [messType, setMessType] = useState("");
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState({});
   const [modal, setModal] = useState(false);
   const [modal_no, setModal2] = useState(false);
   const [items, setItems] = useState(null);
   const [dataAccountStructure, setDataAccountStructure] = useState(null);
   const [details, setDetails] = useState([]);
-
-  // const [details, setDetails] = useState([])
-  //const [items, setItems] = useState(usersData)
+  const history = useHistory();
 
   useEffect(() => {
-    if (dataAccountStructure == null) {
+    if (dataAccountStructure === null) {
       getDataEditValidasi();
     }
   }, [dataAccountStructure]);
 
   const getDataEditValidasi = () => {
+    setMessage({})
     axios
       .get(`${global.config.API_URL}gl/params/accountstructure/edit/list`)
       .then((res) => {
-        console.log(res.data.data);
         setDataAccountStructure(res.data.data);
+        if (res.data.rescode !== 0) {
+          setMessage({
+            title: messageJson.toatsheader_err,
+            body: res.data.errdescription,
+            type: messageJson.toatscolor_err,
+            active: true,
+          });
+        }
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(function (error) {
+        setMessage({
+          title: messageJson.messagetype_err,
+          body: JSON.stringify(error),
+          type: messageJson.toatscolor_err,
+          active: true,
+        });
       });
   };
 
   const toggleDetails = (item) => {
-    // const position = details.indexOf(index)
+    setMessage({})
     setItems(item);
     axios
       .get(
         `${global.config.API_URL}gl/params/accountstructure/edit/load?trxid=${item.trxid}`
       )
       .then((res) => {
-        console.log(res.data.rescode);
-        if (res.data.rescode == 0) {
+        if (res.data.rescode === 0) {
           setDetails(res.data.data.detail);
           console.log(res.data.data.detail);
+        }else{
+          setMessage({
+            title: messageJson.toatsheader_err,
+            body: res.data.errdescription,
+            type: messageJson.toatscolor_err,
+            active: true,
+          });
         }
-        console.log(res);
       })
-      .catch((err) => {
-        console.log("err", err);
+      .catch(function (error) {
+        setMessage({
+          title: messageJson.messagetype_err,
+          body: JSON.stringify(error),
+          type: messageJson.toatscolor_err,
+          active: true,
+        });
       });
   };
 
   const setujuOtoritasi = (trxid) => {
-    console.log("test", trxid);
+    setMessage({})
     let data = {
       trxid: trxid,
       validstate: 1,
@@ -102,31 +122,38 @@ const ReportStrucValidasi = () => {
         data
       )
       .then((res) => {
-        // console.log(res);
-        console.log("tes", res.data);
         if (res.data.rescode === 0) {
-          setMessType("success");
-          setMessage(
-            "Data dengan Transaksi id " + trxid + " berhasil di otorisasi"
-          );
           setModal(false);
           setItems(null);
           getDataEditValidasi();
-          setTimeout(() => {
-            setMessType(null);
-            setMessage(null);
-          }, 5000);
+          setMessage({
+            title: messageJson.toatsheader_success,
+            body: Jsonjurnaladdvalidasi.message_otor,
+            type: messageJson.toatscolor_success,
+            active: true,
+          });
         } else {
-          setMessType("danger");
           window.scrollTo(0, 0);
-          setMessage(res.data.errdescription);
           setModal(false);
+          setMessage({
+            title: messageJson.toatsheader_err,
+            body: res.data.errdescription,
+            type: messageJson.toatscolor_err,
+            active: true,
+          });
         }
+      }).catch(function (error) {
+        setMessage({
+          title: messageJson.messagetype_err,
+          body: JSON.stringify(error),
+          type: messageJson.toatscolor_err,
+          active: true,
+        });
       });
   };
 
   const tolakOtoritasi = (trxid) => {
-    console.log(trxid);
+    setMessage({})
     let data = {
       trxid: trxid,
       validstate: 2,
@@ -137,121 +164,39 @@ const ReportStrucValidasi = () => {
         data
       )
       .then((res) => {
-        // console.log(res);
-        console.log("tes", res.data);
         if (res.data.rescode === 0) {
-          setMessType("success");
-          setMessage(
-            "Data dengan Transaksi id " + trxid + " berhasil di tolak"
-          );
           setModal(false);
           setItems(null);
-          setTimeout(() => {
-            setMessType(null);
-            setMessage(null);
-          }, 5000);
+          setMessage({
+            title: messageJson.toatsheader_success,
+            body: Jsonjurnaladdvalidasi.message_reject,
+            type: messageJson.toatscolor_success,
+            active: true,
+          });
         } else {
-          setMessType("danger");
-          setMessage(res.data.errdescription);
           setModal(false);
+          setMessage({
+            title: messageJson.toatsheader_err,
+            body: res.data.errdescription,
+            type: messageJson.toatscolor_err,
+            active: true,
+          });
         }
+      }).catch(function (error) {
+        setMessage({
+          title: messageJson.messagetype_err,
+          body: JSON.stringify(error),
+          type: messageJson.toatscolor_err,
+          active: true,
+        });
       });
   };
 
-  // const setujuOtoritasi = (noitem) => {
-  //   let data = [...dataAccountStructure];
-  //   var dataBaru = data.filter(function (data) {
-  //     return data.asid != noitem;
-  //   });
-  //   setMessType("success");
-  //   setMessage("Data dengan No item id " + noitem + " berhasil di otorisasi");
-  //   setDataAccountStructure(dataBaru);
-  //   setModal(false);
-  //   setItems(null);
-  //   setTimeout(() => {
-  //     setMessType(null);
-  //     setMessage(null);
-  //   }, 5000);
-  //  console.log(trxid);
-  //  let data = {
-  //    "trxid" : trxid,
-  //    "validstate" : 1,
-  // }
-  // axios.post(`${global.config.API_URL}gl/params/journaltype/add/validation`,data)
-  //   .then(res => {
-  //     // console.log(res);
-  //     console.log('tes',res.data);
-  //     if(res.data.rescode === 0){
-  //       setMessType('success')
-  //       setMessage('Data dengan Transaksi id '+ trxid +' berhasil di otorisasi')
-  //       setModal(false)
-  //       getDataEditValidasi()
-  //       setItems(null)
-  //       setTimeout(()=>{
-  //         setMessType(null)
-  //         setMessage(null)
-  //       }, 5000)
-  //     }else{
-  //       setMessType('danger')
-  //       setMessage(res.data.errdescription)
-  //       setModal(false)
-  //     }
-  // })
-  // };
-
-  // const tolakOtoritasi = (noitem) => {
-  //   setMessType("success");
-  //   setMessage("Data dengan No item id " + noitem + " berhasil di tolak");
-  //   let data = [...dataAccountStructure];
-  //   var dataBaru = data.filter(function (data) {
-  //     return data.asid != noitem;
-  //   });
-  //   setDataAccountStructure(dataBaru);
-  //   setModal2(false);
-  //   setItems(null);
-  //   setTimeout(() => {
-  //     setMessType(null);
-  //     setMessage(null);
-  //   }, 5000);
-
-  //   console.log(trxid);
-  //   let data = {
-  //     "trxid" : trxid,
-  //     "validstate" : 1,
-  //  }
-  //   axios.post(`${global.config.API_URL}gl/params/journaltype/add/validation`,data)
-  //     .then(res => {
-  //       // console.log(res);
-  //       console.log('tes',res.data);
-  //       if(res.data.rescode === 0){
-  //         setMessType('success')
-  //         setMessage('Data dengan Transaksi id '+ trxid +' berhasil di tolak')
-  //         setModal(false)
-  //         getDataEditValidasi()
-  //         setItems(null)
-  //         setTimeout(()=>{
-  //           setMessType(null)
-  //           setMessage(null)
-  //         }, 5000)
-  //       }else{
-  //         setMessType('danger')
-  //         setMessage(res.data.errdescription)
-  //         setModal(false)
-  //       }
-  //   })
-  // };
-
   return (
     <>
-      {message && (
-        <CRow>
-          <CCol>
-            <CAlert color={messType}>{message}</CAlert>
-          </CCol>
-        </CRow>
-      )}
+      <Toast message={message} />
 
-      {items == null && (
+      {items === null && (
         <CRow>
           <CCol>
             <CCard>
@@ -350,7 +295,7 @@ const ReportStrucValidasi = () => {
                         </td>
                       ),
                     acctype: (item) =>
-                      item.acctype == 0 ? (
+                      item.acctype === 0 ? (
                         <td> Akun Neraca </td>
                       ) : (
                         <td> Akun Non Neraca </td>
@@ -358,6 +303,16 @@ const ReportStrucValidasi = () => {
                   }}
                 />
               </CCardBody>
+              <CCardFooter>
+                <CButton
+                  type="reset"
+                  size={"sm"}
+                  color="warning"
+                  onClick={() => history.goBack()}
+                >
+                  <CIcon name="cil-chevron-left" /> {Jsonjurnaladdvalidasi.hide}
+                </CButton>
+              </CCardFooter>
             </CCard>
           </CCol>
         </CRow>
@@ -395,6 +350,7 @@ const ReportStrucValidasi = () => {
                         </CCol>
                       </CFormGroup>
                     </CCol>
+
                     <CCol lg="6" md="6" sm="12">
                       <CFormGroup row>
                         <CCol>
@@ -413,26 +369,9 @@ const ReportStrucValidasi = () => {
                         </CCol>
                       </CFormGroup>
                     </CCol>
+
                   </CRow>
                   <CRow>
-                    <CCol lg="6" md="6" sm="12">
-                      <CFormGroup variant="custom-checkbox" inline row>
-                        <CCol xs="2" xl="2">
-                          <CLabel htmlFor="select">
-                            {Jsonjurnaladdvalidasi.isactive}
-                          </CLabel>
-                        </CCol>
-                        <CCol xs="3" xl="3">
-                          <CFormGroup variant="custom-checkbox" inline>
-                            {items.isactive === true ? (
-                              <CInputCheckbox checked disabled />
-                            ) : (
-                              <CInputCheckbox disabled />
-                            )}
-                          </CFormGroup>
-                        </CCol>
-                      </CFormGroup>
-                    </CCol>
                     <CCol lg="6" md="6" sm="12">
                       <CFormGroup row>
                         <CCol>
@@ -448,6 +387,25 @@ const ReportStrucValidasi = () => {
                             name="tag"
                             defaultValue={items.tag}
                           />
+                        </CCol>
+                      </CFormGroup>
+                    </CCol>
+
+                    <CCol lg="2" md="2" sm="12">
+                      <CFormGroup row>
+                        <CCol>
+                          <CLabel htmlFor="select">
+                            {Jsonjurnaladdvalidasi.isactive}
+                          </CLabel>
+                        </CCol>
+                        <CCol xs="12" xl="9">
+                          <CFormGroup variant="custom-checkbox" inline>
+                            {items.isactive === true ? (
+                              <CInputCheckbox checked disabled />
+                            ) : (
+                              <CInputCheckbox disabled />
+                            )}
+                          </CFormGroup>
                         </CCol>
                       </CFormGroup>
                     </CCol>

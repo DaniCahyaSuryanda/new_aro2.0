@@ -1,0 +1,45 @@
+{
+  "form": "Account Structure Authorization",
+  "action_list" : "Action",
+
+  "list_caption": "List Account Structure Needs Authorization",
+  "list_asid" : "Code",
+  "list_asname" : "Name",
+  "list_isactive": "Active",
+
+  "list_refresh" :"Refresh",
+  "list_new" : "Authorization",
+
+  "detail_caption" : "List Account Structure",
+  "trxid" : "Transaction No",
+  "asid" : "Code",
+  "asname" : "Name",
+  "isactive" : "Active",
+  "tag" : "Tag",
+
+  "detailitem_caption" : "List Account Structure",
+  "detailitem_no" : "Item N",
+  "detailitem_name" : "Item Name",
+  "detailitem_parentno" : "Parent No",
+  "detailitem_accno" : "Account No",
+  "detailitem_accname" : "Account Name",
+  "detailitem_isvisible" : "Show",
+  "detailitem_isgeneral" : "Item Group",
+
+  "acctype_0" : "Balance Sheet Account",
+  "acctype_1" : "Non Balance Sheet Account",
+
+  "otor_button" : "Authorization",
+  "reject_button": "Reject",
+
+  "confirm_otor" : " Authorization New Account Structure ?",
+  "confirm_otor_yes" : "Authorization",
+  "confirm_otor_no" : "Cencel",
+
+  "confirm_reject" : "Reject New Account Structure ?",
+  "confirm_reject_yes" : "Reject Authorization",
+  "confirm_reject_no" : "Cencel",
+  "hide" : "Back",
+  "message_reject" : "New Structure Account Rejected",
+  "message_otor" : "New Structure Account Authorized Successfully"
+}

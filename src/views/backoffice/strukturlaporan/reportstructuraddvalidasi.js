@@ -3,90 +3,169 @@ import {
   CButton,
   CCard,
   CCardBody,
+  CCardFooter,
   CCardHeader,
   CCol,
   CBadge,
-  CCollapse,
   CDataTable,
   CFormGroup,
-  CInput,
   CInputCheckbox,
   CLabel,
   CModal,
   CModalBody,
   CModalFooter,
   CRow,
-  CTextarea,
   CForm,
-  CAlert,
 } from "@coreui/react";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import Jsonjurnaladdvalidasi from "../../../gl/params/lang/id/reportstructureaddvalidation";
+import LangID from "json/lang/id/Struktur Laporan/add/reportstructureaddvalidation.json";
+import LangEN from "json/lang/en/Struktur Laporan/add/reportstructureaddvalidation.json";
+import messageID from "json/lang/id/Message/message.json";
+import messageEN from "json/lang/en/Message/message.json";
+import Toast from "component/Toast";
+import { useHistory } from "react-router-dom";
 
-const fields = [
-  Jsonjurnaladdvalidasi[0].list_new,
-  { key: "asid", label: Jsonjurnaladdvalidasi[0].list_asid },
-  { key: "asname", label: Jsonjurnaladdvalidasi[0].list_asname },
-  { key: "isactive", label: Jsonjurnaladdvalidasi[0].isactive },
-];
+// const fields = [
+//   Jsonjurnaladdvalidasi.list_new,
+//   { key: "asid", label: Jsonjurnaladdvalidasi.list_asid },
+//   { key: "asname", label: Jsonjurnaladdvalidasi.list_asname },
+//   { key: "isactive", label: Jsonjurnaladdvalidasi.isactive },
+// ];
 
-const fieldsDetail = [
-  { key: "itemno", label: Jsonjurnaladdvalidasi[0].detailitem_no },
-  { key: "itemname", label: Jsonjurnaladdvalidasi[0].detailitem_name },
-  { key: "parentno", label: Jsonjurnaladdvalidasi[0].detailitem_parentno },
-  { key: "accno", label: Jsonjurnaladdvalidasi[0].detailitem_accno },
-  { key: "accname", label: Jsonjurnaladdvalidasi[0].detailitem_accname },
-  { key: "isvisible", label: Jsonjurnaladdvalidasi[0].detailitem_isvisible },
-];
+// const fieldsDetail = [
+//   { key: "itemno", label: Jsonjurnaladdvalidasi.detailitem_no },
+//   { key: "itemname", label: Jsonjurnaladdvalidasi.detailitem_name },
+//   { key: "parentno", label: Jsonjurnaladdvalidasi.detailitem_parentno },
+//   { key: "accno", label: Jsonjurnaladdvalidasi.detailitem_accno },
+//   { key: "accname", label: Jsonjurnaladdvalidasi.detailitem_accname },
+//   { key: "isvisible", label: Jsonjurnaladdvalidasi.detailitem_isvisible },
+// ];
 
 const ReportStrucValidasi = () => {
-  const [messType, setMessType] = useState("");
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState({});
   const [modal, setModal] = useState(false);
   const [modal_no, setModal2] = useState(false);
   const [items, setItems] = useState(null);
-  // const [dataJenisJurnal, setDataAccountStructure] = useState(null)
-
+  const history = useHistory();
   const [dataAccountStructure, setDataAccountStructure] = useState(null);
   const [details, setDetails] = useState([]);
-  //const [items, setItems] = useState(usersData)
+  const [Jsonjurnaladdvalidasi, setJsonjurnaladdvalidasi] = useState({});
+  const [messageJson, setMessageJson] = useState({});
+  const [fields, setField] = useState([]);
+  const [fieldsDetail, setFieldsDetail] = useState([]);
+
+  const configApp = JSON.parse(sessionStorage.getItem("config"));
+
+  useEffect(
+    () => {
+      if (configApp.lang === "id") {
+        setJsonjurnaladdvalidasi(LangID);
+        setField([
+          { key: "action", label: LangID.list_new },
+          { key: "asid", label: LangID.list_asid },
+          { key: "asname", label: LangID.list_asname },
+          { key: "isactive", label: LangID.isactive },
+        ]);
+
+        setFieldsDetail([
+          { key: "itemno", label: LangID.detailitem_no },
+          { key: "itemname", label: LangID.detailitem_name },
+          { key: "parentno", label: LangID.detailitem_parentno },
+          { key: "accno", label: LangID.detailitem_accno },
+          { key: "accname", label: LangID.detailitem_accname },
+          { key: "isvisible", label: LangID.detailitem_isvisible },
+        ]);
+      } else if (configApp.lang == "en") {
+        setJsonjurnaladdvalidasi(LangEN);
+        setField([
+          { key: "action", label: LangEN.list_new },
+          { key: "asid", label: LangEN.list_asid },
+          { key: "asname", label: LangEN.list_asname },
+          { key: "isactive", label: LangEN.isactive },
+        ]);
+
+        setFieldsDetail([
+          { key: "itemno", label: LangEN.detailitem_no },
+          { key: "itemname", label: LangEN.detailitem_name },
+          { key: "parentno", label: LangEN.detailitem_parentno },
+          { key: "accno", label: LangEN.detailitem_accno },
+          { key: "accname", label: LangEN.detailitem_accname },
+          { key: "isvisible", label: LangEN.detailitem_isvisible },
+        ]);
+      } else {
+        setJsonjurnaladdvalidasi(LangID);
+        setField([
+          { key: "action", label: LangID.list_new },
+          { key: "asid", label: LangID.list_asid },
+          { key: "asname", label: LangID.list_asname },
+          { key: "isactive", label: LangID.isactive },
+        ]);
+
+        setFieldsDetail([
+          { key: "itemno", label: LangID.detailitem_no },
+          { key: "itemname", label: LangID.detailitem_name },
+          { key: "parentno", label: LangID.detailitem_parentno },
+          { key: "accno", label: LangID.detailitem_accno },
+          { key: "accname", label: LangID.detailitem_accname },
+          { key: "isvisible", label: LangID.detailitem_isvisible },
+        ]);
+      }
+    },
+    [Jsonjurnaladdvalidasi],
+    [fields],
+    [fieldsDetail]
+  );
 
   useEffect(() => {
-    if (dataAccountStructure == null) {
+    if (configApp.lang === "id") {
+      setMessageJson(messageID);
+    } else if (configApp.lang == "en") {
+      setMessageJson(messageEN);
+    } else {
+      setMessageJson(messageID);
+    }
+  }, [messageJson]);
+
+  useEffect(() => {
+    if (dataAccountStructure === null) {
       getDataValidasi();
     }
   }, [dataAccountStructure]);
 
-  // const SetDataStruture = () => {
-  //   setDataAccountStructure(data)
-  //       console.log(data)
-  // }
-
   const toggleDetails = (item) => {
-    // const position = details.indexOf(index)
-    console.log(item);
+    setMessage({});
     setItems(item);
-
     axios
       .get(
         `${global.config.API_URL}gl/params/accountstructure/add/load?trxid=${item.trxid}`
       )
       .then((res) => {
         console.log(res.data.rescode);
-        if (res.data.rescode == 0) {
+        if (res.data.rescode === 0) {
           setDetails(res.data.data.detail);
-          console.log(res.data.data.detail);
+          // console.log(res.data.data.detail);
+        } else {
+          setMessage({
+            title: messageJson.toatsheader_err,
+            body: res.data.errdescription,
+            type: messageJson.toatscolor_err,
+            active: true,
+          });
         }
-        console.log(res);
       })
-      .catch((err) => {
-        console.log("err", err);
+      .catch(function (error) {
+        setMessage({
+          title: messageJson.messagetype_err,
+          body: JSON.stringify(error),
+          type: messageJson.toatscolor_err,
+          active: true,
+        });
       });
   };
 
   const setujuOtoritasi = (trxid) => {
-    console.log("test", trxid);
+    setMessage({});
     let data = {
       trxid: trxid,
       validstate: 1,
@@ -98,41 +177,65 @@ const ReportStrucValidasi = () => {
       )
       .then((res) => {
         // console.log(res);
-        console.log("tes", res.data);
         if (res.data.rescode === 0) {
-          setMessType("success");
-          setMessage(
-            "Data dengan Transaksi id " + trxid + " berhasil di otorisasi"
-          );
           setModal(false);
           setItems(null);
           getDataValidasi();
-          setTimeout(() => {
-            setMessType(null);
-            setMessage(null);
-          }, 5000);
+          setMessage({
+            title: messageJson.toatsheader_success,
+            body: Jsonjurnaladdvalidasi.message_otor,
+            type: messageJson.toatscolor_success,
+            active: true,
+          });
+          setDetails([]);
         } else {
-          setMessType("danger");
           window.scrollTo(0, 0);
-          setMessage(res.data.errdescription);
           setModal(false);
+          setMessage({
+            title: messageJson.toatsheader_err,
+            body: res.data.errdescription,
+            type: messageJson.toatscolor_err,
+            active: true,
+          });
         }
+      })
+      .catch(function (error) {
+        setMessage({
+          title: messageJson.messagetype_err,
+          body: JSON.stringify(error),
+          type: messageJson.toatscolor_err,
+          active: true,
+        });
       });
   };
 
   const getDataValidasi = () => {
+    setMessage({});
     axios
       .get(`${global.config.API_URL}gl/params/accountstructure/add/list`)
       .then((res) => {
         setDataAccountStructure(res.data.data);
+        if (res.data.rescode !== 0) {
+          setMessage({
+            title: messageJson.toatsheader_err,
+            body: res.data.errdescription,
+            type: messageJson.toatscolor_err,
+            active: true,
+          });
+        }
       })
-      .catch((err) => {
-        console.log("err", err);
+      .catch(function (error) {
+        setMessage({
+          title: messageJson.messagetype_err,
+          body: JSON.stringify(error),
+          type: messageJson.toatscolor_err,
+          active: true,
+        });
       });
   };
 
   const tolakOtoritasi = (trxid) => {
-    console.log(trxid);
+    setMessage({});
     let data = {
       trxid: trxid,
       validstate: 2,
@@ -143,42 +246,48 @@ const ReportStrucValidasi = () => {
         data
       )
       .then((res) => {
-        // console.log(res);
-        console.log("tes", res.data);
         if (res.data.rescode === 0) {
-          setMessType("success");
-          setMessage(
-            "Data dengan Transaksi id " + trxid + " berhasil di tolak"
-          );
-          setModal(false);
+          setModal2(false);
           setItems(null);
-          setTimeout(() => {
-            setMessType(null);
-            setMessage(null);
-          }, 5000);
+          getDataValidasi();
+          setMessage({
+            title: messageJson.toatsheader_success,
+            body: Jsonjurnaladdvalidasi.message_reject,
+            type: messageJson.toatscolor_success,
+            active: true,
+          });
+          setDetails([]);
         } else {
-          setMessType("danger");
-          setMessage(res.data.errdescription);
-          setModal(false);
+          setModal2(false);
+          setMessage({
+            title: messageJson.toatsheader_err,
+            body: res.data.errdescription,
+            type: messageJson.toatscolor_err,
+            active: true,
+          });
         }
+      })
+      .catch(function (error) {
+        setModal2(false);
+        setMessage({
+          title: messageJson.messagetype_err,
+          body: JSON.stringify(error),
+          type: messageJson.toatscolor_err,
+          active: true,
+        });
       });
   };
 
   return (
     <>
-      {message && (
-        <CRow>
-          <CCol>
-            <CAlert color={messType}>{message}</CAlert>
-          </CCol>
-        </CRow>
-      )}
-      {items == null && (
+      <Toast message={message} />
+
+      {items === null && (
         <CRow>
           <CCol>
             <CCard>
               <CCardHeader>
-                {Jsonjurnaladdvalidasi[0].list_caption}
+                {Jsonjurnaladdvalidasi.list_caption}
                 <CButton
                   size="sm"
                   color="danger"
@@ -189,7 +298,7 @@ const ReportStrucValidasi = () => {
                   style={{ float: "right" }}
                 >
                   <CIcon name="cil-scrubber" />{" "}
-                  {Jsonjurnaladdvalidasi[0].list_refresh}
+                  {Jsonjurnaladdvalidasi.list_refresh}
                 </CButton>
               </CCardHeader>
               <CCardBody>
@@ -204,7 +313,7 @@ const ReportStrucValidasi = () => {
                   pagination
                   columnFilter
                   scopedSlots={{
-                    Otorisasi: (items) => {
+                    action: (items) => {
                       return (
                         <td className="py-2">
                           <CButton
@@ -272,24 +381,35 @@ const ReportStrucValidasi = () => {
                         </td>
                       ),
                     acctype: (item) =>
-                      item.acctype == 0 ? (
-                        <td> Akun Neraca </td>
+                      item.acctype === 0 ? (
+                        <td> {Jsonjurnaladdvalidasi.acctype_0} </td>
                       ) : (
-                        <td> Akun Non Neraca </td>
+                        <td> {Jsonjurnaladdvalidasi.acctype_1} </td>
                       ),
                   }}
                 />
               </CCardBody>
+              <CCardFooter>
+                <CButton
+                  type="reset"
+                  size="sm"
+                  color="warning"
+                  onClick={() => history.goBack()}
+                >
+                  <CIcon name="cil-chevron-left" /> {Jsonjurnaladdvalidasi.hide}
+                </CButton>
+              </CCardFooter>
             </CCard>
           </CCol>
         </CRow>
       )}
+
       {items && (
         <CRow>
           <CCol>
             <CCard>
               <CCardHeader>
-                <h6>{Jsonjurnaladdvalidasi[0].detail_caption}</h6>
+                <h6>{Jsonjurnaladdvalidasi.detail_caption}</h6>
               </CCardHeader>
               <CCardBody className="mb-4">
                 <CForm
@@ -302,7 +422,7 @@ const ReportStrucValidasi = () => {
                       <CFormGroup row>
                         <CCol>
                           <CLabel htmlFor="text-input">
-                            {Jsonjurnaladdvalidasi[0].asid}
+                            {Jsonjurnaladdvalidasi.asid}
                           </CLabel>
                         </CCol>
                         <CCol xs="12" xl="9">
@@ -320,7 +440,7 @@ const ReportStrucValidasi = () => {
                       <CFormGroup row>
                         <CCol>
                           <CLabel htmlFor="text-input">
-                            {Jsonjurnaladdvalidasi[0].asname}
+                            {Jsonjurnaladdvalidasi.asname}
                           </CLabel>
                         </CCol>
                         <CCol xs="12" xl="9">
@@ -340,7 +460,7 @@ const ReportStrucValidasi = () => {
                       <CFormGroup variant="custom-checkbox" inline row>
                         <CCol xs="2" xl="2">
                           <CLabel htmlFor="select">
-                            {Jsonjurnaladdvalidasi[0].isactive}
+                            {Jsonjurnaladdvalidasi.isactive}
                           </CLabel>
                         </CCol>
                         <CCol xs="3" xl="3">
@@ -358,7 +478,7 @@ const ReportStrucValidasi = () => {
                       <CFormGroup row>
                         <CCol>
                           <CLabel htmlFor="text-input">
-                            {Jsonjurnaladdvalidasi[0].tag}
+                            {Jsonjurnaladdvalidasi.tag}
                           </CLabel>
                         </CCol>
                         <CCol xs="12" xl="9">
@@ -422,7 +542,7 @@ const ReportStrucValidasi = () => {
                         color="warning"
                       >
                         <CIcon name="cil-chevron-left" />{" "}
-                        {Jsonjurnaladdvalidasi[0].hide}
+                        {Jsonjurnaladdvalidasi.hide}
                       </CButton>
                       <CButton
                         onClick={() => setModal(!modal)}
@@ -431,7 +551,7 @@ const ReportStrucValidasi = () => {
                         color="primary"
                       >
                         <CIcon name="cil-check" />{" "}
-                        {Jsonjurnaladdvalidasi[0].otor_button}
+                        {Jsonjurnaladdvalidasi.otor_button}
                       </CButton>
                       <CButton
                         onClick={() => setModal2(!modal_no)}
@@ -441,7 +561,7 @@ const ReportStrucValidasi = () => {
                         color="danger"
                       >
                         <CIcon name="cil-ban" />{" "}
-                        {Jsonjurnaladdvalidasi[0].reject_button}
+                        {Jsonjurnaladdvalidasi.reject_button}
                       </CButton>
                     </CCol>
                   </CRow>
@@ -449,24 +569,24 @@ const ReportStrucValidasi = () => {
               </CCardBody>
               <CModal show={modal} onClose={setModal}>
                 <CModalBody>
-                  <h3>{Jsonjurnaladdvalidasi[0].confirm_otor}</h3>
+                  <h3>{Jsonjurnaladdvalidasi.confirm_otor}</h3>
                 </CModalBody>
                 <CModalFooter>
                   <CButton
                     type="submit"
-                    onClick={() => setujuOtoritasi(items.asid)}
+                    onClick={() => setujuOtoritasi(items.trxid)}
                     color="primary"
                   >
-                    {Jsonjurnaladdvalidasi[0].confirm_otor_yes}
+                    {Jsonjurnaladdvalidasi.confirm_otor_yes}
                   </CButton>{" "}
                   <CButton color="danger" onClick={() => setModal(false)}>
-                    {Jsonjurnaladdvalidasi[0].confirm_otor_no}
+                    {Jsonjurnaladdvalidasi.confirm_otor_no}
                   </CButton>
                 </CModalFooter>
               </CModal>
               <CModal show={modal_no} onClose={setModal2}>
                 <CModalBody>
-                  <h4>{Jsonjurnaladdvalidasi[0].confirm_reject}</h4>
+                  <h4>{Jsonjurnaladdvalidasi.confirm_reject}</h4>
                 </CModalBody>
                 <CModalFooter>
                   <CButton
@@ -474,10 +594,10 @@ const ReportStrucValidasi = () => {
                     onClick={() => tolakOtoritasi(items.trxid)}
                     color="primary"
                   >
-                    {Jsonjurnaladdvalidasi[0].confirm_reject_yes}
+                    {Jsonjurnaladdvalidasi.confirm_reject_yes}
                   </CButton>{" "}
                   <CButton color="danger" onClick={() => setModal2(false)}>
-                    {Jsonjurnaladdvalidasi[0].confirm_reject_no}
+                    {Jsonjurnaladdvalidasi.confirm_reject_no}
                   </CButton>
                 </CModalFooter>
               </CModal>

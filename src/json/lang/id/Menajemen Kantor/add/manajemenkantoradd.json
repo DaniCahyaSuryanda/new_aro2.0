@@ -1,0 +1,19 @@
+{
+    "title" : "Pembuatan Kantor Baru",
+    "office_code" : "Kode Kantor",
+    "office_name" : " Nama Kantor",
+    "office_type" : "Jenis Kantor",
+    "cp" : "Kontak Persen",
+    "address" : "Alamat",
+    "isactive" : "Aktif",
+    "phone_number" : "Nomer Telepon",
+    "email" : "Email",
+
+    "save_button": "Simpan",
+    "cancel_button" : "Reset",
+
+    "confirm_save" : "Simpan Pembuatan Kantor Baru ?",
+
+    "confirm_yes" : "Simpan",
+    "confirm_no" : "Batal"
+}

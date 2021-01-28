@@ -1,0 +1,23 @@
+{
+    "form": "Updating Journal Type",
+    
+    "list_caption": "List Journal Type",
+    "list_trxid" : "Transaction ID",
+    "list_jrtype" : "Journal Type",
+    "list_description" : "Description",
+    "list_isactive": "Active",
+    "list_refresh" :"Refresh",
+    "list_new" : "Edit",
+
+    "detail_caption" : "List Journal Type",
+    "jrtype" : "Journal Type",
+    "description" : "Description",
+    "isactive" : "Active",
+    "save_button" : "Save",
+    "cancel_button": "Cencel",
+    "confirm_save" : "Save Updating Journal Type ?",
+    "confirm_yes" : "Save",
+    "confirm_no" : "Cencel",
+    "hide" : "Back",
+    "message_success" : "Updating Journal Type Successfully Success"
+}

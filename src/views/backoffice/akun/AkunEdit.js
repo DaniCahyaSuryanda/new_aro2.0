@@ -3,83 +3,138 @@ import {
   CButton,
   CCard,
   CCardBody,
-  CCardHeader,
   CCardFooter,
+  CCardHeader,
   CCol,
   CBadge,
   CDataTable,
-  CFormGroup,
-  CInput,
-  CInputCheckbox,
-  CLabel,
   CModal,
-  CCollapse,
-  CSelect,
   CModalBody,
   CModalFooter,
   CRow,
-  CTextarea,
   CForm,
-  CAlert,
-  CToaster,
-  CToastHeader,
 } from "@coreui/react";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import { useForm, Controller } from "react-hook-form";
-// import JsonAccEdit from '../../../gl/params/lang/id/accounteditvalidation.json'
-// import usersData from '../../users/DataAkun'
-import JsonAccEdit from "../../../gl/params/lang/id/accounteditcreate.json";
+import { useForm } from "react-hook-form";
+import LangID from "json/lang/id/Akun/edit/accounteditcreate.json";
+import LangEN from "json/lang/en/Akun/edit/accounteditcreate.json";
+import { useHistory } from "react-router-dom";
+import messageID from "json/lang/id/Message/message.json";
+import messageEN from "json/lang/en/Message/message.json";
+import Toast from "component/Toast";
+import Input from "component/Input";
 
-const fields = [
-  "Edit_Akun",
-  { key: "accno", label: JsonAccEdit[0].list_accno },
-  { key: "accname", label: JsonAccEdit[0].list_accname },
-  { key: "acctype", label: JsonAccEdit[0].list_acctype },
-  { key: "normaldebit", label: JsonAccEdit[0].list_normaldebit },
-  { key: "description", label: JsonAccEdit[0].list_description },
-  { key: "isactive", label: JsonAccEdit[0].list_isactive },
-];
+// const fields = [
+//   "Edit_Akun",
+//   { key: "accno", label: itemAccEdit.list_accno },
+//   { key: "accname", label: itemAccEdit.list_accname },
+//   { key: "acctype", label: itemAccEdit.list_acctype },
+//   { key: "normaldebit", label: itemAccEdit.list_normaldebit },
+//   { key: "description", label: itemAccEdit.list_description },
+//   { key: "isactive", label: itemAccEdit.list_isactive },
+// ];
 
 const AccountEdit = () => {
-  const [messType, setMessType] = useState("");
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState({});
   const [modal, setModal] = useState(false);
-  const [modal_no, setModal2] = useState(false);
   const [items, setItems] = useState(null);
   const [dataAkun, setDataAkun] = useState(null);
-  const { handleSubmit, register, reset, control } = useForm();
+  const { handleSubmit, register, control } = useForm();
   const [dataSend, setDataSend] = useState(null);
   const [slide, setSlide] = useState(true);
-  const [toasts, setToasts] = useState("");
+  const history = useHistory();
+  const [itemAccEdit, setitemAccEdit] = useState({});
+  const [messageJson, setMessageJson] = useState({});
+  const [fields, setField] = useState([]);
+
+  const configApp = JSON.parse(sessionStorage.getItem("config"));
+
+  useEffect(
+    () => {
+      if (configApp.lang === "id") {
+        setitemAccEdit(LangID);
+        setField([
+          { key: "action", label: LangID.list_new },
+          //  { key: "trxid", label: LangID.list_trxid },
+          { key: "accno", label: LangID.list_accno },
+          { key: "accname", label: LangID.list_accname },
+          { key: "acctype", label: LangID.list_acctype },
+          { key: "normaldebit", label: LangID.list_normaldebit },
+          { key: "description", label: LangID.list_description },
+          { key: "isactive", label: LangID.list_isactive },
+        ]);
+      } else if (configApp.lang == "en") {
+        setitemAccEdit(LangEN);
+        setField([
+          { key: "action", label: LangEN.list_new },
+          // { key: "trxid", label: LangEN.list_trxid },
+          { key: "accno", label: LangEN.list_accno },
+          { key: "accname", label: LangEN.list_accname },
+          { key: "acctype", label: LangEN.list_acctype },
+          { key: "normaldebit", label: LangEN.list_normaldebit },
+          { key: "description", label: LangEN.list_description },
+          { key: "isactive", label: LangEN.list_isactive },
+        ]);
+      } else {
+        setitemAccEdit(LangID);
+        setField([
+          { key: "action", label: LangID.list_new },
+          //  { key: "trxid", label: LangID.list_trxid },
+          { key: "accno", label: LangID.list_accno },
+          { key: "accname", label: LangID.list_accname },
+          { key: "acctype", label: LangID.list_acctype },
+          { key: "normaldebit", label: LangID.list_normaldebit },
+          { key: "description", label: LangID.list_description },
+          { key: "isactive", label: LangID.list_isactive },
+        ]);
+      }
+    },
+    [itemAccEdit],
+    [fields]
+  );
 
   useEffect(() => {
-    if (dataAkun == null) {
+    if (configApp.lang === "id") {
+      setMessageJson(messageID);
+    } else if (configApp.lang == "en") {
+      setMessageJson(messageEN);
+    } else {
+      setMessageJson(messageID);
+    }
+  }, [messageJson]);
+
+  useEffect(() => {
+    if (dataAkun === null) {
       getDataAddValidasi();
     }
   }, [dataAkun]);
 
   const getDataAddValidasi = () => {
+    setMessage({});
     axios
       .get(`${global.config.API_URL}gl/params/account/list`)
       .then((res) => {
         setDataAkun(res.data.data);
       })
       .catch((err) => {
-        console.log(err);
+        setMessage({
+          title: messageJson.messagetype_err,
+          body: JSON.stringify(err),
+          type: messageJson.toatscolor_err,
+          active: true,
+        });
       });
   };
 
   const onSubmit = (data) => {
     // alert(JSON.stringify(data))
-    // console.log(data)
     setModal(true);
     setDataSend(data);
-    // console.log(dataSend)
   };
 
   const setujuUbah = (accno) => {
-    //   // console.log(accno);
+    setMessage({});
     let data = {
       accno: dataSend.accno,
       accname: dataSend.accname,
@@ -92,68 +147,44 @@ const AccountEdit = () => {
     axios
       .post(`${global.config.API_URL}gl/params/account/edit/create`, data)
       .then((res) => {
-        console.log("tes", res.data);
         if (res.data.rescode === 0) {
-          setMessType("success");
-          setMessage(JsonAccEdit[0].message_success);
           setModal(false);
           setSlide(true);
           getDataAddValidasi();
           setItems(null);
-          setToasts(JsonAccEdit[0].message_success);
-          setTimeout(() => {
-            setMessage(null);
-            setMessType(null);
-            setToasts(null);
-          }, 5000);
+          setMessage({
+            title: messageJson.toatsheader_success,
+            body: itemAccEdit.message_success + res.data.data.trxid,
+            type: messageJson.toatscolor_success,
+            active: true,
+          });
         } else {
-          setMessType("danger");
-          setMessage(res.data.errdescription);
-          setToasts(res.data.errdescription);
+          setMessage({
+            title: messageJson.messagetype_err,
+            body: res.data.errdescription,
+            type: messageJson.toatscolor_err,
+            active: true,
+          });
           setModal(false);
-          setTimeout(() => {
-            setMessage(null);
-            setMessType(null);
-            setToasts(null);
-          }, 5000);
         }
       })
       .catch(function (error) {
-        console.log(error);
+        setMessage({
+          title: messageJson.messagetype_err,
+          body: JSON.stringify(error),
+          type: messageJson.toatscolor_err,
+          active: true,
+        });
       });
   };
 
-  // const tolakOtoritasi = (trxid) => {
-  //   console.log(trxid);
-  //   let data = {
-  //     "trxid" : trxid,
-  //     "validstate" : 2,
-  //   }
-  //   axios.post(`${global.config.API_URL}gl/params/account/edit/validation`,data)
-  //     .then(res => {
-  //       // console.log(res);
-  //       console.log('tes',res.data);
-  //       if(res.data.rescode === 0){
-  //         setMessType('success')
-  //         setMessage('Data dengan Transaksi id '+ trxid +' berhasil di tolak')
-  //         setModal(false)
-  //         setSlide(true)
-  //         getDataAddValidasi()
-  //         setItems(null)
-  //         setTimeout(()=>{
-  //           setMessType(null)
-  //           setMessage(null)
-  //         }, 5000)
-  //       }else{
-  //         setMessType('danger')
-  //         setMessage(res.data.errdescription)
-  //         setModal(false)
-  //       }
-  //   })
-  // }
-
   const toggleDetails = (item) => {
-    setItems(item);
+    let acctype = itemAccEdit.acctype_list.find(({ value }) => {
+      return value === item.acctype;
+    });
+    let akun = { ...item };
+    akun.acctype = acctype;
+    setItems(akun);
     setSlide(false);
   };
 
@@ -162,140 +193,16 @@ const AccountEdit = () => {
     setSlide(true);
   };
 
-  const AccEdit = JsonAccEdit.map((itemAccEdit) => (
-    <>
-      {slide && (
-        <CCard>
-          <CCardHeader>
-            {itemAccEdit.list_caption}
-            <CButton
-              size="sm"
-              color="danger"
-              className="mr-3"
-              style={{ float: "right" }}
-            >
-              <CIcon name="cil-scrubber" /> {itemAccEdit.list_refresh}
-            </CButton>
-          </CCardHeader>
-          <CCardBody>
-            <CDataTable
-              items={dataAkun}
-              fields={fields}
-              hover
-              striped
-              bordered
-              columnFilter
-              itemsPerPage={10}
-              pagination
-              scopedSlots={{
-                Edit_Akun: (items, index) => {
-                  return (
-                    <td className="py-2">
-                      <CButton
-                        color="primary"
-                        variant="outline"
-                        shape="square"
-                        size="sm"
-                        onClick={() => {
-                          toggleDetails(items);
-                        }}
-                      >
-                        {itemAccEdit.list_new}
-                      </CButton>
-                    </td>
-                  );
-                },
-                normaldebit: (item) =>
-                  item.normaldebit ? (
-                    <td>
-                      <CBadge color={"success"}>
-                        <CIcon size={"lg"} name={"cilCheck"} />
-                      </CBadge>
-                    </td>
-                  ) : (
-                    <td>
-                      <CBadge color={"warning"}>
-                        <p
-                          style={{
-                            fontSize: "1.25rem",
-                            width: "1.25rem",
-                            height: "1.25rem",
-                            color: "#fff",
-                            margin: "0px",
-                            padding: "0px",
-                          }}
-                        >
-                          i
-                        </p>
-                      </CBadge>
-                    </td>
-                  ),
-                acctype: (item) =>
-                  item.acctype == 0 ? (
-                    <td> {JsonAccEdit[0].acctype_0} </td>
-                  ) : (
-                    <td> {JsonAccEdit[0].acctype_0} </td>
-                  ),
-                isactive: (item) =>
-                  item.isactive ? (
-                    <td>
-                      <CBadge color={"success"}>
-                        <CIcon size={"lg"} name={"cilCheck"} />
-                      </CBadge>
-                    </td>
-                  ) : (
-                    <td>
-                      <CBadge color={"warning"}>
-                        <p
-                          style={{
-                            fontSize: "1.25rem",
-                            width: "1.25rem",
-                            height: "1.25rem",
-                            color: "#fff",
-                            margin: "0px",
-                            padding: "0px",
-                          }}
-                        >
-                          i
-                        </p>
-                      </CBadge>
-                    </td>
-                  ),
-              }}
-            />
-          </CCardBody>
-        </CCard>
-      )}
-    </>
-  ));
   return (
     <>
-      {message && (
-        <CRow>
-          <CCol>
-            <CAlert color={messType}>{message}</CAlert>
-          </CCol>
-        </CRow>
-      )}
-
-      {toasts && (
-        <CRow>
-          <CCol xl="8">
-            <CToaster position="bottom-right">
-              <CToastHeader>
-                <h6>{toasts}</h6>
-              </CToastHeader>
-            </CToaster>
-          </CCol>
-        </CRow>
-      )}
+      <Toast message={message} />
 
       {items && (
         <CRow>
           <CCol>
             <CCard>
               <CCardHeader>
-                <h6>{JsonAccEdit[0].detail_caption}</h6>
+                <h6>{itemAccEdit.detail_caption}</h6>
               </CCardHeader>
               <CCardBody className="mb-4">
                 <CForm
@@ -305,174 +212,88 @@ const AccountEdit = () => {
                   onSubmit={handleSubmit(onSubmit)}
                 >
                   <CRow>
-                    <CCol xs="12" md="6" xl="5">
-                      <CFormGroup row>
-                        <CCol>
-                          <CLabel htmlFor="text-input">
-                            {JsonAccEdit[0].accno}
-                          </CLabel>
-                        </CCol>
-                        <CCol xs="12" xl="9">
-                          <input
-                            className="form-control"
-                            readOnly
-                            id="accno"
-                            name="accno"
-                            ref={register}
-                            defaultValue={items.accno}
-                          />
-                        </CCol>
-                      </CFormGroup>
-                    </CCol>
-
-                    <CCol xs="12" md="6" xl="7">
-                      <CFormGroup row>
-                        <CCol>
-                          <CLabel>{JsonAccEdit[0].accname}</CLabel>
-                        </CCol>
-                        <CCol xs="12" xl="9">
-                          <input
-                            type="text"
-                            id="accname"
-                            className="form-control"
-                            name="accname"
-                            ref={register}
-                            defaultValue={items.accname}
-                          />
-                        </CCol>
-                      </CFormGroup>
-                    </CCol>
-                  </CRow>
-
-                  <CRow>
-                    <CCol xs="12" md="6" xl="5">
-                      <CFormGroup row>
-                        <CCol>
-                          <CLabel htmlFor="select">
-                            {JsonAccEdit[0].acctype}
-                          </CLabel>
-                        </CCol>
-                        <CCol xs="12" xl="9">
-                          <Controller
-                            name="acctype"
-                            control={control}
-                            // defaultValue={items.acctype}
-                            defaultValue={"0"}
-                            render={(props) => (
-                              <CSelect
-                                custom
-                                name="acctype"
-                                id="acctype"
-                                onChange={(e) => props.onChange(e.target.value)}
-                              >
-                                {JsonAccEdit[0].acctype_list.map((data) =>
-                                  items.acctype == data.value ? (
-                                    <option value={data.value} selected>
-                                      {" "}
-                                      {data.title}{" "}
-                                    </option>
-                                  ) : (
-                                    <option value={data.value}>
-                                      {" "}
-                                      {data.title}
-                                    </option>
-                                  )
-                                )}
-                              </CSelect>
-                            )}
-                          />
-                        </CCol>
-                      </CFormGroup>
-                    </CCol>
-
-                    <CCol xs="12" md="6" xl="7">
-                      <CFormGroup row>
-                        <CCol>
-                          <CLabel htmlFor="select">
-                            {JsonAccEdit[0].rmaldebit}
-                          </CLabel>
-                        </CCol>
-                        <CCol xs="12" xl="9">
-                          <CFormGroup inline>
-                            <Controller
-                              name="normaldebit"
-                              control={control}
-                              defaultValue={items.normaldebit}
-                              value="true"
-                              render={(props) => (
-                                <CInputCheckbox
-                                  onChange={(e) =>
-                                    props.onChange(e.target.checked)
-                                  }
-                                  checked={props.value}
-                                />
-                              )}
-                            />
-                          </CFormGroup>
-                        </CCol>
-                      </CFormGroup>
-                    </CCol>
+                    <Input
+                      ref={register}
+                      typefield="text"
+                      type="text"
+                      label={itemAccEdit.accno}
+                      name="accno"
+                      defaultValue={items.accno}
+                      id="accno"
+                      md="6"
+                      lg="6"
+                      readonly="true"
+                    />
+                    <Input
+                      ref={register}
+                      typefield="text"
+                      type="text"
+                      label={itemAccEdit.accname}
+                      name="accname"
+                      defaultValue={items.accname}
+                      id="accname"
+                      md="6"
+                      lg="6"
+                    />
                   </CRow>
                   <CRow>
-                    <CCol xs="12" xl="12">
-                      <CFormGroup row>
-                        <CCol md="2">
-                          <CLabel htmlFor="textarea-input">
-                            {JsonAccEdit[0].list_description}
-                          </CLabel>
-                        </CCol>
-                        <CCol xs="12" xl="12">
-                          <textarea
-                            className="form-control"
-                            name="description"
-                            rows="4"
-                            ref={register}
-                          >
-                            {items.description}
-                          </textarea>
-                        </CCol>
-                      </CFormGroup>
-                    </CCol>
-                  </CRow>
+                    <Input
+                      ref={control}
+                      typefield="select"
+                      label={itemAccEdit.acctype}
+                      name="acctype"
+                      id="acctype"
+                      md="6"
+                      lg="6"
+                      options={itemAccEdit.acctype_list}
+                      selectDefaultValue={items.acctype}
+                    />
 
+                    <Input
+                      ref={control}
+                      typefield="checkbox"
+                      label={itemAccEdit.rmaldebit}
+                      name="normaldebit"
+                      id="normaldebit"
+                      defaultValue={items.normaldebit}
+                      md="2"
+                      lg="2"
+                      value="true"
+                    />
+
+                    <Input
+                      ref={control}
+                      typefield="checkbox"
+                      label={itemAccEdit.list_isactive}
+                      name="isactive"
+                      id="isactive"
+                      md="2"
+                      lg="2"
+                      value={true}
+                      defaultValue={items.isactive}
+                    />
+                  </CRow>
                   <CRow>
-                    <CCol xs="12" md="6" xl="5">
-                      <CFormGroup row>
-                        <CCol>
-                          <CLabel htmlFor="select">
-                            {JsonAccEdit[0].list_isactive}
-                          </CLabel>
-                        </CCol>
-                        <CCol xs="12" xl="10">
-                          <CFormGroup variant="custom-checkbox" inline>
-                            <Controller
-                              name="isactive"
-                              control={control}
-                              defaultValue={items.isactive}
-                              value="true"
-                              render={(props) => (
-                                <CInputCheckbox
-                                  onChange={(e) =>
-                                    props.onChange(e.target.checked)
-                                  }
-                                  checked={props.value}
-                                />
-                              )}
-                            />
-                          </CFormGroup>
-                        </CCol>
-                      </CFormGroup>
-                    </CCol>
+                    <Input
+                      ref={register}
+                      typefield="textarea"
+                      label={itemAccEdit.list_description}
+                      name="description"
+                      id="description"
+                      md="12"
+                      lg="12"
+                      rows="4"
+                      defaultValue={items.description}
+                    />
                   </CRow>
                   <hr></hr>
-                  {/* <CButton size="sm" color="danger" onClick={() => toggleDetails2(items)} className="mr-3"><CIcon name="cil-scrubber" /> {JsonAccEdit[0].cancel_button}</CButton> */}
                   <CButton
                     size="sm"
                     type="submit"
                     className="float-right"
                     color="primary"
                   >
-                    <CIcon name="cil-save" /> {JsonAccEdit[0].save_button}
+                    <CIcon name="cil-save" /> {itemAccEdit.save_button}
                   </CButton>
                   <CButton
                     size="sm"
@@ -480,13 +301,13 @@ const AccountEdit = () => {
                     color="warning"
                     className="float-left"
                   >
-                    <CIcon name="cil-chevron-left" /> {JsonAccEdit[0].hide}
+                    <CIcon name="cil-chevron-left" /> {itemAccEdit.hide}
                   </CButton>
                 </CForm>
               </CCardBody>
               <CModal show={modal} onClose={setModal}>
                 <CModalBody>
-                  <h4>{JsonAccEdit[0].confirm_save}</h4>
+                  <h4>{itemAccEdit.confirm_save}</h4>
                 </CModalBody>
                 <CModalFooter>
                   <CButton
@@ -494,206 +315,130 @@ const AccountEdit = () => {
                     color="primary"
                     onClick={() => setujuUbah(items.accno)}
                   >
-                    {JsonAccEdit[0].confirm_yes}
+                    {itemAccEdit.confirm_yes}
                   </CButton>{" "}
                   <CButton color="danger" onClick={() => setModal(false)}>
-                    {JsonAccEdit[0].confirm_no}
+                    {itemAccEdit.confirm_no}
                   </CButton>
                 </CModalFooter>
               </CModal>
-
-              {/* <CModal
-            show={modal_no}
-            onClose={setModal2}
-          >
-            <CModalBody>
-              <h4>{JsonAccEdit[0].confirm_reject}</h4>
-            </CModalBody>
-            <CModalFooter>
-              <CButton type="submit" onClick={() => tolakOtoritasi(items.trxid)} color="primary">{JsonAccEdit[0].confirm_reject_yes}</CButton>{' '}
-                <CButton
-                  color="danger"
-                  onClick={() => setModal2(false)}
-                >{JsonAccEdit[0].confirm_reject_no}</CButton>
-            </CModalFooter>
-          </CModal> */}
             </CCard>
           </CCol>
         </CRow>
       )}
-      <CRow>
-        <CCol xs="12" lg="12">
-          {AccEdit}
-        </CCol>
-      </CRow>
-      {/* { items && (
-      <CRow>
-      <CCol>
-      <CCard>
-        <CCardHeader>
-          <h6>
-            {JsonAccEdit[0].detail_caption}
-          </h6>
-        </CCardHeader>
-        <CCardBody className="mb-4">
-          <CForm encType="multipart/form-data" className="form-horizontal" color="light" onSubmit={handleSubmit(onSubmit)}>
-          <CRow>
-              <CCol xs="12" md="6" xl="5">
-                  <CFormGroup row>
-                  <CCol>
-                      <CLabel htmlFor="text-input">{JsonAccEdit[0].accno}</CLabel>
-                    </CCol>
-                    <CCol xs="12" xl="9">
-                        <input className="form-control" readOnly id="accno" name="accno" ref={register} defaultValue={items.accno}/>
-                    </CCol>
-                  </CFormGroup>
-              </CCol>
 
-              <CCol xs="12" md="6" xl="7">
-                <CFormGroup row>
-                  <CCol>
-                      <CLabel>{JsonAccEdit[0].accname}</CLabel>
-                    </CCol>
-                    <CCol xs="12" xl="9">
-                        <input type="text" id="accname" className="form-control" name="accname" ref={register} defaultValue={items.accname}/>
-                    </CCol>
-                  </CFormGroup>
-              </CCol>
-
-          </CRow>
-
-          <CRow>
-              <CCol xs="12" md="6" xl="5">
-                  <CFormGroup row>
-                    <CCol>
-                      <CLabel htmlFor="select">{JsonAccEdit[0].acctype}</CLabel>
-                    </CCol>
-                    <CCol xs="12" xl="9">
-                      <Controller
-                          name="acctype"
-                          control={control}
-                          // defaultValue={items.acctype}
-                          defaultValue={"0"}
-                          render={props =>(
-                            <CSelect custom name="acctype" id="acctype" onChange={e => props.onChange(e.target.value)}>
-                              {
-                                JsonAccEdit[0].acctype_list.map((data) =>
-                                  (items.acctype == data.value) ?  <option value={data.value} selected> {data.title} </option>  :  <option value={data.value}> {data.title}</option>
-                                )
-                              }
-                            </CSelect>
-                          )}
-                        />
-                    </CCol>
-                  </CFormGroup>
-              </CCol>
-
-              <CCol xs="12" md="6" xl="7">
-              <CFormGroup row>
-                  <CCol>
-                    <CLabel htmlFor="select">{JsonAccEdit[0].rmaldebit}</CLabel>
-                  </CCol>
-                    <CCol xs="12" xl="9">
-                      <CFormGroup inline>
-                      <Controller
-                          name="normaldebit"
-                          control={control}
-                          defaultValue={items.normaldebit}
-                          value="true"
-                          render={props =>
-                            <CInputCheckbox
-                              onChange={e => props.onChange(e.target.checked)}
-                              checked={props.value}
-                            />
-                          }
-                        />
-                      </CFormGroup>
-                  </CCol>
-                </CFormGroup>
-            </CCol>
-      </CRow>
+      {slide && (
         <CRow>
-            <CCol xs="12" xl="12">
-            <CFormGroup row>
-                <CCol md="2">
-                  <CLabel htmlFor="textarea-input">{JsonAccEdit[0].list_description}</CLabel>
-                </CCol>
-                <CCol xs="12"xl="12">
-                    <textarea
-                      className="form-control"
-                      name="description"
-                      rows="4"
-                      ref={register}
-                      >{items.description}</textarea>
-                </CCol>
-            </CFormGroup>
-            </CCol>
-        </CRow>
-
-        <CRow>
-            <CCol xs="12" md="6" xl="5">
-              <CFormGroup row>
-                <CCol>
-                  <CLabel htmlFor="select">{JsonAccEdit[0].list_isactive}</CLabel>
-                </CCol>
-                  <CCol xs="12" xl="10">
-                    <CFormGroup variant="custom-checkbox" inline>
-                    <Controller
-                          name="isactive"
-                          control={control}
-                          defaultValue={items.isactive}
-                          value="true"
-                          render={props =>
-                            <CInputCheckbox
-                              onChange={e => props.onChange(e.target.checked)}
-                              checked={props.value}
-                            />
-                          }
-                        />
-                      </CFormGroup>
-                  </CCol>
-                </CFormGroup>
-            </CCol>
-      </CRow>
-          <CButton size="sm" color="danger" onClick={() => setItems(null)} className="mr-3"><CIcon name="cil-scrubber" /> {JsonAccEdit[0].cancel_button}</CButton>
-          <CButton size="sm" type="submit" color="primary"><CIcon name="cil-scrubber" /> {JsonAccEdit[0].save_button}</CButton>
-      </CForm>
-      </CCardBody>
-          <CModal
-              show={modal}
-              onClose={setModal}
-            >
-            <CModalBody>
-              <h4>{JsonAccEdit[0].confirm_save}</h4>
-            </CModalBody>
-            <CModalFooter>
-              <CButton type="submit" color="primary" onClick={() => setujuUbah(items.accno)} >{JsonAccEdit[0].confirm_yes}</CButton>{' '}
-              <CButton
-                  color="danger"
-                  onClick={() => setModal(false)}
-                >{JsonAccEdit[0].confirm_no}</CButton>
-            </CModalFooter>
-          </CModal>
-
-          <CModal
-            show={modal_no}
-            onClose={setModal2}
-          >
-            <CModalBody>
-              <h4>{JsonAccEdit[0].confirm_reject}</h4>
-            </CModalBody>
-            <CModalFooter>
-              <CButton type="submit" onClick={() => tolakOtoritasi(items.trxid)} color="primary">{JsonAccEdit[0].confirm_reject_yes}</CButton>{' '}
+          <CCol xs="12" lg="12">
+            <CCard>
+              <CCardHeader>
+                {itemAccEdit.list_caption}
                 <CButton
+                  size="sm"
                   color="danger"
-                  onClick={() => setModal2(false)}
-                >{JsonAccEdit[0].confirm_reject_no}</CButton>
-            </CModalFooter>
-          </CModal>
-        </CCard>
-      </CCol>
-    </CRow>
-    ) } */}
+                  className="mr-3"
+                  style={{ float: "right" }}
+                >
+                  <CIcon name="cil-scrubber" /> {itemAccEdit.list_refresh}
+                </CButton>
+              </CCardHeader>
+              <CCardBody>
+                <CDataTable
+                  items={dataAkun}
+                  fields={fields}
+                  hover
+                  striped
+                  bordered
+                  columnFilter
+                  itemsPerPage={50}
+                  pagination
+                  scopedSlots={{
+                    action: (items, index) => {
+                      return (
+                        <td className="py-2">
+                          <CButton
+                            color="primary"
+                            variant="outline"
+                            shape="square"
+                            size="sm"
+                            onClick={() => {
+                              toggleDetails(items);
+                            }}
+                          >
+                            {itemAccEdit.list_new}
+                          </CButton>
+                        </td>
+                      );
+                    },
+                    normaldebit: (item) =>
+                      item.normaldebit ? (
+                        <td>
+                          <CBadge color={"success"}>
+                            <CIcon size={"lg"} name={"cilCheck"} />
+                          </CBadge>
+                        </td>
+                      ) : (
+                        <td>
+                          <CBadge color={"warning"}>
+                            <p
+                              style={{
+                                fontSize: "1.25rem",
+                                width: "1.25rem",
+                                height: "1.25rem",
+                                color: "#fff",
+                                margin: "0px",
+                                padding: "0px",
+                              }}
+                            ></p>
+                          </CBadge>
+                        </td>
+                      ),
+                    acctype: (item) =>
+                      item.acctype === 0 ? (
+                        <td> {itemAccEdit.acctype_0} </td>
+                      ) : (
+                        <td> {itemAccEdit.acctype_0} </td>
+                      ),
+                    isactive: (item) =>
+                      item.isactive ? (
+                        <td>
+                          <CBadge color={"success"}>
+                            <CIcon size={"lg"} name={"cilCheck"} />
+                          </CBadge>
+                        </td>
+                      ) : (
+                        <td>
+                          <CBadge color={"warning"}>
+                            <p
+                              style={{
+                                fontSize: "1.25rem",
+                                width: "1.25rem",
+                                height: "1.25rem",
+                                color: "#fff",
+                                margin: "0px",
+                                padding: "0px",
+                              }}
+                            ></p>
+                          </CBadge>
+                        </td>
+                      ),
+                  }}
+                />
+              </CCardBody>
+              <CCardFooter>
+                <CButton
+                  type="reset"
+                  size="sm"
+                  color="warning"
+                  onClick={() => history.goBack()}
+                >
+                  <CIcon name="cil-chevron-left" /> {itemAccEdit.hide}
+                </CButton>
+              </CCardFooter>
+            </CCard>
+          </CCol>
+        </CRow>
+      )}
     </>
   );
 };

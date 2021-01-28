@@ -7,58 +7,51 @@ import {
   CCardHeader,
   CCol,
   CForm,
-  CFormGroup,
-  CTextarea,
-  CInput,
-  CInputCheckbox,
-  CLabel,
-  CSelect,
   CRow,
   CModal,
   CModalBody,
   CModalFooter,
-  CModalHeader,
-  CModalTitle,
-  CAlert,
   CDataTable,
   CBadge,
 } from "@coreui/react";
 import axios from "axios";
-import Select from "react-select";
 import CIcon from "@coreui/icons-react";
-import { useForm, Controller } from "react-hook-form";
-import JsonReportstructureadd from "gl/params/lang/id/reportstructureaddcreate.json";
+import { useForm } from "react-hook-form";
+import LangID from "json/lang/id/Struktur Laporan/add/reportstructureaddcreate.json";
+import LangEN from "json/lang/en/Struktur Laporan/add/reportstructureaddcreate.json";
+import messageID from "json/lang/id/Message/message.json";
+import messageEN from "json/lang/en/Message/message.json";
+import Toast from "component/Toast";
+import { useHistory } from "react-router-dom";
+import Input from "component/Input";
 
-// export default class Tambahjurnalakun extends React.Component {
-
-const fields = [
-  JsonReportstructureadd.action_list,
-  { key: "detailitem_no", label: JsonReportstructureadd.detailitem_no },
-  { key: "detailitem_name", label: JsonReportstructureadd.detailitem_name },
-  {
-    key: "detailitem_parentno",
-    label: JsonReportstructureadd.detailitem_parentno,
-  },
-  {
-    key: "detailitem_isgeneral",
-    label: JsonReportstructureadd.detailitem_isgeneral,
-  },
-  { key: "detailitem_accno", label: JsonReportstructureadd.detailitem_accno },
-  {
-    key: "detailitem_accname",
-    label: JsonReportstructureadd.detailitem_accname,
-  },
-  {
-    key: "detailitem_isvisible",
-    label: JsonReportstructureadd.detailitem_isvisible,
-  },
-];
+// const fields = [
+//   JsonReportstructureadd.action_list,
+//   { key: "detailitem_no", label: JsonReportstructureadd.detailitem_no },
+//   { key: "detailitem_name", label: JsonReportstructureadd.detailitem_name },
+//   {
+//     key: "detailitem_parentno",
+//     label: JsonReportstructureadd.detailitem_parentno,
+//   },
+//   {
+//     key: "detailitem_isgeneral",
+//     label: JsonReportstructureadd.detailitem_isgeneral,
+//   },
+//   { key: "detailitem_accno", label: JsonReportstructureadd.detailitem_accno },
+//   {
+//     key: "detailitem_accname",
+//     label: JsonReportstructureadd.detailitem_accname,
+//   },
+//   {
+//     key: "detailitem_isvisible",
+//     label: JsonReportstructureadd.detailitem_isvisible,
+//   },
+// ];
 
 const Reportstrucutreadd = () => {
   const [modal, setModal] = useState(false);
   const [dataAkun, setDataAkun] = useState([]);
-  const [messType, setMessType] = useState("");
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState({});
   const [accNo, setAccNo] = useState(null);
   const [items, setItems] = useState(null);
   const [dataSend, setDataSend] = useState(null);
@@ -67,6 +60,13 @@ const Reportstrucutreadd = () => {
   const [editFormItem, setEditFormItem] = useState(false);
   const [indexEdit, setIndexEdit] = useState(false);
   const [option, setOption] = useState([]);
+  const history = useHistory();
+  const [JsonReportstructureadd, setJsonReportstructureadd] = useState({});
+  const [messageJson, setMessageJson] = useState({});
+  const [fields, setField] = useState([null]);
+
+  const configApp = JSON.parse(sessionStorage.getItem("config"));
+
   const {
     register: register2,
     handleSubmit: handleSubmit2,
@@ -81,11 +81,121 @@ const Reportstrucutreadd = () => {
   } = useForm();
   const { handleSubmit, register, reset, control } = useForm();
 
+  useEffect(
+    () => {
+      //if (JsonReportstructureadd === null || fields === null) {
+      if (configApp.lang === "id") {
+        setJsonReportstructureadd(LangID);
+        setField([
+          { key: "action", label: LangID.action_list },
+          { key: "detailitem_no", label: LangID.detailitem_no },
+          {
+            key: "detailitem_name",
+            label: LangID.detailitem_name,
+          },
+          {
+            key: "detailitem_parentno",
+            label: LangID.detailitem_parentno,
+          },
+          {
+            key: "detailitem_isgeneral",
+            label: LangID.detailitem_isgeneral,
+          },
+          {
+            key: "detailitem_accno",
+            label: LangID.detailitem_accno,
+          },
+          {
+            key: "detailitem_accname",
+            label: LangID.detailitem_accname,
+          },
+          {
+            key: "detailitem_isvisible",
+            label: LangID.detailitem_isvisible,
+          },
+        ]);
+      } else if (configApp.lang == "en") {
+        setJsonReportstructureadd(LangEN);
+        setField([
+          { key: "action", label: LangEN.action_list },
+          { key: "detailitem_no", label: LangEN.detailitem_no },
+          {
+            key: "detailitem_name",
+            label: LangEN.detailitem_name,
+          },
+          {
+            key: "detailitem_parentno",
+            label: LangEN.detailitem_parentno,
+          },
+          {
+            key: "detailitem_isgeneral",
+            label: LangEN.detailitem_isgeneral,
+          },
+          {
+            key: "detailitem_accno",
+            label: LangEN.detailitem_accno,
+          },
+          {
+            key: "detailitem_accname",
+            label: LangEN.detailitem_accname,
+          },
+          {
+            key: "detailitem_isvisible",
+            label: LangEN.detailitem_isvisible,
+          },
+        ]);
+      } else {
+        setJsonReportstructureadd(LangID);
+        setField([
+          { key: "action", label: LangID.action_list },
+          { key: "detailitem_no", label: LangID.detailitem_no },
+          {
+            key: "detailitem_name",
+            label: LangID.detailitem_name,
+          },
+          {
+            key: "detailitem_parentno",
+            label: LangID.detailitem_parentno,
+          },
+          {
+            key: "detailitem_isgeneral",
+            label: LangID.detailitem_isgeneral,
+          },
+          {
+            key: "detailitem_accno",
+            label: LangID.detailitem_accno,
+          },
+          {
+            key: "detailitem_accname",
+            label: LangID.detailitem_accname,
+          },
+          {
+            key: "detailitem_isvisible",
+            label: LangID.detailitem_isvisible,
+          },
+        ]);
+      }
+      // }
+    },
+    [JsonReportstructureadd],
+    [fields]
+  );
+
+  useEffect(() => {
+    if (configApp.lang === "id") {
+      setMessageJson(messageID);
+    } else if (configApp.lang == "en") {
+      setMessageJson(messageEN);
+    } else {
+      setMessageJson(messageID);
+    }
+  }, [messageJson]);
+
   const onSubmit = (data) => {
     // alert(JSON.stringify(data))
     let detail = [];
     dataAkun.map((row) => {
-      detail.push({
+      return detail.push({
         itemno: row.detailitem_no,
         itemname: row.detailitem_name,
         parentno: row.detailitem_parentno,
@@ -101,19 +211,15 @@ const Reportstrucutreadd = () => {
       tag: data.tag,
       detail: detail,
       validstate: 0,
-      lang: "id",
+      lang: JSON.parse(sessionStorage.getItem("config")).lang,
     };
+    // alert(JSON.stringify(sendData))
     setDataSend(sendData);
     setModal(true);
   };
 
-  const toggleDetails2 = () => {
-    // const position = details.indexOf(index)
-    setFormItem(true);
-    setAccNo(false);
-  };
-
   const confirmSave = () => {
+    setMessage({});
     axios
       .post(
         `http://117.54.7.227/arov2/api/gl/params/accountstructure/add/create`,
@@ -122,33 +228,39 @@ const Reportstrucutreadd = () => {
       .then((res) => {
         console.log("tes", res.data);
         if (res.data.rescode === 0) {
-          setMessType("success");
-          setMessage("Struktur Laporan Berhasil Disimpan");
           reset();
           setModal(false);
           setDataSend(null);
           setItems(null);
-          setTimeout(() => {
-            setMessType(null);
-            setMessage(null);
-          }, 5000);
+          setDataAkun([]);
+          setMessage({
+            title: messageJson.toatsheader_success,
+            body: JsonReportstructureadd.setmessage_done,
+            type: messageJson.toatscolor_success,
+            active: true,
+          });
         } else {
           setModal(false);
-          setMessType("danger");
-          setMessage(res.data.errdescription);
-          setTimeout(() => {
-            setMessType(null);
-            setMessage(null);
-          }, 5000);
+          setMessage({
+            title: messageJson.toatsheader_err,
+            body: res.data.errdescription,
+            type: messageJson.toatscolor_err,
+            active: true,
+          });
         }
       })
       .catch(function (error) {
-        console.log(error);
+        setMessage({
+          title: messageJson.messagetype_err,
+          body: JSON.stringify(error),
+          type: messageJson.toatscolor_err,
+          active: true,
+        });
       });
   };
 
   const saveDetail = (param) => {
-    // alert(JSON.stringify(data))
+    // alert(JSON.stringify(param))
     let data = [...dataAkun];
     if (param.detailitem_isgeneral) {
       data.push({
@@ -161,26 +273,33 @@ const Reportstrucutreadd = () => {
         detailitem_isvisible: param.detailitem_isvisible,
       });
     } else {
-      let accname = accNo.find(({ accno }) => {
-        return accno == param.detailitem_accno.value;
-      });
+      let accname = {};
+      if (param.detailitem_accno !== "") {
+        accname = accNo.find(({ accno }) => {
+          return accno === param.detailitem_accno;
+        });
+      } else {
+        accname.accno = "";
+        accname.accname = "";
+      }
       data.push({
         detailitem_no: param.detailitem_no,
         detailitem_name: param.detailitem_name,
         detailitem_parentno: param.detailitem_parentno,
         detailitem_isgeneral: param.detailitem_isgeneral,
-        detailitem_accno: param.detailitem_accno.value,
+        detailitem_accno: accname.accno,
         detailitem_accname: accname.accname,
         detailitem_isvisible: param.detailitem_isvisible,
       });
     }
     reset2();
     setFormItem(false);
+    setWithItemGroup(false);
     setDataAkun(data);
-    console.log(dataAkun);
   };
 
   const saveEditDetail = (param) => {
+    // console.log(param)
     let data = [...dataAkun];
     if (param.detailitem_isgeneral) {
       data[indexEdit] = {
@@ -193,15 +312,21 @@ const Reportstrucutreadd = () => {
         detailitem_isvisible: param.detailitem_isvisible,
       };
     } else {
-      let accname = accNo.find(({ accno }) => {
-        return accno == param.detailitem_accno.value;
-      });
+      let accname = {};
+      if (param.detailitem_accno !== undefined) {
+        accname = accNo.find(({ accno }) => {
+          return accno === param.detailitem_accno;
+        });
+      } else {
+        accname.accno = "";
+        accname.accname = "";
+      }
       data[indexEdit] = {
         detailitem_no: param.detailitem_no,
         detailitem_name: param.detailitem_name,
         detailitem_parentno: param.detailitem_parentno,
         detailitem_isgeneral: param.detailitem_isgeneral,
-        detailitem_accno: param.detailitem_accno.value,
+        detailitem_accno: accname.accno,
         detailitem_accname: accname.accname,
         detailitem_isvisible: param.detailitem_isvisible,
       };
@@ -212,27 +337,26 @@ const Reportstrucutreadd = () => {
   };
 
   const deleteItem = (index) => {
-    console.log(index);
     let data = [...dataAkun];
     data.splice(index, 1);
-    console.log(data);
     setDataAkun(data);
-    console.log(dataAkun);
   };
 
   const ubahItem = (items, index) => {
     setItems(items);
+    setWithItemGroup(items.detailitem_isgeneral);
     setEditFormItem(true);
     setIndexEdit(index);
   };
 
   useEffect(() => {
-    if (accNo == null) {
+    if (accNo === null) {
       getDataAkun();
     }
   }, [accNo]);
 
   const getDataAkun = () => {
+    setMessage({});
     axios
       .get(
         "http://117.54.7.227/arov2/api/gl/params/account/list?onlyactive=true"
@@ -240,36 +364,44 @@ const Reportstrucutreadd = () => {
       .then((res) => {
         let data = [];
         res.data.data.map((akun) => {
-          data.push({
+          return data.push({
             value: akun.accno,
             label: akun.accno + " - " + akun.accname,
           });
         });
-        console.log(res.data.data);
+        // console.log(res.data.data);
         setAccNo(res.data.data);
         setOption(data);
+        if (res.data.rescode !== 0) {
+          setMessage({
+            title: messageJson.toatsheader_err,
+            body: res.data.errdescription,
+            type: messageJson.toatscolor_err,
+            active: true,
+          });
+        }
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(function (error) {
+        setMessage({
+          title: messageJson.toatsheader_err,
+          body: JSON.stringify(error),
+          type: messageJson.toatscolor_err,
+          active: true,
+        });
       });
   };
 
-  const itemGroup = (e) => {
-    console.log(e);
-    setWithItemGroup(e);
+  const itemGroup = (value, checked) => {
+    // console.log(e);
+    setWithItemGroup(checked);
   };
 
   return (
     <>
-      {message && (
-        <CRow>
-          <CCol>
-            <CAlert color={messType}>{message}</CAlert>
-          </CCol>
-        </CRow>
-      )}
+      <Toast message={message} />
+
       {accNo && (
-        <CCard color="light">
+        <>
           <CRow>
             <CCol xl="12">
               <CCard>
@@ -281,89 +413,56 @@ const Reportstrucutreadd = () => {
                 >
                   <CCardBody>
                     <CRow>
-                      <CCol xs="12" md="6" xl="6">
-                        <CFormGroup row>
-                          <CCol>
-                            <CLabel htmlFor="text-input">
-                              {JsonReportstructureadd.asid}
-                            </CLabel>
-                          </CCol>
-                          <CCol xs="12" xl="9">
-                            <input
-                              className="form-control"
-                              id="asid"
-                              ref={register}
-                              name="asid"
-                            />
-                          </CCol>
-                        </CFormGroup>
-                      </CCol>
+                      <Input
+                        ref={register}
+                        typefield="text"
+                        type="text"
+                        label={JsonReportstructureadd.asid}
+                        name="asid"
+                        defaultValue=""
+                        id="asid"
+                        md="6"
+                        lg="6"
+                      />
 
-                      <CCol xs="12" md="6" xl="6">
-                        <CFormGroup row>
-                          <CCol>
-                            <CLabel htmlFor="text-input">
-                              {JsonReportstructureadd.asname}
-                            </CLabel>
-                          </CCol>
-                          <CCol xs="12" xl="9">
-                            <input
-                              className="form-control"
-                              ref={register}
-                              id="asname"
-                              name="asname"
-                            />
-                          </CCol>
-                        </CFormGroup>
-                      </CCol>
+                      <Input
+                        ref={register}
+                        typefield="text"
+                        type="text"
+                        label={JsonReportstructureadd.asname}
+                        name="asname"
+                        defaultValue=""
+                        id="asname"
+                        md="6"
+                        lg="6"
+                      />
                     </CRow>
                     <CRow>
-                      <CCol xs="12" md="6" xl="6">
-                        <CFormGroup row>
-                          <CCol xs="2" xl="2">
-                            <CLabel htmlFor="select">
-                              {JsonReportstructureadd.isactive}
-                            </CLabel>
-                          </CCol>
-                          <CCol xs="3" xl="3">
-                            <CFormGroup variant="custom-checkbox" inline>
-                              <Controller
-                                name="isactive"
-                                control={control}
-                                value={true}
-                                defaultValue={true}
-                                render={(props) => (
-                                  <CInputCheckbox
-                                    onChange={(e) =>
-                                      props.onChange(e.target.checked)
-                                    }
-                                    checked={props.value}
-                                  />
-                                )}
-                              />
-                            </CFormGroup>
-                          </CCol>
-                        </CFormGroup>
-                      </CCol>
-                      <CCol xs="12" md="6" xl="6">
-                        <CFormGroup row>
-                          <CCol>
-                            <CLabel htmlFor="text-input">
-                              {JsonReportstructureadd.tag}
-                            </CLabel>
-                          </CCol>
-                          <CCol xs="12" xl="9">
-                            <input
-                              className="form-control"
-                              ref={register}
-                              id="tag"
-                              name="tag"
-                            />
-                          </CCol>
-                        </CFormGroup>
-                      </CCol>
-                    </CRow>
+                      <Input
+                        ref={register}
+                        typefield="text"
+                        type="text"
+                        label={JsonReportstructureadd.tag}
+                        name="tag"
+                        defaultValue=""
+                        id="tag"
+                        md="6"
+                        lg="6"
+                      />
 
+                      <Input
+                        ref={control}
+                        typefield="checkbox"
+                        label={JsonReportstructureadd.isactive}
+                        name="isactive"
+                        id="isactive"
+                        md="2"
+                        lg="2"
+                        value={true}
+                        defaultValue={false}
+                        // eventCheckbox={eventCheckbox}
+                      />
+                    </CRow>
                     <CRow>
                       <CCol>
                         <CDataTable
@@ -420,7 +519,7 @@ const Reportstrucutreadd = () => {
                                   </CBadge>
                                 </td>
                               ),
-                            Aksi: (items, index) => {
+                            action: (items, index) => {
                               return (
                                 <td>
                                   <div className="btn-group">
@@ -458,8 +557,8 @@ const Reportstrucutreadd = () => {
                       <CCol lg="12" md="12">
                         <CButton
                           color="primary"
+                          size="sm"
                           onClick={() => setFormItem(true)}
-                          style={{ float: "right" }}
                         >
                           <CIcon name="cil-pencil" />
                           {JsonReportstructureadd.list_new}
@@ -468,13 +567,34 @@ const Reportstrucutreadd = () => {
                     </CRow>
                   </CCardBody>
                   <CCardFooter>
-                    <CButton type="reset" color="danger" className="mr-3">
-                      <CIcon name="cil-x" />{" "}
-                      {JsonReportstructureadd.cancel_button}
+                    <CButton
+                      type="reset"
+                      size="sm"
+                      color="warning"
+                      onClick={() => history.goBack()}
+                    >
+                      <CIcon name="cil-chevron-left" />{" "}
+                      {JsonReportstructureadd.hide}
                     </CButton>
-                    <CButton type="submit" color="primary">
+                    <CButton
+                      type="submit"
+                      color="primary"
+                      size="sm"
+                      className={"m-3 float-right"}
+                    >
                       <CIcon name="cil-save" />{" "}
                       {JsonReportstructureadd.save_button}
+                    </CButton>
+
+                    <CButton
+                      type="reset"
+                      color="danger"
+                      size="sm"
+                      className={"m-3 float-right"}
+                      onClick={() => setDataAkun([])}
+                    >
+                      <CIcon name="cil-x" />{" "}
+                      {JsonReportstructureadd.cancel_button}
                     </CButton>
                   </CCardFooter>
                 </CForm>
@@ -514,136 +634,79 @@ const Reportstrucutreadd = () => {
                       onSubmit={handleSubmit2(saveDetail)}
                     >
                       <CRow>
-                        <CCol lg="6" md="6" sm="12">
-                          <CFormGroup row>
-                            <CCol>
-                              <CLabel htmlFor="text-input">
-                                {JsonReportstructureadd.detailitem_no}
-                              </CLabel>
-                            </CCol>
-                            <CCol xs="12" xl="9">
-                              <input
-                                className="form-control"
-                                id="detailitem_no"
-                                name="detailitem_no"
-                                ref={register2}
-                                defaultValue={""}
-                              />
-                            </CCol>
-                          </CFormGroup>
-                        </CCol>
-                        <CCol lg="6" md="6" sm="12">
-                          <CFormGroup row>
-                            <CCol>
-                              <CLabel htmlFor="text-input">
-                                {JsonReportstructureadd.detailitem_name}
-                              </CLabel>
-                            </CCol>
-                            <CCol xs="12" xl="9">
-                              <input
-                                className="form-control"
-                                id="detailitem_name"
-                                name="detailitem_name"
-                                ref={register2}
-                                defaultValue={""}
-                              />
-                            </CCol>
-                          </CFormGroup>
-                        </CCol>
+                        <Input
+                          ref={register2}
+                          typefield="text"
+                          type="text"
+                          label={JsonReportstructureadd.detailitem_no}
+                          name="detailitem_no"
+                          defaultValue=""
+                          id="detailitem_no"
+                          md="4"
+                          lg="4"
+                        />
+                        <Input
+                          ref={register2}
+                          typefield="text"
+                          type="text"
+                          label={JsonReportstructureadd.detailitem_name}
+                          name="detailitem_name"
+                          defaultValue=""
+                          id="detailitem_name"
+                          md="4"
+                          lg="4"
+                        />
+                        <Input
+                          ref={register2}
+                          typefield="text"
+                          type="text"
+                          label={JsonReportstructureadd.detailitem_parentno}
+                          name="detailitem_parentno"
+                          defaultValue=""
+                          id="detailitem_parentno"
+                          md="4"
+                          lg="4"
+                        />
                       </CRow>
                       <CRow>
-                        <CCol lg="6" md="6" sm="12">
-                          <CFormGroup row>
-                            <CCol>
-                              <CLabel htmlFor="text-input">
-                                {JsonReportstructureadd.detailitem_parentno}
-                              </CLabel>
-                            </CCol>
-                            <CCol xs="12" xl="9">
-                              <input
-                                className="form-control"
-                                id="detailitem_parentno"
-                                name="detailitem_parentno"
-                                ref={register2}
-                                defaultValue={""}
-                              />
-                            </CCol>
-                          </CFormGroup>
-                        </CCol>
-                        <CCol lg="6" md="6" sm="12">
-                          <CFormGroup row>
-                            <CCol>
-                              <CLabel htmlFor="text-input">
-                                {JsonReportstructureadd.detailitem_isgeneral}
-                              </CLabel>
-                            </CCol>
-                            <CCol xs="12" xl="9">
-                              <Controller
-                                name="detailitem_isgeneral"
-                                control={control2}
-                                defaultValue={false}
-                                value="true"
-                                render={(props) => (
-                                  <CInputCheckbox
-                                    onChange={(e) =>
-                                      props.onChange(e.target.checked)
-                                    }
-                                    onClick={(e) => itemGroup(e.target.checked)}
-                                    checked={props.value}
-                                  />
-                                )}
-                              />
-                            </CCol>
-                          </CFormGroup>
-                        </CCol>
-                      </CRow>
-                      <CRow>
+                        <Input
+                          ref={control2}
+                          typefield="checkbox"
+                          label={JsonReportstructureadd.detailitem_isvisible}
+                          name="detailitem_isvisible"
+                          id="detailitem_isvisible"
+                          md="2"
+                          lg="2"
+                          value={true}
+                          defaultValue={false}
+                        />
+                        <Input
+                          ref={control2}
+                          typefield="checkbox"
+                          label={JsonReportstructureadd.detailitem_isgeneral}
+                          name="detailitem_isgeneral"
+                          id="detailitem_isgeneral"
+                          md="2"
+                          lg="2"
+                          value={true}
+                          defaultValue={false}
+                          eventCheckbox={itemGroup}
+                        />
                         {!withItemGroup && (
-                          <CCol lg="6" md="6" sm="12">
-                            <CFormGroup row>
-                              <CCol>
-                                <CLabel htmlFor="text-input">
-                                  {JsonReportstructureadd.detailitem_accno}
-                                </CLabel>
-                              </CCol>
-                              <CCol xs="12" xl="9">
-                                <Controller
-                                  name="detailitem_accno"
-                                  as={Select}
-                                  options={option}
-                                  control={control2}
-                                  defaultValue=""
-                                  id="detailitem_accno"
-                                />
-                              </CCol>
-                            </CFormGroup>
-                          </CCol>
+                          <Input
+                            ref={control2}
+                            typefield="select"
+                            label={JsonReportstructureadd.detailitem_accno}
+                            name="detailitem_accno"
+                            id="detailitem_accno"
+                            md="4"
+                            lg="4"
+                            options={option}
+                            defaultValue=""
+                            selectDefaultValue={option[0]}
+                            // eventSelect={eventSelect}
+                          />
                         )}
-                        <CCol lg="6" md="6" sm="12">
-                          <CFormGroup row>
-                            <CCol>
-                              <CLabel htmlFor="text-input">
-                                {JsonReportstructureadd.detailitem_isvisible}
-                              </CLabel>
-                            </CCol>
-                            <CCol xs="12" xl="9">
-                              <Controller
-                                name="detailitem_isvisible"
-                                control={control2}
-                                defaultValue={false}
-                                value="true"
-                                render={(props) => (
-                                  <CInputCheckbox
-                                    onChange={(e) =>
-                                      props.onChange(e.target.checked)
-                                    }
-                                    checked={props.value}
-                                  />
-                                )}
-                              />
-                            </CCol>
-                          </CFormGroup>
-                        </CCol>
                       </CRow>
                       <hr></hr>
                       <CRow>
@@ -652,7 +715,10 @@ const Reportstrucutreadd = () => {
                             size="sm"
                             color="danger"
                             style={{ float: "left" }}
-                            onClick={() => setFormItem(false)}
+                            onClick={() => {
+                              setFormItem(false);
+                              setWithItemGroup(false);
+                            }}
                             className="mr-3"
                           >
                             <CIcon name="cil-x" />{" "}
@@ -691,142 +757,83 @@ const Reportstrucutreadd = () => {
                       onSubmit={handleSubmit3(saveEditDetail)}
                     >
                       <CRow>
-                        <CCol lg="6" md="6" sm="12">
-                          <CFormGroup row>
-                            <CCol>
-                              <CLabel htmlFor="text-input">
-                                {JsonReportstructureadd.detailitem_no}
-                              </CLabel>
-                            </CCol>
-                            <CCol xs="12" xl="9">
-                              <input
-                                className="form-control"
-                                id="detailitem_no"
-                                name="detailitem_no"
-                                ref={register3}
-                                defaultValue={items.detailitem_no}
-                              />
-                            </CCol>
-                          </CFormGroup>
-                        </CCol>
-                        <CCol lg="6" md="6" sm="12">
-                          <CFormGroup row>
-                            <CCol>
-                              <CLabel htmlFor="text-input">
-                                {JsonReportstructureadd.detailitem_name}
-                              </CLabel>
-                            </CCol>
-                            <CCol xs="12" xl="9">
-                              <input
-                                className="form-control"
-                                id="detailitem_name"
-                                name="detailitem_name"
-                                ref={register3}
-                                defaultValue={items.detailitem_name}
-                              />
-                            </CCol>
-                          </CFormGroup>
-                        </CCol>
+                        <Input
+                          ref={register3}
+                          typefield="text"
+                          type="text"
+                          label={JsonReportstructureadd.detailitem_no}
+                          name="detailitem_no"
+                          defaultValue={items.detailitem_no}
+                          id="detailitem_no"
+                          md="4"
+                          lg="4"
+                        />
+                        <Input
+                          ref={register3}
+                          typefield="text"
+                          type="text"
+                          label={JsonReportstructureadd.detailitem_name}
+                          name="detailitem_name"
+                          defaultValue={items.detailitem_name}
+                          id="detailitem_name"
+                          md="4"
+                          lg="4"
+                        />
+                        <Input
+                          ref={register3}
+                          typefield="text"
+                          type="text"
+                          label={JsonReportstructureadd.detailitem_parentno}
+                          name="detailitem_parentno"
+                          defaultValue={items.detailitem_parentno}
+                          id="detailitem_parentno"
+                          md="4"
+                          lg="4"
+                        />
                       </CRow>
                       <CRow>
-                        <CCol lg="6" md="6" sm="12">
-                          <CFormGroup row>
-                            <CCol>
-                              <CLabel htmlFor="text-input">
-                                {JsonReportstructureadd.detailitem_parentno}
-                              </CLabel>
-                            </CCol>
-                            <CCol xs="12" xl="9">
-                              <input
-                                className="form-control"
-                                id="detailitem_parentno"
-                                name="detailitem_parentno"
-                                ref={register3}
-                                defaultValue={items.detailitem_parentno}
-                              />
-                            </CCol>
-                          </CFormGroup>
-                        </CCol>
-                        <CCol lg="6" md="6" sm="12">
-                          <CFormGroup row>
-                            <CCol>
-                              <CLabel htmlFor="text-input">
-                                {JsonReportstructureadd.detailitem_isgeneral}
-                              </CLabel>
-                            </CCol>
-                            <CCol xs="12" xl="9">
-                              <Controller
-                                name="detailitem_isgeneral"
-                                control={control3}
-                                defaultValue={items.detailitem_isgeneral}
-                                value="true"
-                                render={(props) => (
-                                  <CInputCheckbox
-                                    onChange={(e) =>
-                                      props.onChange(e.target.checked)
-                                    }
-                                    onClick={(e) => itemGroup(e.target.checked)}
-                                    checked={props.value}
-                                  />
-                                )}
-                              />
-                            </CCol>
-                          </CFormGroup>
-                        </CCol>
-                      </CRow>
-                      <CRow>
+                        <Input
+                          ref={control3}
+                          typefield="checkbox"
+                          label={JsonReportstructureadd.detailitem_isvisible}
+                          name="detailitem_isvisible"
+                          id="detailitem_isvisible"
+                          md="2"
+                          lg="2"
+                          value={true}
+                          defaultValue={items.detailitem_isvisible}
+                        />
+                        <Input
+                          ref={control3}
+                          typefield="checkbox"
+                          label={JsonReportstructureadd.detailitem_isgeneral}
+                          name="detailitem_isgeneral"
+                          id="detailitem_isgeneral"
+                          md="2"
+                          lg="2"
+                          value={true}
+                          defaultValue={items.detailitem_isgeneral}
+                          eventCheckbox={itemGroup}
+                        />
                         {!withItemGroup && (
-                          <CCol lg="6" md="6" sm="12">
-                            <CFormGroup row>
-                              <CCol>
-                                <CLabel htmlFor="text-input">
-                                  {JsonReportstructureadd.detailitem_accno}
-                                </CLabel>
-                              </CCol>
-                              <CCol xs="12" xl="9">
-                                <Controller
-                                  name="detailitem_accno"
-                                  as={Select}
-                                  options={option}
-                                  control={control3}
-                                  defaultValue={{
-                                    value: items.detailitem_accno,
-                                    label:
-                                      items.detailitem_accno +
-                                      " - " +
-                                      items.detailitem_accname,
-                                  }}
-                                  id="detailitem_accno"
-                                />
-                              </CCol>
-                            </CFormGroup>
-                          </CCol>
+                          <Input
+                            ref={control3}
+                            typefield="select"
+                            label={JsonReportstructureadd.detailitem_accno}
+                            name="detailitem_accno"
+                            id="detailitem_accno"
+                            md="4"
+                            lg="4"
+                            options={option}
+                            selectDefaultValue={{
+                              value: items.detailitem_accno,
+                              label:
+                                items.detailitem_accno +
+                                " - " +
+                                items.detailitem_accname,
+                            }}
+                          />
                         )}
-                        <CCol lg="6" md="6" sm="12">
-                          <CFormGroup row>
-                            <CCol>
-                              <CLabel htmlFor="text-input">
-                                {JsonReportstructureadd.detailitem_isvisible}
-                              </CLabel>
-                            </CCol>
-                            <CCol xs="12" xl="9">
-                              <Controller
-                                name="detailitem_isvisible"
-                                control={control3}
-                                defaultValue={items.detailitem_isvisible}
-                                value="true"
-                                render={(props) => (
-                                  <CInputCheckbox
-                                    onChange={(e) =>
-                                      props.onChange(e.target.checked)
-                                    }
-                                    checked={props.value}
-                                  />
-                                )}
-                              />
-                            </CCol>
-                          </CFormGroup>
-                        </CCol>
                       </CRow>
                       <CRow>
                         <CCol>
@@ -857,7 +864,7 @@ const Reportstrucutreadd = () => {
               </CCol>
             </CRow>
           )}
-        </CCard>
+        </>
       )}
     </>
   );

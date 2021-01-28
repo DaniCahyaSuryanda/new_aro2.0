@@ -1,0 +1,42 @@
+{
+  "form": "Otorisasi Pembuatan Struktur Akun",
+  "action_list" : "Aksi",
+
+  "list_caption": "Daftar Struktur Akun Perlu Otorisasi",
+  "list_asid" : "Kode",
+  "list_asname" : "Nama",
+  "list_isactive": "Aktif",
+
+  "list_refresh" :"Refresh",
+  "list_new" : "Otorisasi",
+
+  "detail_caption" : "Data Struktur Akun Baru",
+  "trxid" : "No Transaksi",
+  "asid" : "Kode",
+  "asname" : "Nama",
+  "isactive" : "Aktif",
+  "tag" : "Tag",
+
+  "detailitem_caption" : "Data Struktur Akun",
+  "detailitem_no" : "No Item",
+  "detailitem_name" : "Nama Item",
+  "detailitem_parentno" : "No Induk",
+  "detailitem_accno" : "No Akun",
+  "detailitem_accname" : "Nama Akun",
+  "detailitem_isvisible" : "Ditampilkan",
+  "detailitem_isgeneral" : "Item Grup",
+
+  "otor_button" : "Otorisasi",
+  "reject_button": "Tolak",
+
+  "confirm_otor" : "Otorisasi Struktur Akun Baru ?",
+  "confirm_otor_yes" : "Otorisasi",
+  "confirm_otor_no" : "Tutup",
+
+  "confirm_reject" : "Tolak Otorisasi Struktur Akun Baru ?",
+  "confirm_reject_yes" : "Tolak Otorisasi",
+  "confirm_reject_no" : "Batal",
+  "hide" : "Kembali",
+  "message_reject" : "Berhasil Menolak Struktur Akun Baru",
+  "message_otor" : "Berhasil Otorisasi Struktur Akun Baru"
+}

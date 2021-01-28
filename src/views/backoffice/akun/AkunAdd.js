@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import ReactDOM from "react-dom";
+import React, { useState, useEffect } from "react";
 import {
   CButton,
   CCard,
@@ -8,45 +7,73 @@ import {
   CCardHeader,
   CCol,
   CForm,
-  CFormGroup,
-  CTextarea,
-  CInput,
-  CInputCheckbox,
-  CLabel,
-  CSelect,
   CRow,
   CModal,
   CModalBody,
   CModalFooter,
-  CModalHeader,
-  CModalTitle,
-  CAlert,
-  CToast,
-  CToastBody,
-  CToastHeader,
-  CToaster,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import axios from "axios";
-import { useForm, Controller } from "react-hook-form";
-import AccountAdd from "../../../gl/params/lang/id/accountaddcreate.json";
-
-// export default class Tambahjurnalakun extends React.Component {
+import { useForm } from "react-hook-form";
+import LangID from "json/lang/id/Akun/add/accountaddcreate.json";
+import LangEN from "json/lang/en/Akun/add/accountaddcreate.json";
+import messageID from "json/lang/id/Message/message.json";
+import messageEN from "json/lang/en/Message/message.json";
+import Toast from "component/Toast";
+import { useHistory } from "react-router-dom";
+import Input from "component/Input";
 
 const AccAdd = () => {
   const { handleSubmit, register, reset, control } = useForm();
   const [items, setItems] = useState(null);
-  const [messType, setMessType] = useState("");
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState({});
   const [modal, setModal] = useState(false);
+  const history = useHistory();
+  const [itemAccCreate, setItemCreate] = useState({});
+  const [messageJson, setItemMessage] = useState({});
+
+  const configApp = JSON.parse(sessionStorage.getItem("config"));
 
   const onSubmit = (data) => {
     setModal(true);
     setItems(data);
-    // alert(JSON.stringify(data));
   };
-  const [toasts, setToasts] = useState(false);
+  useEffect(
+    () => {
+      if (configApp.lang === "id") {
+        setItemCreate(LangID);
+        setItemMessage(messageID);
+      } else if (configApp.lang == "en") {
+        setItemCreate(LangEN);
+        setItemMessage(messageEN);
+      } else {
+        setItemCreate(LangID);
+        setItemMessage(messageID);
+      }
+    },
+    [itemAccCreate],
+    [messageJson]
+  );
+
+  // useEffect(
+  //   () => {
+  //     if (configApp.lang === "id") {
+  //       setItemCreate(LangID);
+  //       setMessageJson(messageJsonID);
+  //     } else if (configApp.lang == " en") {
+  //       setItemCreate(LangEN);
+  //       setMessageJson(messageJsonEN);
+  //     } else {
+  //       setItemCreate(LangID);
+  //       setMessageJson(messageJsonID);
+  //     }
+  //   },
+  //   [itemAccCreate],
+  //   [messageJson]
+  // );
+
   const simpanData = () => {
+    setMessage({});
     let data = {
       accno: items.accno,
       accname: items.accname,
@@ -59,229 +86,180 @@ const AccAdd = () => {
     axios
       .post(`${global.config.API_URL}gl/params/account/add/create`, data)
       .then((res) => {
-        console.log("tes", res.data);
         if (res.data.rescode === 0) {
-          setMessType("success");
-          setMessage(AccountAdd[0].message_success);
+          setMessage({
+            title: messageJson.toatsheader_success,
+            body: itemAccCreate.message_success,
+            type: messageJson.toatscolor_success,
+            active: true,
+          });
           setModal(false);
           setItems(null);
           reset();
-          setToasts(AccountAdd[0].message_success);
-          setTimeout(() => {
-            setToasts(null);
-            setMessage(null);
-            setMessType(null);
-          }, 5000);
         } else {
-          setMessType("danger");
-          setMessage(res.data.errdescription);
-          setToasts(res.data.errdescription);
           setModal(false);
-          setTimeout(() => {
-            setToasts(null);
-            setMessage(null);
-            setMessType(null);
-          }, 5000);
+          setMessage({
+            title: messageJson.toatsheader_err,
+            body: res.data.errdescription,
+            type: messageJson.toatscolor_err,
+            active: true,
+          });
+          //setMessage();
         }
       })
       .catch(function (error) {
-        console.log(error);
+        setMessage({
+          title: messageJson.messagetype_err,
+          body: JSON.stringify(error),
+          type: messageJson.toatscolor_err,
+          active: true,
+        });
       });
   };
-  const Akunadd = AccountAdd.map((itemAccCreate) => (
-    <CCard>
-      <CCardHeader>{itemAccCreate.form}</CCardHeader>
-      <CCardBody>
-        <CForm
-          encType="multipart/form-data"
-          className="form-horizontal"
-          onSubmit={handleSubmit(onSubmit)}
-        >
-          <CRow>
-            <CCol xs="12" md="6" xl="5">
-              <CFormGroup row>
-                <CCol>
-                  <CLabel htmlFor="text-input">{itemAccCreate.accno}</CLabel>
-                </CCol>
-                <CCol xs="12" xl="9">
-                  <input
-                    className="form-control"
-                    defaultValue=""
-                    id="accno"
-                    name="accno"
-                    ref={register}
-                  />
-                </CCol>
-              </CFormGroup>
-            </CCol>
 
-            <CCol xs="12" md="6" xl="7">
-              <CFormGroup row>
-                <CCol>
-                  <CLabel htmlFor="text-input">{itemAccCreate.accname}</CLabel>
-                </CCol>
-                <CCol xs="12" xl="9">
-                  <input
-                    className="form-control"
-                    defaultValue=""
-                    id="accname"
-                    name="accname"
-                    ref={register}
-                  />
-                </CCol>
-              </CFormGroup>
-            </CCol>
-          </CRow>
+  // const eventSelect = (data) => {
+  //   console.log(data);
+  // };
 
-          <CRow>
-            <CCol xs="12" md="6" xl="5">
-              <CFormGroup row>
-                <CCol>
-                  <CLabel htmlFor="select">{itemAccCreate.acctype}</CLabel>
-                </CCol>
-                <CCol xs="12" xl="9">
-                  <select
-                    className="form-control"
-                    custom
-                    name="acctype"
-                    id="acctype"
-                    ref={register}
-                  >
-                    <option value="0">{itemAccCreate.acctype_0}</option>
-                    <option value="1">{itemAccCreate.acctype_1}</option>
-                  </select>
-                </CCol>
-              </CFormGroup>
-            </CCol>
+  // const eventCheckbox = (value, checked) => {
+  //   console.log(value);
+  // };
 
-            <CCol xs="12" md="6" xl="7">
-              <CFormGroup row>
-                <CCol>
-                  <CLabel htmlFor="select">
-                    {itemAccCreate.list_normaldebit}
-                  </CLabel>
-                </CCol>
-                <CCol xs="12" xl="9">
-                  <CFormGroup variant="custom-checkbox" inline>
-                    <Controller
-                      name="normaldebit"
-                      control={control}
-                      value={true}
-                      defaultValue={true}
-                      render={(props) => (
-                        <CInputCheckbox
-                          onChange={(e) => props.onChange(e.target.checked)}
-                          checked={props.value}
-                        />
-                      )}
-                    />
-                  </CFormGroup>
-                </CCol>
-              </CFormGroup>
-            </CCol>
-          </CRow>
-          <CRow>
-            <CCol xs="12" xl="12">
-              <CFormGroup row>
-                <CCol md="2">
-                  <CLabel htmlFor="textarea-input">
-                    {itemAccCreate.description}
-                  </CLabel>
-                </CCol>
-                <CCol xs="12" xl="12">
-                  <textarea
-                    name="description"
-                    id="description"
-                    defaultValue=""
-                    rows="4"
-                    ref={register}
-                    className="form-control"
-                  />
-                </CCol>
-              </CFormGroup>
-            </CCol>
-          </CRow>
-
-          <CRow>
-            <CCol xs="12" md="6" xl="5">
-              <CFormGroup row>
-                <CCol>
-                  <CLabel htmlFor="select">{itemAccCreate.isactive}</CLabel>
-                </CCol>
-                <CCol xs="12" xl="10">
-                  <CFormGroup variant="custom-checkbox" inline>
-                    <Controller
-                      name="isactive"
-                      control={control}
-                      value={true}
-                      defaultValue={true}
-                      render={(props) => (
-                        <CInputCheckbox
-                          onChange={(e) => props.onChange(e.target.checked)}
-                          checked={props.value}
-                        />
-                      )}
-                    />
-                  </CFormGroup>
-                </CCol>
-              </CFormGroup>
-            </CCol>
-          </CRow>
-          <hr></hr>
-          {/* <CButton type="submit">Test Simpan</CButton> */}
-          <CButton type="reset" size={35} color="danger">
-            <CIcon name="cil-scrubber" /> {itemAccCreate.cancel_button}
-          </CButton>
-          <CButton
-            type="submit"
-            className={"float-right"}
-            size={35}
-            color="primary"
-          >
-            <CIcon name="cil-save" /> {itemAccCreate.save_button}
-          </CButton>
-        </CForm>
-      </CCardBody>
-
-      <CModal show={modal} onClose={setModal}>
-        <CModalBody>
-          <h3>{itemAccCreate.confirm_save}</h3>
-        </CModalBody>
-        <CModalFooter>
-          <CButton type="submit" onClick={() => simpanData()} color="primary">
-            {itemAccCreate.confirm_yes}
-          </CButton>{" "}
-          <CButton color="danger" onClick={() => setModal(false)}>
-            {itemAccCreate.confirm_no}
-          </CButton>
-        </CModalFooter>
-      </CModal>
-    </CCard>
-  ));
   return (
     <>
-      {message && (
-        <CRow>
-          <CCol>
-            <CAlert color={messType}>{message}</CAlert>
-          </CCol>
-        </CRow>
-      )}
+      <Toast message={message} />
       <CRow>
-        <CCol xl="12">{Akunadd}</CCol>
+        <CCol xl="12">
+          <CCard>
+            <CCardHeader>{itemAccCreate.form}</CCardHeader>
+            <CForm
+              encType="multipart/form-data"
+              className="form-horizontal"
+              onSubmit={handleSubmit(onSubmit)}
+            >
+              <CCardBody>
+                <CRow>
+                  <Input
+                    ref={register}
+                    typefield="text"
+                    type="text"
+                    label={itemAccCreate.accno}
+                    name="accno"
+                    defaultValue=""
+                    id="accno"
+                    md="6"
+                    lg="6"
+                  />
+                  <Input
+                    ref={register}
+                    typefield="text"
+                    type="text"
+                    label={itemAccCreate.accname}
+                    name="accname"
+                    id="accname"
+                    defaultValue=""
+                    md="6"
+                    lg="6"
+                  />
+                </CRow>
+                <CRow>
+                  <Input
+                    ref={control}
+                    typefield="select"
+                    label={itemAccCreate.acctype}
+                    name="acctype"
+                    id="acctype"
+                    md="6"
+                    lg="6"
+                    options={[
+                      { value: "0", label: itemAccCreate.acctype_0 },
+                      { value: "1", label: itemAccCreate.acctype_1 },
+                    ]}
+                    defaultValue=""
+                    // eventSelect={eventSelect}
+                  />
+                  <Input
+                    ref={control}
+                    typefield="checkbox"
+                    label={itemAccCreate.normaldebit}
+                    name="normaldebit"
+                    id="normaldebit"
+                    md="2"
+                    lg="2"
+                    value="true"
+                    defaultValue={false}
+                    // eventCheckbox={eventCheckbox}
+                  />
+                  <Input
+                    ref={control}
+                    typefield="checkbox"
+                    label={itemAccCreate.isactive}
+                    name="isactive"
+                    id="isactive"
+                    md="2"
+                    lg="2"
+                    value={true}
+                    defaultValue={false}
+                    // eventCheckbox={eventCheckbox}
+                  />
+                </CRow>
+                <CRow>
+                  <Input
+                    ref={register}
+                    typefield="textarea"
+                    label={itemAccCreate.description}
+                    name="description"
+                    id="description"
+                    md="12"
+                    lg="12"
+                    rows="4"
+                    defaultValue={""}
+                  />
+                </CRow>
+              </CCardBody>
+              <CCardFooter>
+                <CButton
+                  type="reset"
+                  size={35}
+                  color="warning"
+                  onClick={() => history.goBack()}
+                >
+                  <CIcon name="cil-chevron-left" /> {itemAccCreate.confirm_no}
+                </CButton>
+                <CButton
+                  type="submit"
+                  className={"float-right"}
+                  size={35}
+                  color="primary"
+                >
+                  <CIcon name="cil-save" /> {itemAccCreate.save_button}
+                </CButton>
+                <CButton
+                  type="reset"
+                  size={35}
+                  className={"float-right mr-3"}
+                  color="danger"
+                >
+                  <CIcon name="cil-scrubber" /> {itemAccCreate.cancel_button}
+                </CButton>
+              </CCardFooter>
+            </CForm>
+            <CModal show={modal} onClose={setModal}>
+              <CModalBody>
+                <h3>{itemAccCreate.confirm_save}</h3>
+              </CModalBody>
+              <CModalFooter>
+                <CButton onClick={() => simpanData()} color="primary">
+                  {itemAccCreate.confirm_yes}
+                </CButton>{" "}
+                <CButton color="danger" onClick={() => setModal(false)}>
+                  {itemAccCreate.confirm_no}
+                </CButton>
+              </CModalFooter>
+            </CModal>
+          </CCard>
+        </CCol>
       </CRow>
-
-      {toasts && (
-        <CRow>
-          <CCol xl="6">
-            <CToaster position="bottom-right">
-              <CToastHeader>
-                <h6>{toasts}</h6>
-              </CToastHeader>
-            </CToaster>
-          </CCol>
-        </CRow>
-      )}
     </>
   );
 };

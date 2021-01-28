@@ -1,0 +1,43 @@
+{
+  "form": "Pengkinian Struktur Akun",
+
+  "list_caption": "Daftar Struktur Akun",
+  "list_asid" : "Kode",
+  "list_asname" : "Nama",
+  "list_isactive": "Aktif",
+
+  "list_refresh" :"Refresh",
+  "list_new" : "Edit",
+
+  "detail_caption" : "Data Struktur Akun",
+  "asid" : "Kode",
+  "asname" : "Nama",
+  "isactive" : "Aktif",
+  "tag" : "Tag",
+  "detailitem_caption" : "Data Struktur Akun",
+  "detailitem_no" : "No Item",
+  "detailitem_name" : "Nama Item",
+  "detailitem_parentno" : "No Induk",
+  "detailitem_accno" : "No Akun",
+  "detailitem_accname" : "Nama Akun",
+  "detailitem_isvisible" : "Ditampilkan",
+  "detailitem_isgeneral" : "Item Grup",
+
+  "save_button" : "Simpan",
+  "cancel_button": "Batal",
+
+  "confirm_save" : "Simpan Pengkinian Struktur Akun ?",
+  "confirm_yes" : "Simpan",
+  "confirm_no" : "Batal",
+
+  "action_list" : "Aksi",
+  "action_button_delete" : "Hapus",
+  "action_button_edit" : "Ubah",
+  "edit_detail" : "Ubah Detail",
+
+  "acctype_0" : "Akun Neraca",
+  "acctype_1" : "Akun Non Neraca",
+  "message_success" : "Pengkinian Struktur Akun Berhasil Disimpan",
+
+  "hide" : "Kembali"
+}

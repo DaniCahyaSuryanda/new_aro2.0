@@ -1,0 +1,42 @@
+{
+    "form": "Otorisasi Jurnal Umum",
+
+    "list_caption": "Daftar Jurnal Perlu Otorisasi",
+    "list_trxid" : "No Transaksi",
+    "list_journaldate" : "Tgl Jurnal",
+    "list_journaltype" : "Jenis Jurnal",
+    "list_description": "Keterangan",
+
+    "list_refresh" :"Refresh",
+    "list_new" : "Otorisasi",
+
+    "detail_caption" : "Data Jurnal Umum perlu Otor",
+    "trxid" : "No Transaksi",
+    "journaldate" : "Tgl Jurnal",
+    "journaltype" : "Jenis Jurnal",
+    "reffid" : "No Referensi",
+    "description": "Keterangan",
+    "detailitem_caption" : "Detil Jurnal",
+    "detailitem_accno" : "No Akun",
+    "detailitem_accname" : "Nama Akun",
+    "detailitem_description": "Keterangan",
+    "detailitem_debit" : "Debit",
+    "detailitem_credit" : "Kredit",
+
+    "otor_button" : "Otorisasi",
+    "reject_button": "Tolak",
+
+    "confirm_otor" : "Otorisasi Jurnal Baru ?",
+    "confirm_otor_yes" : "Otorisasi",
+    "confirm_otor_no" : "Batal",
+    "message_success_otor": "Otorisasi Pembuatan Jurnal Baru Disetujui",
+
+    "confirm_reject" : "Tolak Otorisasi Jurnal Baru ?",
+    "confirm_reject_yes" : "Tolak Otorisasi",
+    "confirm_reject_no" : "Batal",
+    "cancel_button" : "Kembali",
+    "message_success_reject": "Otorisasi Pembuatan Jurnal Baru Ditolak",
+
+    "hide": "kembali"
+
+}

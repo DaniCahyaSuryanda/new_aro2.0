@@ -4,6 +4,7 @@ import {
   CCard,
   CCardBody,
   CCardHeader,
+  CCardFooter,
   CCol,
   CBadge,
   CDataTable,
@@ -17,55 +18,111 @@ import {
   CRow,
   CTextarea,
   CForm,
-  CAlert,
-  CToaster,
-  CToastHeader,
 } from "@coreui/react";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import JsonAccEditValidasi from "../../../gl/params/lang/id/accountaddvalidation.json";
-// import usersData from '../../users/DataAkun'
+import LangID from "json/lang/id/Akun/add/accountaddvalidation.json";
+import LangEN from "json/lang/en/Akun/add/accountaddvalidation.json";
+import messageID from "json/lang/id/Message/message.json";
+import messageEN from "json/lang/en/Message/message.json";
+import Toast from "component/Toast";
+import { useHistory } from "react-router-dom";
 
-const fields = [
-  JsonAccEditValidasi[0].list_new,
-  { key: "trxid", label: JsonAccEditValidasi[0].list_trxid },
-  { key: "accno", label: JsonAccEditValidasi[0].list_accno },
-  { key: "accname", label: JsonAccEditValidasi[0].list_accname },
-  { key: "acctype", label: JsonAccEditValidasi[0].list_acctype },
-  { key: "normaldebit", label: JsonAccEditValidasi[0].list_normaldebit },
-  { key: "description", label: JsonAccEditValidasi[0].list_description },
-  { key: "isactive", label: JsonAccEditValidasi[0].list_isactive },
-];
+// const fields = [
+//   JsonAccEditValidasi.list_new,
+//   { key: "trxid", label: JsonAccEditValidasi.list_trxid },
+//   { key: "accno", label: JsonAccEditValidasi.list_accno },
+//   { key: "accname", label: JsonAccEditValidasi.list_accname },
+//   { key: "acctype", label: JsonAccEditValidasi.list_acctype },
+//   { key: "normaldebit", label: JsonAccEditValidasi.list_normaldebit },
+//   { key: "description", label: JsonAccEditValidasi.list_description },
+//   { key: "isactive", label: JsonAccEditValidasi.list_isactive },
+// ];
 
 const AccAddValidation = () => {
-  const [messType, setMessType] = useState("");
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState({});
   const [modal, setModal] = useState(false);
   const [modal_no, setModal2] = useState(false);
   const [items, setItems] = useState(null);
   const [dataAkun, setDataAkun] = useState(null);
   const [slide, setSlide] = useState(true);
-  const [toasts, setToasts] = useState("");
-
+  const history = useHistory();
+  const [JsonAccEditValidasi, setJsonAccEditValidasi] = useState({});
+  const [fields, setField] = useState([]);
+  const [messageJson, setMessageJson] = useState({});
+  const configApp = JSON.parse(sessionStorage.getItem("config"));
   useEffect(() => {
     if (dataAkun == null) {
       getDataEditValidasi();
     }
   }, [dataAkun]);
 
+  useEffect(
+    () => {
+      if (configApp.lang === "id") {
+        setJsonAccEditValidasi(LangID);
+        setField([
+          { key: "action", label: LangID.list_new },
+          { key: "trxid", label: LangID.list_trxid },
+          { key: "accno", label: LangID.list_accno },
+          { key: "accname", label: LangID.list_accname },
+          { key: "acctype", label: LangID.list_acctype },
+          { key: "normaldebit", label: LangID.list_normaldebit },
+          { key: "description", label: LangID.list_description },
+          { key: "isactive", label: LangID.list_isactive },
+        ]);
+      } else if (configApp.lang == "en") {
+        setJsonAccEditValidasi(LangEN);
+        setField([
+          { key: "action", label: LangEN.list_new },
+          { key: "trxid", label: LangEN.list_trxid },
+          { key: "accno", label: LangEN.list_accno },
+          { key: "accname", label: LangEN.list_accname },
+          { key: "acctype", label: LangEN.list_acctype },
+          { key: "normaldebit", label: LangEN.list_normaldebit },
+          { key: "description", label: LangEN.list_description },
+          { key: "isactive", label: LangEN.list_isactive },
+        ]);
+      } else {
+        setJsonAccEditValidasi(LangID);
+        setField([
+          { key: "action", label: LangID.list_new },
+          { key: "trxid", label: LangID.list_trxid },
+          { key: "accno", label: LangID.list_accno },
+          { key: "accname", label: LangID.list_accname },
+          { key: "acctype", label: LangID.list_acctype },
+          { key: "normaldebit", label: LangID.list_normaldebit },
+          { key: "description", label: LangID.list_description },
+          { key: "isactive", label: LangID.list_isactive },
+        ]);
+      }
+    },
+    [JsonAccEditValidasi],
+    [fields]
+  );
+
+  useEffect(() => {
+    if (configApp.lang === "id") {
+      setMessageJson(messageID);
+    } else if (configApp.lang == "en") {
+      setMessageJson(messageEN);
+    } else {
+      setMessageJson(messageID);
+    }
+  }, [messageJson]);
+
   const toggleDetails2 = (item) => {
-    // console.log(item)
     setSlide(true);
     setItems(false);
   };
 
   const toggleDetails = (item) => {
-    // console.log(item)
     setItems(item);
     setSlide(false);
   };
+
   const setujuOtoritasi = (trxid) => {
-    console.log(trxid);
+    setMessage({});
     let data = {
       trxid: trxid,
       validstate: 1,
@@ -73,49 +130,59 @@ const AccAddValidation = () => {
     axios
       .post(`${global.config.API_URL}gl/params/account/add/validation`, data)
       .then((res) => {
-        // console.log(res);
         console.log("tes", res.data);
         if (res.data.rescode === 0) {
-          setMessType("success");
-          setMessage(JsonAccEditValidasi[0].otor_success);
-          setToasts(JsonAccEditValidasi[0].otor_success);
+          setMessage(JsonAccEditValidasi.otor_success);
           setModal(false);
           setSlide(true);
           getDataEditValidasi();
           setItems(null);
-
-          setTimeout(() => {
-            setToasts(null);
-            setMessType(null);
-            setMessage(null);
-          }, 5000);
+          setMessage({
+            title: messageJson.toatsheader_success,
+            body: JsonAccEditValidasi.otor_success,
+            type: messageJson.toatscolor_success,
+            active: true,
+          });
         } else {
-          setMessType("danger");
           setMessage(res.data.errdescription);
-          setToasts(res.data.errdescription);
           setModal(false);
-          setTimeout(() => {
-            setToasts(null);
-            setMessType(null);
-            setMessage(null);
-          }, 5000);
+          setMessage({
+            title: messageJson.messagetype_err,
+            body: res.data.errdescription,
+            type: messageJson.toatscolor_err,
+            active: true,
+          });
         }
+      })
+      .catch((err) => {
+        setMessage({
+          title: messageJson.messagetype_err,
+          body: JSON.stringify(err),
+          type: messageJson.toatscolor_err,
+          active: true,
+        });
       });
   };
 
   const getDataEditValidasi = () => {
+    setMessage({});
     axios
       .get(`${global.config.API_URL}gl/params/account/add/list`)
       .then((res) => {
         setDataAkun(res.data.data);
       })
       .catch((err) => {
-        console.log(err);
+        setMessage({
+          title: messageJson.messagetype_err,
+          body: JSON.stringify(err),
+          type: messageJson.toatscolor_err,
+          active: true,
+        });
       });
   };
 
   const tolakOtoritasi = (trxid) => {
-    console.log(trxid);
+    setMessage({});
     let data = {
       trxid: trxid,
       validstate: 2,
@@ -123,51 +190,50 @@ const AccAddValidation = () => {
     axios
       .post(`${global.config.API_URL}gl/params/account/add/validation`, data)
       .then((res) => {
-        // console.log(res);
-        console.log("tes", res.data);
         if (res.data.rescode === 0) {
-          setMessType("success");
-          setMessage(JsonAccEditValidasi[0].otor_reject);
-          setToasts(JsonAccEditValidasi[0].otor_reject);
-          setModal(false);
+          setMessage(JsonAccEditValidasi.otor_reject);
+          setModal2(false);
           setSlide(true);
           getDataEditValidasi();
           setItems(null);
-          setTimeout(() => {
-            setToasts(null);
-            setMessType(null);
-            setMessage(null);
-          }, 5000);
+          setMessage({
+            title: messageJson.toatsheader_success,
+            body: JsonAccEditValidasi.otor_reject,
+            type: messageJson.toatscolor_success,
+            active: true,
+          });
         } else {
-          setMessType("danger");
           setMessage(res.data.errdescription);
-          setToasts(res.data.errdescription);
-          setModal(false);
-          setTimeout(() => {
-            setToasts(null);
-            setMessType(null);
-            setMessage(null);
-          }, 5000);
+          setModal2(false);
+          setMessage({
+            title: messageJson.toatsheader_err,
+            body: res.data.errdescription,
+            type: messageJson.toatscolor_err,
+            active: true,
+          });
         }
+      })
+      .catch((err) => {
+        setModal2(false);
+        setMessage({
+          title: messageJson.toatsheader_err,
+          body: JSON.stringify(err),
+          type: messageJson.toatscolor_err,
+          active: true,
+        });
       });
   };
 
   return (
     <>
-      {message && (
-        <CRow>
-          <CCol>
-            <CAlert color={messType}>{message}</CAlert>
-          </CCol>
-        </CRow>
-      )}
+      <Toast message={message} />
 
       {slide && (
         <CRow>
           <CCol>
             <CCard>
               <CCardHeader>
-                {JsonAccEditValidasi[0].list_caption}
+                {JsonAccEditValidasi.list_caption}
                 <CButton
                   size="sm"
                   color="danger"
@@ -178,7 +244,7 @@ const AccAddValidation = () => {
                   style={{ float: "right" }}
                 >
                   <CIcon name="cil-scrubber" />{" "}
-                  {JsonAccEditValidasi[0].list_refresh}
+                  {JsonAccEditValidasi.list_refresh}
                 </CButton>
               </CCardHeader>
               <CCardBody>
@@ -189,11 +255,11 @@ const AccAddValidation = () => {
                   striped
                   bordered
                   size="sm"
-                  itemsPerPage={10}
+                  itemsPerPage={50}
                   pagination
                   columnFilter
                   scopedSlots={{
-                    Otorisasi: (items) => {
+                    action: (items) => {
                       return (
                         <td className="py-2">
                           <CButton
@@ -205,7 +271,7 @@ const AccAddValidation = () => {
                               toggleDetails(items);
                             }}
                           >
-                            {JsonAccEditValidasi[0].otor_button}
+                            {JsonAccEditValidasi.otor_button}
                           </CButton>
                         </td>
                       );
@@ -229,9 +295,7 @@ const AccAddValidation = () => {
                                 margin: "0px",
                                 padding: "0px",
                               }}
-                            >
-                              i
-                            </p>
+                            ></p>
                           </CBadge>
                         </td>
                       ),
@@ -261,26 +325,25 @@ const AccAddValidation = () => {
                         </td>
                       ),
                     acctype: (item) =>
-                      item.acctype == 0 ? (
-                        <td> {JsonAccEditValidasi[0].acctype_0} </td>
+                      item.acctype === 0 ? (
+                        <td> {JsonAccEditValidasi.acctype_0} </td>
                       ) : (
-                        <td> {JsonAccEditValidasi[0].acctype_1} </td>
+                        <td> {JsonAccEditValidasi.acctype_1} </td>
                       ),
                   }}
                 />
               </CCardBody>
+              <CCardFooter>
+                <CButton
+                  type="reset"
+                  size="sm"
+                  color="warning"
+                  onClick={() => history.goBack()}
+                >
+                  <CIcon name="cil-chevron-left" /> {JsonAccEditValidasi.hide}
+                </CButton>
+              </CCardFooter>
             </CCard>
-          </CCol>
-        </CRow>
-      )}
-      {toasts && (
-        <CRow>
-          <CCol xl="8">
-            <CToaster position="bottom-right">
-              <CToastHeader>
-                <h6>{toasts}</h6>
-              </CToastHeader>
-            </CToaster>
           </CCol>
         </CRow>
       )}
@@ -290,11 +353,11 @@ const AccAddValidation = () => {
           <CCol>
             <CCard>
               <CCardHeader>
-                <h6>{JsonAccEditValidasi[0].detail_caption}</h6>
+                <h6>{JsonAccEditValidasi.detail_caption}</h6>
               </CCardHeader>
               <CCardBody className="mb-4">
                 <p className="text-muted">
-                  {JsonAccEditValidasi[0].list_trxid} : {items.trxid}{" "}
+                  {JsonAccEditValidasi.list_trxid} : {items.trxid}{" "}
                 </p>
                 <CForm
                   encType="multipart/form-data"
@@ -302,11 +365,11 @@ const AccAddValidation = () => {
                   color="light"
                 >
                   <CRow>
-                    <CCol xs="12" md="6" xl="5">
+                    <CCol xs="12" md="6" xl="6">
                       <CFormGroup row>
                         <CCol>
                           <CLabel htmlFor="text-input">
-                            {JsonAccEditValidasi[0].list_accno}
+                            {JsonAccEditValidasi.list_accno}
                           </CLabel>
                         </CCol>
                         <CCol xs="12" xl="9">
@@ -320,11 +383,11 @@ const AccAddValidation = () => {
                       </CFormGroup>
                     </CCol>
 
-                    <CCol xs="12" md="6" xl="7">
+                    <CCol xs="12" md="6" xl="6">
                       <CFormGroup row>
                         <CCol>
                           <CLabel htmlFor="text-input">
-                            {JsonAccEditValidasi[0].list_accname}
+                            {JsonAccEditValidasi.list_accname}
                           </CLabel>
                         </CCol>
                         <CCol xs="12" xl="9">
@@ -340,11 +403,11 @@ const AccAddValidation = () => {
                   </CRow>
 
                   <CRow>
-                    <CCol xs="12" md="6" xl="5">
+                    <CCol xs="12" md="6" xl="6">
                       <CFormGroup row>
                         <CCol>
                           <CLabel htmlFor="select">
-                            {JsonAccEditValidasi[0].list_acctype}
+                            {JsonAccEditValidasi.list_acctype}
                           </CLabel>
                         </CCol>
                         <CCol xs="12" xl="9">
@@ -352,7 +415,7 @@ const AccAddValidation = () => {
                             id="accname"
                             name="accname"
                             value={
-                              items.acctype == 0
+                              items.acctype === 0
                                 ? "Akun Neraca"
                                 : "Akun No Neraca"
                             }
@@ -362,14 +425,14 @@ const AccAddValidation = () => {
                       </CFormGroup>
                     </CCol>
 
-                    <CCol xs="12" md="6" xl="7">
+                    <CCol xs="12" md="2" xl="2">
                       <CFormGroup row>
                         <CCol>
                           <CLabel htmlFor="select">
-                            {JsonAccEditValidasi[0].list_normaldebit}
+                            {JsonAccEditValidasi.list_normaldebit}
                           </CLabel>
                         </CCol>
-                        <CCol xs="12" xl="9">
+                        <CCol xs="12" xl="12">
                           <CFormGroup variant="custom-checkbox" inline>
                             {items.isactive === true ? (
                               <CInputCheckbox
@@ -398,39 +461,15 @@ const AccAddValidation = () => {
                         </CCol>
                       </CFormGroup>
                     </CCol>
-                  </CRow>
-                  <CRow>
-                    <CCol xs="12" xl="12">
-                      <CFormGroup row>
-                        <CCol md="2">
-                          <CLabel htmlFor="textarea-input">
-                            {JsonAccEditValidasi[0].list_description}
-                          </CLabel>
-                        </CCol>
-                        <CCol xs="12" xl="12">
-                          <CTextarea
-                            name="description"
-                            id="description"
-                            rows="4"
-                            value={items.description}
-                            disabled
-                          >
-                            {items.description}
-                          </CTextarea>
-                        </CCol>
-                      </CFormGroup>
-                    </CCol>
-                  </CRow>
 
-                  <CRow>
-                    <CCol xs="12" md="6" xl="5">
+                    <CCol xs="12" md="2" xl="2">
                       <CFormGroup row>
                         <CCol>
                           <CLabel htmlFor="select">
-                            {JsonAccEditValidasi[0].list_isactive}
+                            {JsonAccEditValidasi.list_isactive}
                           </CLabel>
                         </CCol>
-                        <CCol xs="12" xl="10">
+                        <CCol xs="12" xl="12">
                           <CFormGroup variant="custom-checkbox" inline>
                             {items.isactive === true ? (
                               <CInputCheckbox
@@ -459,6 +498,28 @@ const AccAddValidation = () => {
                       </CFormGroup>
                     </CCol>
                   </CRow>
+                  <CRow>
+                    <CCol xs="12" xl="12">
+                      <CFormGroup row>
+                        <CCol md="2">
+                          <CLabel htmlFor="textarea-input">
+                            {JsonAccEditValidasi.list_description}
+                          </CLabel>
+                        </CCol>
+                        <CCol xs="12" xl="12">
+                          <CTextarea
+                            name="description"
+                            id="description"
+                            rows="4"
+                            value={items.description}
+                            disabled
+                          >
+                            {items.description}
+                          </CTextarea>
+                        </CCol>
+                      </CFormGroup>
+                    </CCol>
+                  </CRow>
                 </CForm>
                 <CButton
                   onClick={() => setModal(!modal)}
@@ -466,8 +527,7 @@ const AccAddValidation = () => {
                   color="primary"
                   style={{ float: "right" }}
                 >
-                  <CIcon name="cil-check" />{" "}
-                  {JsonAccEditValidasi[0].otor_button}
+                  <CIcon name="cil-check" /> {JsonAccEditValidasi.otor_button}
                 </CButton>
                 <CButton
                   onClick={() => setModal2(!modal_no)}
@@ -476,21 +536,19 @@ const AccAddValidation = () => {
                   style={{ float: "right" }}
                   className="mr-3"
                 >
-                  <CIcon name="cil-ban" />{" "}
-                  {JsonAccEditValidasi[0].reject_button}
+                  <CIcon name="cil-ban" /> {JsonAccEditValidasi.reject_button}
                 </CButton>
                 <CButton
                   onClick={() => toggleDetails2(items)}
                   size="sm"
                   color="warning"
                 >
-                  <CIcon name="cil-chevron-left" />{" "}
-                  {JsonAccEditValidasi[0].hide}
+                  <CIcon name="cil-chevron-left" /> {JsonAccEditValidasi.hide}
                 </CButton>
               </CCardBody>
               <CModal show={modal} onClose={setModal}>
                 <CModalBody>
-                  <h4>{JsonAccEditValidasi[0].confirm_otor}</h4>
+                  <h4>{JsonAccEditValidasi.confirm_otor}</h4>
                 </CModalBody>
                 <CModalFooter>
                   <CButton
@@ -498,17 +556,17 @@ const AccAddValidation = () => {
                     color="primary"
                     onClick={() => setujuOtoritasi(items.trxid)}
                   >
-                    {JsonAccEditValidasi[0].confirm_otor_yes}
+                    {JsonAccEditValidasi.confirm_otor_yes}
                   </CButton>{" "}
                   <CButton color="danger" onClick={() => setModal(false)}>
-                    {JsonAccEditValidasi[0].confirm_otor_no}
+                    {JsonAccEditValidasi.confirm_otor_no}
                   </CButton>
                 </CModalFooter>
               </CModal>
 
               <CModal show={modal_no} onClose={setModal2}>
                 <CModalBody>
-                  <h4>{JsonAccEditValidasi[0].confirm_reject}</h4>
+                  <h4>{JsonAccEditValidasi.confirm_reject}</h4>
                 </CModalBody>
                 <CModalFooter>
                   <CButton
@@ -516,10 +574,10 @@ const AccAddValidation = () => {
                     onClick={() => tolakOtoritasi(items.trxid)}
                     color="primary"
                   >
-                    {JsonAccEditValidasi[0].confirm_reject_yes}
+                    {JsonAccEditValidasi.confirm_reject_yes}
                   </CButton>{" "}
                   <CButton color="danger" onClick={() => setModal2(false)}>
-                    {JsonAccEditValidasi[0].confirm_reject_no}
+                    {JsonAccEditValidasi.confirm_reject_no}
                   </CButton>
                 </CModalFooter>
               </CModal>

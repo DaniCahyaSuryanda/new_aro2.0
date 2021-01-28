@@ -9,33 +9,26 @@ import {
   CForm,
   CFormGroup,
   CLabel,
-  CSelect,
   CRow,
   CModal,
   CModalBody,
   CModalFooter,
-  CAlert,
   CDataTable,
   CBadge,
-  CToast,
-  CToaster,
-  CToastHeader,
-  CToastBody,
   CModalHeader,
 } from "@coreui/react";
 
 import getFormattedDate from "utils/utils";
-import DatePicker from "react-datepicker";
-import Moment from "react-moment";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import Select from "react-select";
 import CIcon from "@coreui/icons-react";
 import { useForm, Controller } from "react-hook-form";
-import JurnalTypeAdd from "gl/transaction/lang/id/journaladdcreate.json";
-import JsonMessage from "componenJson/message.json";
-
-// import { cilColorBorder } from '@coreui/icons'
+import JurnalTypeAdd from "json/lang/id/Jurnal Umum/add/journaladdcreate.json";
+import messageJson from "json/lang/id/Message/message.json";
+import Toast from "component/Toast";
+import { useHistory } from "react-router-dom";
+import Input from "component/Input";
 
 const fields = [
   JurnalTypeAdd.action_list,
@@ -49,26 +42,25 @@ const fields = [
   { key: "detailitem_credit", label: JurnalTypeAdd.detailitem_credit },
 ];
 
+const configApp = JSON.parse(sessionStorage.getItem("config"));
+
+const darkMode = configApp.darktheme;
+
 const JenisJurnalAdd = () => {
-  const [startDate, setStartDate] = useState("");
   const [modal, setModal] = useState(false);
   const [modalEditItem, setModalEditItem] = useState(false);
   const [dataAkun, setDataAkun] = useState([]);
-  const [messType, setMessType] = useState("");
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState({});
   const [accNo, setAccNo] = useState(null);
   const [jurnal, setJurnal] = useState(null);
-  const [items, setItems] = useState(null);
   const [dataSend, setDataSend] = useState(null);
-  const [withItemGroup, setWithItemGroup] = useState(false);
   const [formItem, setFormItem] = useState(false);
   const [editFormItem, setEditFormItem] = useState(false);
   const [indexEdit, setIndexEdit] = useState(false);
   const [optionAcc, setOptionAcc] = useState([]);
   const [optionJurnal, setOptionJurnal] = useState([]);
-  const [toatsHeader, setToatsHeader] = useState(null);
-  const [toatsType, setToatsType] = useState(false);
-  const [toats, setToats] = useState(null);
+  const history = useHistory();
+
   const {
     register: register2,
     handleSubmit: handleSubmit2,
@@ -81,20 +73,13 @@ const JenisJurnalAdd = () => {
     reset: reset3,
     control: control3,
   } = useForm();
-
-  const {
-    handleSubmit: handleSubmit,
-    register: register,
-    reset: reset,
-    control: control,
-  } = useForm();
+  const { handleSubmit, register, reset, control } = useForm();
 
   const onSubmit = (data) => {
     let detail = [];
     dataAkun.map((row) => {
-      detail.push({
+      return detail.push({
         accno: row.detailitem_accno,
-        accname: row.detailitem_accname,
         description: row.detailitem_description,
         debit: row.detailitem_debit,
         credit: row.detailitem_credit,
@@ -108,86 +93,80 @@ const JenisJurnalAdd = () => {
       description: data.description,
       detail: detail,
       validstate: 0,
-      lang: "id",
+      lang: JSON.parse(sessionStorage.getItem("config")).lang,
     };
     setDataSend(sendData);
     setModal(true);
   };
 
   const confirmSave = () => {
-    console.log(dataSend);
+    setMessage({});
     axios
       .post(
         `${global.config.API_URL}gl/transaction/journal/add/create`,
         dataSend
       )
       .then((res) => {
-        console.log("tes", res.data);
         if (res.data.rescode === 0) {
-          setMessType(JsonMessage.messagetype_success);
-          setMessage(JsonMessage.journaladd_success);
-          setToatsType(JsonMessage.toatscolor_success);
-          setToatsHeader(JsonMessage.toatsheader_success);
-          setToats(JsonMessage.journaladd_success);
           reset();
           setModal(false);
           setDataSend(null);
-          setItems(null);
-          setDataAkun(null);
-          setTimeout(() => {
-            setMessType(null);
-            setMessage(null);
-          }, 5000);
+          setDataAkun([]);
+          setMessage({
+            title: messageJson.toatsheader_success,
+            body: JurnalTypeAdd.message_success,
+            type: messageJson.toatscolor_success,
+            active: true,
+          });
         } else {
           setModal(false);
-          setMessType(JsonMessage.messagetype_err);
-          setToatsType(JsonMessage.toatscolor_err);
-          setToatsHeader(JsonMessage.toatsheader_err);
-          setToats(res.data.errdescription);
-          setMessage(res.data.errdescription);
-          setTimeout(() => {
-            setMessType(null);
-            setMessage(null);
-            setToatsType(null);
-            setToatsHeader(null);
-            setToats(null);
-          }, 5000);
+          setMessage({
+            title: messageJson.toatsheader_err,
+            body: res.data.errdescription,
+            type: messageJson.toatscolor_err,
+            active: true,
+          });
         }
       })
-
       .catch(function (error) {
-        console.log(error.response.data);
         setModal(false);
-        // setMessType("danger");
-        // setMessage(error);
+        setMessage({
+          title: messageJson.messagetype_err,
+          body: JSON.stringify(error),
+          type: messageJson.toatscolor_err,
+          active: true,
+        });
       });
   };
 
   const saveDetail = (param) => {
-    // alert(JSON.stringify(data))
     let data = [...dataAkun];
-    let accname = accNo.find(({ accno }) => {
-      return accno == param.detailitem_accno.value;
-    });
+    let accname = {};
+      if (param.detailitem_accno !== undefined) {
+        accname = accNo.find(({ accno }) => {
+          return accno === param.detailitem_accno;
+        });
+      } else {
+        accname.accno = "";
+        accname.accname = "";
+      }
     data.push({
       detailitem_debit: param.detailitem_debit,
       detailitem_description: param.detailitem_description,
-      detailitem_accno: param.detailitem_accno.value,
+      detailitem_accno: accname.accno,
       detailitem_accname: accname.accname,
       detailitem_credit: param.detailitem_credit,
     });
     reset2();
     setFormItem(false);
     setDataAkun(data);
-    console.log(dataAkun);
   };
 
   const saveEditDetail = (param) => {
-    console.log(param);
     let data = [...dataAkun];
     let accnoValue = param.detailitem_accno.value;
     let accname = accNo.find(({ accno }) => {
-      return accno == accnoValue;
+      return accno === accnoValue;
     });
 
     data[indexEdit] = {
@@ -204,12 +183,9 @@ const JenisJurnalAdd = () => {
   };
 
   const deleteItem = (index) => {
-    console.log(index);
     let data = [...dataAkun];
     data.splice(index, 1);
-    console.log(data);
     setDataAkun(data);
-    console.log(dataAkun);
   };
 
   const ubahItem = (param, index) => {
@@ -227,68 +203,74 @@ const JenisJurnalAdd = () => {
   }, [accNo, jurnal]);
 
   const getDataJurnal = () => {
+    setMessage({});
     axios
       .get(global.config.API_URL + "gl/params/journaltype/list?onlyactive=true")
       .then((res) => {
         let data = [];
         res.data.data.map((jurnal) => {
-          data.push({ value: jurnal.jrtype, label: jurnal.jrtype });
+          return data.push({ value: jurnal.jrtype, label: jurnal.jrtype });
         });
-        console.log(res.data.data);
         setJurnal(res.data.data);
         setOptionJurnal(data);
+        if (res.data.rescode !== 0) {
+          setMessage({
+            title: messageJson.toatsheader_err,
+            body: res.data.errdescription,
+            type: messageJson.toatscolor_err,
+            active: true,
+          });
+        }
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(function (error) {
+        setMessage({
+          title: messageJson.messagetype_err,
+          body: JSON.stringify(error),
+          type: messageJson.toatscolor_err,
+          active: true,
+        });
       });
   };
 
   const getDataAkun = () => {
+    setMessage({});
     axios
       .get(`${global.config.API_URL}gl/params/account/list?onlyactive=true`)
       .then((res) => {
         let data = [];
         res.data.data.map((akun) => {
-          data.push({
+          return data.push({
             value: akun.accno,
             label: akun.accno + " - " + akun.accname,
           });
         });
-        console.log(res.data.data);
         setAccNo(res.data.data);
         setOptionAcc(data);
+        if (res.data.rescode !== 0) {
+          setMessage({
+            title: messageJson.messagetype_err,
+            body: res.data.errdescription,
+            type: messageJson.toatscolor_err,
+            active: true,
+          });
+        }
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(function (error) {
+        setMessage({
+          title: messageJson.messagetype_err,
+          body: JSON.stringify(error),
+          type: messageJson.toatscolor_err,
+          active: true,
+        });
       });
   };
 
-  // const itemGroup = (e) => {
-  //   console.log(e);
-  //   setWithItemGroup(e);
-  // };
-
   return (
     <>
-      {message && (
-        <CRow>
-          <CCol>
-            <CAlert color={messType}>{message}</CAlert>
-          </CCol>
-        </CRow>
-      )}
-      {toats && (
-        <CToaster position="top-right">
-          <CToast show={true}>
-            <CToastHeader className={toatsType}>
-              <h6>{toatsHeader}</h6>
-            </CToastHeader>
-            <CToastBody>{toats}</CToastBody>
-          </CToast>
-        </CToaster>
-      )}
+      <Toast message={message} />
+
       {accNo && jurnal && (
-        <CCard color="light">
+        <>
           <CRow>
             <CCol xl="12">
               <CCard>
@@ -300,107 +282,54 @@ const JenisJurnalAdd = () => {
                 >
                   <CCardBody>
                     <CRow>
-                      <CCol xs="12" md="6" xl="6">
-                        <CFormGroup row>
-                          <CCol>
-                            <CLabel htmlFor="text-input">
-                              {JurnalTypeAdd.journaldate}
-                            </CLabel>
-                          </CCol>
-                          <CCol xs="12" xl="9">
-                            <input
-                              type="date"
-                              className="form-control"
-                              id="journaldate"
-                              ref={register}
-                              name="journaldate"
-                              // onChange={(event) =>
-                              //   changeField(event.target.value)
-                              // }
-                              dateformat="dd/MM/yyyy"
-                            />
-                            {/* <DatePicker
-                              ref={register}
-                              name="journaldate"
-                              className="form-control"
-                              selected={startDate}
-                              onChange={(date) => setStartDate(date)}
-                              // showTimeSelect
-                              // timeFormat="HH:mm"
-                              //timeIntervals={15}
-                              // timeCaption="time"
-                              dateFormat="yyyy/MM/dd"
-                              autoComplete="off"
-                            /> */}
-                          </CCol>
-                        </CFormGroup>
-                      </CCol>
-
-                      <CCol xs="12" md="6" xl="6">
-                        <CFormGroup row>
-                          <CCol>
-                            <CLabel htmlFor="text-input">
-                              {JurnalTypeAdd.reffid}
-                            </CLabel>
-                          </CCol>
-                          <CCol xs="12" xl="9">
-                            <input
-                              className="form-control"
-                              ref={register}
-                              id="reffid"
-                              name="reffid"
-                            />
-                          </CCol>
-                        </CFormGroup>
-                      </CCol>
+                      <Input
+                        ref={register}
+                        typefield="date"
+                        type="date"
+                        label={JurnalTypeAdd.journaldate}
+                        name="journaldate"
+                        defaultValue=""
+                        id="journaldate"
+                        md="6"
+                        lg="6"
+                      />
+                      <Input
+                        ref={register}
+                        typefield="text"
+                        type="text"
+                        label={JurnalTypeAdd.reffid}
+                        name="reffid"
+                        defaultValue=""
+                        id="reffid"
+                        md="6"
+                        lg="6"
+                      />
                     </CRow>
                     <CRow>
-                      <CCol xs="12" md="6" xl="6">
-                        <CFormGroup row>
-                          <CCol>
-                            <CLabel htmlFor="select">
-                              {JurnalTypeAdd.journaltype}
-                            </CLabel>
-                          </CCol>
-                          <CCol xs="12" xl="9">
-                            <Controller
-                              name="journaltype"
-                              as={Select}
-                              options={optionJurnal}
-                              control={control}
-                              defaultValue=""
-                              id="journaltype"
-                            />
-                            {/* <input
-                              type="text"
-                              className="form-control"
-                              id="journaltype"
-                              name="journaltype"
-                              ref={register2}
-                              defaultValue={""}
-                            /> */}
-                          </CCol>
-                        </CFormGroup>
-                      </CCol>
-                      <CCol xs="12" md="6" xl="6">
-                        <CFormGroup row>
-                          <CCol>
-                            <CLabel htmlFor="select">
-                              {JurnalTypeAdd.description}
-                            </CLabel>
-                          </CCol>
-                          <CCol xs="12" xl="9">
-                            <textarea
-                              className="form-control"
-                              name="description"
-                              rows="4"
-                              ref={register}
-                            ></textarea>
-                          </CCol>
-                        </CFormGroup>
-                      </CCol>
+                      <Input
+                        ref={register}
+                        typefield="textarea"
+                        label={JurnalTypeAdd.description}
+                        name="description"
+                        id="description"
+                        md="6"
+                        lg="6"
+                        rows="4"
+                        defaultValue={""}
+                      />
+                      <Input
+                        ref={control}
+                        typefield="select"
+                        label={JurnalTypeAdd.journaltype}
+                        name="journaltype"
+                        id="journaltype"
+                        md="6"
+                        lg="6"
+                        options={optionJurnal}
+                        defaultValue=""
+                        // eventSelect={eventSelect}
+                      />
                     </CRow>
-
                     <CRow>
                       <CCol>
                         <CDataTable
@@ -491,8 +420,8 @@ const JenisJurnalAdd = () => {
                       <CCol lg="12" md="12">
                         <CButton
                           color="primary"
+                          size="sm"
                           onClick={() => setFormItem(true)}
-                          style={{ float: "right" }}
                         >
                           <CIcon name="cil-pencil" />
                           {JurnalTypeAdd.list_new}
@@ -501,15 +430,31 @@ const JenisJurnalAdd = () => {
                     </CRow>
                   </CCardBody>
                   <CCardFooter>
-                    <CButton type="reset" color="danger" className="mr-3">
-                      <CIcon name="cil-x" /> {JurnalTypeAdd.cancel_button}
+                    <CButton
+                      type="reset"
+                      size={"sm"}
+                      color="warning"
+                      onClick={() => history.goBack()}
+                    >
+                      <CIcon name="cil-chevron-left" /> {JurnalTypeAdd.hide}
                     </CButton>
                     <CButton
                       type="submit"
                       color="primary"
+                      size="sm"
                       style={{ float: "right" }}
+                      className="m-2"
                     >
                       <CIcon name="cil-save" /> {JurnalTypeAdd.save_button}
+                    </CButton>
+                    <CButton
+                      type="reset"
+                      size="sm"
+                      color="danger"
+                      style={{ float: "right" }}
+                      className="m-2"
+                    >
+                      <CIcon name="cil-x" /> {JurnalTypeAdd.reset_button}
                     </CButton>
                   </CCardFooter>
                 </CForm>
@@ -553,84 +498,53 @@ const JenisJurnalAdd = () => {
                   onSubmit={handleSubmit2(saveDetail)}
                 >
                   <CRow>
-                    <CCol lg="6" md="6" sm="12">
-                      <CFormGroup row>
-                        <CCol>
-                          <CLabel htmlFor="text-input">
-                            {JurnalTypeAdd.detailitem_accno}
-                          </CLabel>
-                        </CCol>
-                        <CCol xs="12" xl="9">
-                          <Controller
-                            name="detailitem_accno"
-                            as={Select}
-                            options={optionAcc}
-                            control={control2}
-                            defaultValue=""
-                            id="detailitem_accno"
-                          />
-                        </CCol>
-                      </CFormGroup>
-                    </CCol>
-                    <CCol lg="6" md="6" sm="12">
-                      <CFormGroup row>
-                        <CCol>
-                          <CLabel htmlFor="text-input">
-                            {JurnalTypeAdd.detailitem_description}
-                          </CLabel>
-                        </CCol>
-                        <CCol xs="12" xl="9">
-                          <input
-                            className="form-control"
-                            id="detailitem_description"
-                            name="detailitem_description"
-                            ref={register2}
-                            defaultValue={""}
-                            rows="4"
-                          ></input>
-                        </CCol>
-                      </CFormGroup>
-                    </CCol>
+                    <Input
+                      ref={control2}
+                      typefield="select"
+                      label={JurnalTypeAdd.detailitem_accno}
+                      name="detailitem_accno"
+                      id="detailitem_accno"
+                      md="6"
+                      lg="6"
+                      options={optionAcc}
+                      defaultValue=""
+                      // eventSelect={eventSelect}
+                    />
+                    <Input
+                      ref={register2}
+                      typefield="text"
+                      type="text"
+                      label={JurnalTypeAdd.detailitem_description}
+                      name="detailitem_description"
+                      defaultValue=""
+                      id="detailitem_description"
+                      md="6"
+                      lg="6"
+                    />
                   </CRow>
                   <CRow>
-                    <CCol lg="6" md="6" sm="12">
-                      <CFormGroup row>
-                        <CCol>
-                          <CLabel htmlFor="text-input">
-                            {JurnalTypeAdd.detailitem_debit}
-                          </CLabel>
-                        </CCol>
-                        <CCol xs="12" xl="9">
-                          <input
-                            type="number"
-                            className="form-control"
-                            id="detailitem_debit"
-                            name="detailitem_debit"
-                            ref={register2({ valueAsNumber: true })}
-                            //  defaultValue=""
-                          />
-                        </CCol>
-                      </CFormGroup>
-                    </CCol>
-                    <CCol lg="6" md="6" sm="12">
-                      <CFormGroup row>
-                        <CCol>
-                          <CLabel htmlFor="text-input">
-                            {JurnalTypeAdd.detailitem_credit}
-                          </CLabel>
-                        </CCol>
-                        <CCol xs="12" xl="9">
-                          <input
-                            type="number"
-                            className="form-control"
-                            id="detailitem_credit"
-                            name="detailitem_credit"
-                            ref={register2({ valueAsNumber: true })}
-                            //  defaultValue={""}
-                          />
-                        </CCol>
-                      </CFormGroup>
-                    </CCol>
+                    <Input
+                      ref={register2}
+                      typefield="number"
+                      type="number"
+                      label={JurnalTypeAdd.detailitem_debit}
+                      name="detailitem_debit"
+                      defaultValue=""
+                      id="detailitem_debit"
+                      md="6"
+                      lg="6"
+                    />
+                    <Input
+                      ref={register2}
+                      typefield="number"
+                      type="number"
+                      label={JurnalTypeAdd.detailitem_credit}
+                      name="detailitem_credit"
+                      defaultValue=""
+                      id="detailitem_credit"
+                      md="6"
+                      lg="6"
+                    />
                   </CRow>
                   <hr></hr>
                   <CRow>
@@ -657,8 +571,9 @@ const JenisJurnalAdd = () => {
               </CModalBody>
             )}
           </CModal>
-        </CCard>
+        </>
       )}
+
       <CModal
         size="lg"
         show={modalEditItem}
@@ -692,6 +607,22 @@ const JenisJurnalAdd = () => {
                         name="detailitem_accno"
                         as={Select}
                         options={optionAcc}
+                        theme={(theme) => ({
+                          ...theme,
+                          borderRadius: "4px",
+                          colors: {
+                            ...theme.colors,
+                            neutral0: darkMode
+                              ? "#2a2b36"
+                              : theme.colors.neutral0,
+                            neutral80: darkMode
+                              ? "#fff"
+                              : theme.colors.neutral80,
+                            primary25: darkMode
+                              ? theme.colors.primary75
+                              : theme.colors.primary25,
+                          },
+                        })}
                         control={control3}
                         defaultValue={{
                           value: editFormItem.detailitem_accno,

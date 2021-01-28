@@ -1,0 +1,35 @@
+{
+    "form": "Pembuatan Jurnal Umum Baru",
+
+    "detail_caption" : "Pembuatan Jurnal Umum",
+    "journaldate" : "Tgl Jurnal",
+    "journaltype" : "Jenis Jurnal",
+
+    "list_refresh" :"Refresh",
+    "list_new" : "Buat Baru",
+
+    "reffid" : "No Referensi",
+    "description": "Keterangan",
+
+    "detailitem_caption" : "Detil Jurnal",
+
+    "detailitem_accno" : "No Akun",
+    "detailitem_accname" : "Nama Akun",
+    "detailitem_description": "Keterangan",
+    "detailitem_debit" : "Debit",
+    "detailitem_credit" : "Kredit",
+
+    "save_button" : "Simpan",
+    "cancel_button": "Batal",
+    "reset_button" : "Reset",
+    "hide": "kembali",
+
+    "action_list" : "Aksi",
+    "action_button_delete" : "Hapus",
+    "action_button_edit" : "Ubah",
+    "message_success": "Pembuatan Jurnal Baru Berhasil",
+
+    "confirm_save" : "Simpan Jurnal Umum Baru ?",
+    "confirm_yes" : "Simpan",
+    "confirm_no" : "Batal"
+}
