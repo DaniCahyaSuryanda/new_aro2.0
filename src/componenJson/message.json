@@ -1,6 +1,7 @@
 {
     "messagetype_success" : "success",
     "messagetype_err" : "danger",
+
  
     "toatsheader_success" : "Berhasil",
     "toatsheader_err" : "Gagal",

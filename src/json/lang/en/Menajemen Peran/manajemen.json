@@ -1,9 +1,9 @@
 [
-    { 
+    {
       "id": "mg-001",
-      "Namamenu" : "Pembuatan Kantor Baru",
-      "Buttonadd" : "Buat Baru",
-      "ButtonOtor" : "Otorisasi",
+      "Namamenu" : "Create New Office",
+      "Buttonadd" : "Create New",
+      "ButtonOtor" : "Authorization",
       "Iconadd" :"cil-pencil",
       "Iconotor" : "cil-check-circle",
       "Addlink" : "/pemeliharaan/manajemenKantor/Addnewoffice",
@@ -11,16 +11,16 @@
       "Color" : "success"
     },
 
-    { 
+    {
       "id": "mg-002",
-      "Namamenu" : "Pengkinian Kantor Baru",
-      "Buttonadd" : "Buat Baru",
-      "ButtonOtor" : "Otorisasi",
+      "Namamenu" : "Updating New Office",
+      "Buttonadd" : "Create New",
+      "ButtonOtor" : "Authorization",
       "Iconadd" :"cil-pencil",
       "Iconotor" : "cil-check-circle",
       "Addlink" : "/pemeliharaan/manajemenKantor/Editoffice",
       "Otorlink" : "",
       "Color" : "success"
     }
-   
+
   ]

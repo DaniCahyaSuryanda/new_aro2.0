@@ -3,7 +3,7 @@ import { createStore } from 'redux'
 const initialState = {
   sidebarShow: 'responsive',
   asideShow: false,
-  darkMode: false
+  darkMode: (JSON.parse( sessionStorage.getItem('config') ) === null) ? false : JSON.parse( sessionStorage.getItem('config') ).darktheme
 }
 
 const changeState = (state = initialState, { type, ...rest }) => {

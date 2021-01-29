@@ -25,28 +25,7 @@ import Toast from "component/Toast";
 import { useHistory } from "react-router-dom";
 import Input from "component/Input";
 
-// const fields = [
-//   JsonReportstructureadd.action_list,
-//   { key: "detailitem_no", label: JsonReportstructureadd.detailitem_no },
-//   { key: "detailitem_name", label: JsonReportstructureadd.detailitem_name },
-//   {
-//     key: "detailitem_parentno",
-//     label: JsonReportstructureadd.detailitem_parentno,
-//   },
-//   {
-//     key: "detailitem_isgeneral",
-//     label: JsonReportstructureadd.detailitem_isgeneral,
-//   },
-//   { key: "detailitem_accno", label: JsonReportstructureadd.detailitem_accno },
-//   {
-//     key: "detailitem_accname",
-//     label: JsonReportstructureadd.detailitem_accname,
-//   },
-//   {
-//     key: "detailitem_isvisible",
-//     label: JsonReportstructureadd.detailitem_isvisible,
-//   },
-// ];
+const configApp = JSON.parse(sessionStorage.getItem("config"));
 
 const Reportstrucutreadd = () => {
   const [modal, setModal] = useState(false);
@@ -60,30 +39,13 @@ const Reportstrucutreadd = () => {
   const [editFormItem, setEditFormItem] = useState(false);
   const [indexEdit, setIndexEdit] = useState(false);
   const [option, setOption] = useState([]);
+  const [JsonReportstructureadd, setJsonReportstructureadd] = useState(null);
+  const [messageJson, setMessageJson] = useState(null);
+  const [fields, setField] = useState(null);
   const history = useHistory();
-  const [JsonReportstructureadd, setJsonReportstructureadd] = useState({});
-  const [messageJson, setMessageJson] = useState({});
-  const [fields, setField] = useState([null]);
 
-  const configApp = JSON.parse(sessionStorage.getItem("config"));
-
-  const {
-    register: register2,
-    handleSubmit: handleSubmit2,
-    reset: reset2,
-    control: control2,
-  } = useForm();
-  const {
-    register: register3,
-    handleSubmit: handleSubmit3,
-    reset: reset3,
-    control: control3,
-  } = useForm();
-  const { handleSubmit, register, reset, control } = useForm();
-
-  useEffect(
-    () => {
-      //if (JsonReportstructureadd === null || fields === null) {
+  useEffect(() => {
+    if (JsonReportstructureadd === null || fields === null) {
       if (configApp.lang === "id") {
         setJsonReportstructureadd(LangID);
         setField([
@@ -175,21 +137,34 @@ const Reportstrucutreadd = () => {
           },
         ]);
       }
-      // }
-    },
-    [JsonReportstructureadd],
-    [fields]
-  );
+    }
+  }, [JsonReportstructureadd, fields]);
 
   useEffect(() => {
-    if (configApp.lang === "id") {
-      setMessageJson(messageID);
-    } else if (configApp.lang == "en") {
-      setMessageJson(messageEN);
-    } else {
-      setMessageJson(messageID);
+    if (messageJson === null) {
+      if (configApp.lang === "id") {
+        setMessageJson(messageID);
+      } else if (configApp.lang == "en") {
+        setMessageJson(messageEN);
+      } else {
+        setMessageJson(messageID);
+      }
     }
   }, [messageJson]);
+
+  const {
+    register: register2,
+    handleSubmit: handleSubmit2,
+    reset: reset2,
+    control: control2,
+  } = useForm();
+  const {
+    register: register3,
+    handleSubmit: handleSubmit3,
+    reset: reset3,
+    control: control3,
+  } = useForm();
+  const { handleSubmit, register, reset, control } = useForm();
 
   const onSubmit = (data) => {
     // alert(JSON.stringify(data))
@@ -400,7 +375,7 @@ const Reportstrucutreadd = () => {
     <>
       <Toast message={message} />
 
-      {accNo && (
+      {accNo && JsonReportstructureadd && fields && (
         <>
           <CRow>
             <CCol xl="12">
@@ -472,7 +447,7 @@ const Reportstrucutreadd = () => {
                           striped
                           bordered
                           columnFilter
-                          itemsPerPage={5}
+                          itemsPerPage={50}
                           pagination
                           scopedSlots={{
                             detailitem_isgeneral: (item) =>

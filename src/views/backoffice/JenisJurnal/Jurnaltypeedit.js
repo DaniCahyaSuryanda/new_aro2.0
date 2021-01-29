@@ -16,21 +16,16 @@ import {
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import CIcon from "@coreui/icons-react";
 import LangID from "json/lang/id/Tipe Jurnal/edit/journaltypeeditcreate.json";
 import LangEN from "json/lang/en/Tipe Jurnal/edit/journaltypeeditcreate.json";
-import CIcon from "@coreui/icons-react";
 import messageJsonID from "json/lang/id/Message/message.json";
 import messageJsonEN from "json/lang/en/Message/message.json";
 import Toast from "component/Toast";
-import { useHistory } from "react-router-dom";
 import Input from "component/Input";
+import { useHistory } from "react-router-dom";
 
-// const fields = [
-//   { key: "Edit_Jurnal", label: "Setting" },
-//   { key: "jrtype", label: JsonjurnalEdit.list_jrtype },
-//   { key: "description", label: JsonjurnalEdit.list_description },
-//   { key: "isactive", label: JsonjurnalEdit.list_isactive },
-// ];
+const configApp = JSON.parse(sessionStorage.getItem("config"));
 
 const JJEditCreate = () => {
   const [message, setMessage] = useState("");
@@ -38,9 +33,6 @@ const JJEditCreate = () => {
   // const [modal_no, setModal2] = useState(false);
   const [items, setItems] = useState(null);
   const [dataPengkinian, setdataPengkinian] = useState(null);
-  const [JsonjurnalEdit, setJsonjurnalEdit] = useState({});
-  const [fields, setField] = useState([]);
-  const [messageJson, setMessageJson] = useState({});
   const {
     handleSubmit,
     register,
@@ -49,17 +41,13 @@ const JJEditCreate = () => {
   } = useForm();
   const [dataSend, setDataSend] = useState(null);
   const [slide, setSlide] = useState(true);
+  const [JsonjurnalEdit, setJsonjurnalEdit] = useState({});
+  const [fields, setField] = useState(null);
+  const [messageJson, setMessageJson] = useState(null);
   const history = useHistory();
-  const configApp = JSON.parse(sessionStorage.getItem("config"));
 
   useEffect(() => {
-    if (dataPengkinian == null) {
-      getDataAddValidasi();
-    }
-  }, [dataPengkinian]);
-
-  useEffect(
-    () => {
+    if (JsonjurnalEdit === null || fields === null) {
       if (configApp.lang == "id") {
         setJsonjurnalEdit(LangID);
         setField([
@@ -88,20 +76,26 @@ const JJEditCreate = () => {
           { key: "isactive", label: LangID.isactive },
         ]);
       }
-    },
-    [JsonjurnalEdit],
-    [fields]
-  );
+    }
+  }, [JsonjurnalEdit, fields]);
 
   useEffect(() => {
-    if (configApp.lang == "id") {
-      setMessageJson(messageJsonID);
-    } else if (configApp.lang == "en") {
-      setMessageJson(messageJsonEN);
-    } else {
-      setMessageJson(messageJsonID);
+    if (messageJson === null) {
+      if (configApp.lang == "id") {
+        setMessageJson(messageJsonID);
+      } else if (configApp.lang == "en") {
+        setMessageJson(messageJsonEN);
+      } else {
+        setMessageJson(messageJsonID);
+      }
     }
   }, [messageJson]);
+
+  useEffect(() => {
+    if (dataPengkinian == null) {
+      getDataAddValidasi();
+    }
+  }, [dataPengkinian]);
 
   const toggleDetails = (item) => {
     // console.log(item)
@@ -188,9 +182,9 @@ const JJEditCreate = () => {
     <>
       <Toast message={message} />
 
-      <CRow>
-        <CCol xs="12" lg="12">
-          {slide && (
+      {slide && JsonjurnalEdit && fields && (
+        <CRow>
+          <CCol xs="12" lg="12">
             <CCard>
               <CCardHeader>
                 {JsonjurnalEdit.list_caption}
@@ -268,9 +262,9 @@ const JJEditCreate = () => {
                 </CButton>
               </CCardFooter>
             </CCard>
-          )}
-        </CCol>
-      </CRow>
+          </CCol>
+        </CRow>
+      )}
 
       {items && (
         <CRow>

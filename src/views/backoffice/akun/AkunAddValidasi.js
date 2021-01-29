@@ -28,16 +28,7 @@ import messageEN from "json/lang/en/Message/message.json";
 import Toast from "component/Toast";
 import { useHistory } from "react-router-dom";
 
-// const fields = [
-//   JsonAccEditValidasi.list_new,
-//   { key: "trxid", label: JsonAccEditValidasi.list_trxid },
-//   { key: "accno", label: JsonAccEditValidasi.list_accno },
-//   { key: "accname", label: JsonAccEditValidasi.list_accname },
-//   { key: "acctype", label: JsonAccEditValidasi.list_acctype },
-//   { key: "normaldebit", label: JsonAccEditValidasi.list_normaldebit },
-//   { key: "description", label: JsonAccEditValidasi.list_description },
-//   { key: "isactive", label: JsonAccEditValidasi.list_isactive },
-// ];
+const configApp = JSON.parse(sessionStorage.getItem("config"));
 
 const AccAddValidation = () => {
   const [message, setMessage] = useState({});
@@ -47,18 +38,12 @@ const AccAddValidation = () => {
   const [dataAkun, setDataAkun] = useState(null);
   const [slide, setSlide] = useState(true);
   const history = useHistory();
-  const [JsonAccEditValidasi, setJsonAccEditValidasi] = useState({});
-  const [fields, setField] = useState([]);
-  const [messageJson, setMessageJson] = useState({});
-  const configApp = JSON.parse(sessionStorage.getItem("config"));
-  useEffect(() => {
-    if (dataAkun == null) {
-      getDataEditValidasi();
-    }
-  }, [dataAkun]);
+  const [JsonAccEditValidasi, setJsonAccEditValidasi] = useState(null);
+  const [fields, setField] = useState(null);
+  const [messageJson, setMessageJson] = useState(null);
 
-  useEffect(
-    () => {
+  useEffect(() => {
+    if (JsonAccEditValidasi === null || fields === null) {
       if (configApp.lang === "id") {
         setJsonAccEditValidasi(LangID);
         setField([
@@ -96,20 +81,26 @@ const AccAddValidation = () => {
           { key: "isactive", label: LangID.list_isactive },
         ]);
       }
-    },
-    [JsonAccEditValidasi],
-    [fields]
-  );
+    }
+  }, [JsonAccEditValidasi, fields]);
 
   useEffect(() => {
-    if (configApp.lang === "id") {
-      setMessageJson(messageID);
-    } else if (configApp.lang == "en") {
-      setMessageJson(messageEN);
-    } else {
-      setMessageJson(messageID);
+    if (messageJson === null) {
+      if (configApp.lang === "id") {
+        setMessageJson(messageID);
+      } else if (configApp.lang == "en") {
+        setMessageJson(messageEN);
+      } else {
+        setMessageJson(messageID);
+      }
     }
   }, [messageJson]);
+
+  useEffect(() => {
+    if (dataAkun == null) {
+      getDataEditValidasi();
+    }
+  }, [dataAkun]);
 
   const toggleDetails2 = (item) => {
     setSlide(true);
@@ -228,7 +219,7 @@ const AccAddValidation = () => {
     <>
       <Toast message={message} />
 
-      {slide && (
+      {slide && JsonAccEditValidasi && fields && (
         <CRow>
           <CCol>
             <CCard>
@@ -255,7 +246,7 @@ const AccAddValidation = () => {
                   striped
                   bordered
                   size="sm"
-                  itemsPerPage={50}
+                  itemsPerPage={10}
                   pagination
                   columnFilter
                   scopedSlots={{

@@ -5,61 +5,106 @@ import {
   CCard,
   CCardHeader,
   CCardBody,
-  CForm,
-  CFormGroup,
-  CLabel,
   CButton,
   CCardFooter,
   CDataTable,
-  CModal,
-  CModalHeader,
-  CModalBody,
-  CSelect,
 } from "@coreui/react";
-import JsonLaporanUmum from "laporan/lang/id/laporanumum.json";
+import LangID from "json/lang/id/Laporan Umum/laporanumum.json";
+import LangEN from "json/lang/en/Laporan Umum/laporanumum.json";
 import axios from "axios";
-import Select from "react-select";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import CIcon from "@coreui/icons-react";
+import messageID from "json/lang/id/Message/message.json";
+import messageEN from "json/lang/en/Message/message.json";
+import Toast from "component/Toast";
+import moment from "moment";
+import Input from "component/Input";
 
-// const fields = [
-//   { key: "detail_kategori", label: JsonLaporanUmum.detail_kategori },
-//   { key: "detail_name", label: JsonLaporanUmum.detail_name },
-//   { key: "detail_startdate", label: JsonLaporanUmum.detail_startdate },
-//   { key: "detail_enddate", label: JsonLaporanUmum.detail_enddate },
-// ];
-import { useSelector } from "react-redux";
+const configApp = JSON.parse(sessionStorage.getItem("config"));
+
 const LaporanUmum = () => {
-  const { handleSubmit, register, reset, control } = useForm();
+  const { handleSubmit, register, control } = useForm();
   const [dataKategori, setDataKategori] = useState(null);
   const [dataNama, setDataNama] = useState([]);
-  const [items, setItems] = useState(false);
   const [dataFilter, setDataFilter] = useState(null);
+  const [message, setMessage] = useState({});
   const [dataGrid, setDataGrid] = useState(null);
   const [dataButton, setDataButton] = useState(null);
-  const darkMode = useSelector((state) => state.darkMode);
+
+  const [JsonLaporanUmum, setJsonLaporanUmum] = useState(null);
+  const [messageJson, setMessageJson] = useState({});
+  const configApp = JSON.parse(sessionStorage.getItem("config"));
+
   useEffect(() => {
-    if (dataKategori == null) {
+    if (dataKategori === null) {
       SetDataKategori();
     }
   }, [dataKategori]);
 
+  useEffect(
+    () => {
+      if (Object.keys(messageJson).length === 0) {
+        if (configApp.lang == "id") {
+          setMessageJson(messageID);
+        } else if (configApp.lang == "en") {
+          setMessageJson(messageEN);
+        } else {
+          setMessageJson(messageID);
+        }
+      } else {
+        if (dataKategori === null) {
+          SetDataKategori();
+        }
+      }
+    },
+    [messageJson],
+    [dataKategori]
+  );
+
+  useEffect(() => {
+    if (JsonLaporanUmum == null) {
+      if (configApp.lang === "id") {
+        setJsonLaporanUmum(LangID);
+      } else if (configApp.lang === "en") {
+        setJsonLaporanUmum(LangEN);
+      } else {
+        setJsonLaporanUmum(LangID);
+      }
+    }
+  }, [JsonLaporanUmum]);
+
   const SetDataKategori = () => {
+    setMessage({});
     axios
       .post(global.config.API_URL + "general/report/viewer/listcategory")
       .then((res) => {
         let data = [];
         res.data.data.map((row) => {
-          data.push({ value: row, label: row });
+          return data.push({ value: row, label: row });
         });
         setDataKategori(data);
+        if (res.data.rescode !== 0) {
+          setMessage({
+            title: messageJson.toatsheader_err,
+            body: res.data.errdescription,
+            type: messageJson.toatscolor_err,
+            active: true,
+          });
+        }
       })
-      .catch((err) => {
-        console.log(err);
+      .catch((error) => {
+        setMessage({
+          title: messageJson.toatsheader_err,
+          body: JSON.stringify(error),
+          type: messageJson.toatscolor_err,
+          active: true,
+        });
       });
   };
 
   const setOptionNama = (kategori) => {
+    setMessage({});
+
     let kategory = {
       category: kategori,
     };
@@ -71,27 +116,38 @@ const LaporanUmum = () => {
       .then((res) => {
         let data = [];
         res.data.data.map((row) => {
-          data.push({
+          return data.push({
             value: row,
             label: row,
           });
         });
         setDataNama(data);
+        if (res.data.rescode !== 0) {
+          setMessage({
+            title: messageJson.toatsheader_err,
+            body: res.data.errdescription,
+            type: messageJson.toatscolor_err,
+            active: true,
+          });
+        }
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(function (error) {
+        setMessage({
+          title: messageJson.messagetype_err,
+          body: JSON.stringify(error),
+          type: messageJson.toatscolor_err,
+          active: true,
+        });
       });
   };
 
   const showFilter = handleSubmit((data) => {
+    setMessage({});
     let body = {
       category: data.category,
       name: data.name,
-      lang: "id",
+      lang: JSON.parse(sessionStorage.getItem("config")).lang,
     };
-    // let kategori = data.category;
-    // let nama = data.name;
-    // let lang = { lang: "id" };
     setDataGrid(null);
     setDataFilter(null);
     setDataButton(null);
@@ -101,26 +157,34 @@ const LaporanUmum = () => {
         let dataRes = res.data.data;
         let filter = [];
         dataRes.filter.map((row) => {
-          if (row.datatype == "select") {
+          if (row.datatype === "select") {
             let dataSelect = [];
             let idselect = row.selectid;
             let filterData = dataRes.selectvalues.find(({ id }) => {
-              return id == idselect;
+              return id === idselect;
             });
             filterData.listvalues.map((selectRow) => {
-              dataSelect.push({
+              return dataSelect.push({
                 value: selectRow.id,
                 label: selectRow.caption,
               });
             });
-            filter.push({
+            return filter.push({
               name: row.id,
               label: row.caption,
               type: row.datatype,
               values: dataSelect,
             });
+          } else if (row.datatype === "date") {
+            let defaultValue = moment(row.defaultvalue).format("yyyy-MM-DD");
+            return filter.push({
+              name: row.id,
+              label: row.caption,
+              type: row.datatype,
+              defaultvalue: defaultValue,
+            });
           } else {
-            filter.push({
+            return filter.push({
               name: row.id,
               label: row.caption,
               type: row.datatype,
@@ -129,14 +193,13 @@ const LaporanUmum = () => {
           }
         });
         setDataFilter(filter);
-
         let button = { ...dataRes };
         delete button.filter;
         delete button.selectvalues;
         const objectArray = Object.entries(button);
         button = [];
         objectArray.forEach(([key, value]) => {
-          if (value == true) {
+          if (value === true) {
             button.push({ disabled: value, name: key, className: "mr-3" });
           } else {
             button.push({
@@ -147,9 +210,22 @@ const LaporanUmum = () => {
           }
         });
         setDataButton(button);
+        if (res.data.rescode !== 0) {
+          setMessage({
+            title: messageJson.toatsheader_err,
+            body: res.data.errdescription,
+            type: messageJson.toatscolor_err,
+            active: true,
+          });
+        }
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(function (error) {
+        setMessage({
+          title: messageJson.messagetype_err,
+          body: JSON.stringify(error),
+          type: messageJson.toatscolor_err,
+          active: true,
+        });
       });
   });
 
@@ -160,35 +236,76 @@ const LaporanUmum = () => {
     delete data.category;
     delete data.name;
     dataForm.listfilter = data;
-    dataForm.lang = "id";
+    dataForm.lang = JSON.parse(sessionStorage.getItem("config")).lang;
 
     return dataForm;
   };
 
   const viewdata = handleSubmit((data) => {
+    setMessage({});
     const result = formatingData(data);
     axios
       .post(`${global.config.API_URL}general/report/viewer/data`, result)
       .then((res) => {
         if (res.data.rescode === 0) {
           let columns = [];
+          let gridData = [...res.data.data.data];
           res.data.data.columns.map((row) => {
-            columns.push({ key: row.key, label: row.name });
+            gridData.map((grid) => {
+              if (row.columntype === "bool") {
+                return (grid[row.key] =
+                  grid[row.key] === true
+                    ? JsonLaporanUmum.column_type_bool_true
+                    : JsonLaporanUmum.column_type_bool_true);
+              } else if (row.columntype === "money") {
+                return (grid[row.key] =
+                  configApp.formatData.money.prefix +
+                  parseInt(grid[row.key])
+                    .toFixed(configApp.formatData.money.decimal)
+                    .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,"));
+              } else if (row.columntype === "date") {
+                return (grid[row.key] = moment(
+                  grid[row.key],
+                  configApp.formatData.date
+                ));
+              } else if (row.columntype === "number") {
+                return (grid[row.key] = parseInt(grid[row.key])
+                  .toFixed(0)
+                  .replace(
+                    `/(\d)(?=(\d{${configApp.formatData.number.split}})+(?!\d))/g`,
+                    "$1,"
+                  ));
+              }
+            });
+            return columns.push({ key: row.key, label: row.name });
           });
           let data = {
             columns: columns,
             data: res.data.data.data,
           };
           setDataGrid(data);
+        } else {
+          setMessage({
+            title: messageJson.toatsheader_err,
+            body: res.data.errdescription,
+            type: messageJson.toatscolor_err,
+            active: true,
+          });
         }
       })
       .catch(function (error) {
-        console.log(error);
+        setMessage({
+          title: messageJson.messagetype_err,
+          body: JSON.stringify(error),
+          type: messageJson.toatscolor_err,
+          active: true,
+        });
       });
     console.log("View Report");
   });
 
   const downloadxlsx = handleSubmit((data) => {
+    setMessage({});
     const result = formatingData(data);
     axios
       .post(`${global.config.API_URL}general/report/viewer/downloadcsv`, result)
@@ -209,15 +326,27 @@ const LaporanUmum = () => {
           );
           document.body.appendChild(link);
           link.click();
+          setMessage({
+            title: messageJson.toatsheader_success,
+            body: JsonLaporanUmum.message_downloadxlsx,
+            type: messageJson.toatscolor_success,
+            active: true,
+          });
           console.log("Downlaod XLSX");
         }
       })
       .catch(function (error) {
-        console.log(error);
+        setMessage({
+          title: messageJson.messagetype_err,
+          body: JSON.stringify(error),
+          type: messageJson.toatscolor_err,
+          active: true,
+        });
       });
   });
 
   const downloadcsv = handleSubmit((data) => {
+    setMessage({});
     const result = formatingData(data);
     axios
       .post(`${global.config.API_URL}general/report/viewer/downloadcsv`, result)
@@ -237,18 +366,31 @@ const LaporanUmum = () => {
             nameFile.substr(1, nameFile.length - 2)
           );
           document.body.appendChild(link);
+          setMessage({
+            title: messageJson.toatsheader_success,
+            body: JsonLaporanUmum.message_downloadcsv,
+            type: messageJson.toatscolor_success,
+            active: true,
+          });
           link.click();
           console.log("Downlaod CVS");
         }
       })
       .catch(function (error) {
-        console.log(error);
+        setMessage({
+          title: messageJson.messagetype_err,
+          body: JSON.stringify(error),
+          type: messageJson.toatscolor_err,
+          active: true,
+        });
       });
   });
 
   return (
     <>
-      {dataKategori && (
+      <Toast message={message} />
+
+      {dataKategori && JsonLaporanUmum && (
         <CRow>
           <CCol xl="12">
             <CCard>
@@ -257,76 +399,30 @@ const LaporanUmum = () => {
               </CCardHeader>
               <CCardBody>
                 <CRow>
-                  <CCol lg="6">
-                    <CFormGroup row>
-                      <CCol xl="12">
-                        <CLabel htmlFor="text-input">
-                          {JsonLaporanUmum.category}
-                        </CLabel>
-                      </CCol>
-                      <CCol xs="12" xl="12">
-                        <Controller
-                          control={control}
-                          name="category"
-                          defaultValue={""}
-                          id="category"
-                          render={({ onChange }) => (
-                            <Select
-                              onChange={(e) => {
-                                onChange(e.value);
-                                setOptionNama(e.value);
-                              }}
-                              options={dataKategori}
-                              theme={(theme) => ({
-                                ...theme,
-                                colors: {
-                                  ...theme.colors,
-                                  primary: darkMode
-                                    ? "black"
-                                    : theme.colors.primary,
-                                  primary25: darkMode
-                                    ? "black"
-                                    : theme.colors.primary25,
-                                  dangerLight: darkMode
-                                    ? "black"
-                                    : theme.colors.dangerLight,
-                                  neutral0: darkMode
-                                    ? "#2a2b36"
-                                    : theme.colors.neutral0,
-                                },
-                              })}
-                            />
-                          )}
-                        />
-                      </CCol>
-                    </CFormGroup>
-                  </CCol>
-                  <CCol lg="6">
-                    <CFormGroup row>
-                      <CCol xl="12">
-                        <CLabel htmlFor="text-input">
-                          {JsonLaporanUmum.name}
-                        </CLabel>
-                      </CCol>
-                      <CCol xs="12" xl="12">
-                        <Controller
-                          control={control}
-                          name="name"
-                          defaultValue={""}
-                          id="name"
-                          render={({ onChange }) => (
-                            <Select
-                              onChange={(e) => {
-                                onChange(e.value);
-                                showFilter();
-                              }}
-                              options={dataNama}
-                            />
-                          )}
-                        />
-                      </CCol>
-                    </CFormGroup>
-                  </CCol>
+                  <Input
+                    ref={control}
+                    typefield="select"
+                    label={JsonLaporanUmum.category}
+                    name="category"
+                    id="category"
+                    md="6"
+                    lg="6"
+                    options={dataKategori}
+                    defaultValue=""
+                    eventSelect={setOptionNama}
+                  />
+                  <Input
+                    ref={control}
+                    typefield="select"
+                    label={JsonLaporanUmum.name}
+                    name="name"
+                    id="name"
+                    md="6"
+                    lg="6"
+                    options={dataNama}
+                    defaultValue=""
+                    eventSelect={showFilter}
+                  />
                 </CRow>
               </CCardBody>
             </CCard>
@@ -343,84 +439,85 @@ const LaporanUmum = () => {
               </CCardHeader>
               <CCardBody>
                 <CRow>
-                  {dataFilter.length == 0 ? (
-                    <h5 align="center">{JsonLaporanUmum.filter_empty}</h5>
-                  ) : (
-                    ""
-                  )}
+                  <CCol>
+                    {dataFilter.length === 0 ? (
+                      <h5 align="center">{JsonLaporanUmum.filter_empty}</h5>
+                    ) : (
+                      ""
+                    )}
+                  </CCol>
                 </CRow>
                 <CRow>
                   {dataFilter.map((row, key) => (
-                    <CCol md="4" key={key}>
-                      <CFormGroup row>
-                        <CCol xl="12" xs="12">
-                          <CLabel htmlFor="text-input">{row.label}</CLabel>
-                        </CCol>
-                        <CCol xs="12" xl="12">
-                          {row.type == "select" ? (
-                            <Controller
-                              control={control}
-                              name={row.name}
-                              defaultValue={""}
-                              id={row.name}
-                              render={({ onChange }) => (
-                                <Select
-                                  onChange={(e) => {
-                                    onChange(e.value);
-                                  }}
-                                  options={row.values}
-                                />
-                              )}
-                            />
-                          ) : (
-                            ""
-                          )}
-                          {row.type == "number" ? (
-                            <input
-                              id={row.name}
-                              className="form-control"
-                              name={row.name}
-                              defaultValue={row.defaultvalue}
-                              type="number"
-                              ref={register}
-                            />
-                          ) : (
-                            ""
-                          )}
-                          {row.type == "text" ? (
-                            <input
-                              id={row.name}
-                              className="form-control"
-                              name={row.name}
-                              defaultValue={row.defaultvalue}
-                              type="text"
-                              ref={register}
-                            />
-                          ) : (
-                            ""
-                          )}
-                          {row.type == "date" ? (
-                            <input
-                              id={row.name}
-                              className="form-control"
-                              name={row.name}
-                              type="date"
-                              defaultValue={row.defaultvalue}
-                              ref={register}
-                            />
-                          ) : (
-                            ""
-                          )}
-                        </CCol>
-                      </CFormGroup>
-                    </CCol>
+                    <>
+                      {row.type === "select" ? (
+                        <Input
+                          ref={control}
+                          typefield="select"
+                          label={row.label}
+                          name={row.name}
+                          id={row.name}
+                          md="4"
+                          lg="4"
+                          options={row.values}
+                          defaultValue=""
+                        />
+                      ) : (
+                        ""
+                      )}
+                      {row.type === "number" ? (
+                        <Input
+                          ref={register}
+                          typefield="number"
+                          type="number"
+                          label={row.label}
+                          name={row.name}
+                          defaultValue={row.defaultvalue}
+                          id={row.name}
+                          md="4"
+                          lg="4"
+                        />
+                      ) : (
+                        ""
+                      )}
+                      {row.type === "text" ? (
+                        <Input
+                          ref={register}
+                          typefield="text"
+                          type="text"
+                          label={row.label}
+                          name={row.name}
+                          defaultValue={row.defaultvalue}
+                          id={row.name}
+                          md="4"
+                          lg="4"
+                        />
+                      ) : (
+                        ""
+                      )}
+                      {row.type === "date" ? (
+                        <Input
+                          ref={register}
+                          typefield="date"
+                          type="date"
+                          label={row.label}
+                          name={row.name}
+                          defaultValue={row.defaultvalue}
+                          id="journaldate"
+                          md="4"
+                          lg="4"
+                        />
+                      ) : (
+                        ""
+                      )}
+                    </>
                   ))}
                 </CRow>
               </CCardBody>
               <CCardFooter>
                 {dataButton.map((row, key) => (
                   <>
-                    {row.name == "viewdata" ? (
+                    {row.name === "viewdata" ? (
                       <CButton
                         key="1"
                         size="sm"
@@ -436,7 +533,7 @@ const LaporanUmum = () => {
                       ""
                     )}
 
-                    {row.name == "downloadxlsx" ? (
+                    {row.name === "downloadxlsx" ? (
                       <CButton
                         size="sm"
                         key="2"
@@ -452,7 +549,7 @@ const LaporanUmum = () => {
                       ""
                     )}
 
-                    {row.name == "downloadcsv" ? (
+                    {row.name === "downloadcsv" ? (
                       <CButton
                         size="sm"
                         key="3"
@@ -487,7 +584,7 @@ const LaporanUmum = () => {
                   items={dataGrid.data}
                   fields={dataGrid.columns}
                   itemsPerPageSelect
-                  itemsPerPage={20}
+                  itemsPerPage={50}
                   columnFilter
                   sorter
                   hover

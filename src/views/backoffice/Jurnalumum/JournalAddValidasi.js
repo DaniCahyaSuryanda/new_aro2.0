@@ -16,30 +16,12 @@ import {
 } from "@coreui/react";
 import axios from "axios";
 import CIcon from "@coreui/icons-react";
-import JurnalAddValidasi from "json/lang/id/Jurnal Umum/add/journaladdvalidation.json";
-import messageJson from "../../../json/lang/id/Message/message.json";
-import Toast from "../../../component/Toast";
+import LangID from "json/lang/id/Jurnal Umum/add/journaladdvalidation.json";
+import LangEN from "json/lang/en/Jurnal Umum/add/journaladdvalidation.json";
+import messageID from "json/lang/id/Message/message.json";
+import messageEN from "json/lang/en/Message/message.json";
+import Toast from "component/Toast";
 import { useHistory } from "react-router-dom";
-
-const fields = [
-  JurnalAddValidasi.list_new,
-  { key: "trxid", label: JurnalAddValidasi.trxid },
-  { key: "journaldate", label: JurnalAddValidasi.journaldate },
-  { key: "journaltype", label: JurnalAddValidasi.journaltype },
-  { key: "reffid", label: JurnalAddValidasi.reffid },
-  { key: "description", label: JurnalAddValidasi.description },
-];
-
-const fieldsDetail = [
-  { key: "accno", label: JurnalAddValidasi.detailitem_accno },
-  { key: "accname", label: JurnalAddValidasi.detailitem_accname },
-  {
-    key: "description",
-    label: JurnalAddValidasi.detailitem_description,
-  },
-  { key: "debit", label: JurnalAddValidasi.detailitem_debit },
-  { key: "credit", label: JurnalAddValidasi.detailitem_credit },
-];
 
 const JenisJurnalAdd = () => {
   const [modal, setModal] = useState(false);
@@ -50,14 +32,106 @@ const JenisJurnalAdd = () => {
   const [slide, setSlide] = useState(true);
   const [accNo, setDataAccountStructure] = useState(null);
   const [details, setDetails] = useState([]);
+  const [JurnalAddValidasi, setJurnalAddValidasi] = useState({});
+  const [messageJson, setMessageJson] = useState({});
+  const [fields, setField] = useState(null);
+  const [fieldsDetail, setFieldsDetail] = useState(null);
+
+  const configApp = JSON.parse(sessionStorage.getItem("config"));
+
+  // useEffect(() => {
+  //   if (accNo == null) {
+  //     // getDataJurnal();
+  //     SetDataJurnal();
+  //     // console.log(data)
+  //   }
+  // }, [accNo]);
 
   useEffect(() => {
-    if (accNo == null) {
-      // getDataJurnal();
-      SetDataJurnal();
-      // console.log(data)
+    if (Object.keys(messageJson).length === 0) {
+      if (configApp.lang == "id") {
+        setMessageJson(messageID);
+      } else if (configApp.lang == "en") {
+        setMessageJson(messageEN);
+      } else {
+        setMessageJson(messageID);
+      }
+    } else {
+      if (accNo == null) {
+        //  getDataJurnal();
+        SetDataJurnal();
+        // getDataAkun();
+      }
     }
-  }, [accNo]);
+  }, [messageJson, accNo]);
+
+  useEffect(() => {
+    if (JurnalAddValidasi == null || fields == null || fieldsDetail == null) {
+      if (configApp.lang === "id") {
+        setJurnalAddValidasi(LangID);
+        setField([
+          { key: "action", label: LangID.list_new },
+          { key: "trxid", label: LangID.trxid },
+          { key: "journaldate", label: LangID.journaldate },
+          { key: "journaltype", label: LangID.journaltype },
+          { key: "reffid", label: LangID.reffid },
+          { key: "description", label: LangID.description },
+        ]);
+        setFieldsDetail([
+          { key: "accno", label: LangID.detailitem_accno },
+          { key: "accname", label: LangID.detailitem_accname },
+          {
+            key: "description",
+            label: LangID.detailitem_description,
+          },
+          { key: "debit", label: LangID.detailitem_debit },
+          { key: "credit", label: LangID.detailitem_credit },
+        ]);
+      } else if (configApp.lang == "en") {
+        setJurnalAddValidasi(LangEN);
+        setField([
+          { key: "action", label: LangEN.list_new },
+          { key: "trxid", label: LangEN.trxid },
+          { key: "journaldate", label: LangEN.journaldate },
+          { key: "journaltype", label: LangEN.journaltype },
+          { key: "reffid", label: LangEN.reffid },
+          { key: "description", label: LangEN.description },
+        ]);
+        setFieldsDetail([
+          { key: "accno", label: LangEN.detailitem_accno },
+          { key: "accname", label: LangEN.detailitem_accname },
+          {
+            key: "description",
+            label: LangEN.detailitem_description,
+          },
+          { key: "debit", label: LangEN.detailitem_debit },
+          { key: "credit", label: LangEN.detailitem_credit },
+        ]);
+      }
+    } else {
+      if (configApp.lang === "id") {
+        setJurnalAddValidasi(LangID);
+        setField([
+          { key: "action", label: LangID.list_new },
+          { key: "trxid", label: LangID.trxid },
+          { key: "journaldate", label: LangID.journaldate },
+          { key: "journaltype", label: LangID.journaltype },
+          { key: "reffid", label: LangID.reffid },
+          { key: "description", label: LangID.description },
+        ]);
+        setFieldsDetail([
+          { key: "accno", label: LangID.detailitem_accno },
+          { key: "accname", label: LangID.detailitem_accname },
+          {
+            key: "description",
+            label: LangID.detailitem_description,
+          },
+          { key: "debit", label: LangID.detailitem_debit },
+          { key: "credit", label: LangID.detailitem_credit },
+        ]);
+      }
+    }
+  }, [JurnalAddValidasi, fieldsDetail, fields]);
 
   const SetDataJurnal = () => {
     axios
@@ -115,7 +189,7 @@ const JenisJurnalAdd = () => {
   };
 
   const setujuOtoritasi = (trxid) => {
-    setMessage({})
+    setMessage({});
     let data = {
       trxid: trxid,
       validstate: 1,
@@ -160,7 +234,7 @@ const JenisJurnalAdd = () => {
   };
 
   const tolakOtoritasi = (trxid) => {
-    setMessage({})
+    setMessage({});
     let data = {
       trxid: trxid,
       validstate: 2,
@@ -219,7 +293,7 @@ const JenisJurnalAdd = () => {
   return (
     <>
       <Toast message={message} />
-      {slide && (
+      {slide && JurnalAddValidasi && fields && fieldsDetail && (
         <CRow>
           <CCol>
             <CCard>
@@ -244,11 +318,12 @@ const JenisJurnalAdd = () => {
                   striped
                   bordered
                   size="sm"
-                  itemsPerPage={10}
+                  itemsPerPageSelect
+                  itemsPerPage={50}
                   pagination
                   columnFilter
                   scopedSlots={{
-                    Otorisasi: (items) => {
+                    action: (items) => {
                       return (
                         <td className="py-2">
                           <CButton
@@ -258,7 +333,7 @@ const JenisJurnalAdd = () => {
                             size="sm"
                             onClick={() => toggleDetail(items)}
                           >
-                            Otorisasi
+                            {JurnalAddValidasi.otor_button}
                           </CButton>
                         </td>
                       );

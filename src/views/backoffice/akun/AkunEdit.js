@@ -17,23 +17,15 @@ import {
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useHistory } from "react-router-dom";
 import LangID from "json/lang/id/Akun/edit/accounteditcreate.json";
 import LangEN from "json/lang/en/Akun/edit/accounteditcreate.json";
-import { useHistory } from "react-router-dom";
 import messageID from "json/lang/id/Message/message.json";
 import messageEN from "json/lang/en/Message/message.json";
 import Toast from "component/Toast";
 import Input from "component/Input";
 
-// const fields = [
-//   "Edit_Akun",
-//   { key: "accno", label: itemAccEdit.list_accno },
-//   { key: "accname", label: itemAccEdit.list_accname },
-//   { key: "acctype", label: itemAccEdit.list_acctype },
-//   { key: "normaldebit", label: itemAccEdit.list_normaldebit },
-//   { key: "description", label: itemAccEdit.list_description },
-//   { key: "isactive", label: itemAccEdit.list_isactive },
-// ];
+const configApp = JSON.parse(sessionStorage.getItem("config"));
 
 const AccountEdit = () => {
   const [message, setMessage] = useState({});
@@ -44,14 +36,12 @@ const AccountEdit = () => {
   const [dataSend, setDataSend] = useState(null);
   const [slide, setSlide] = useState(true);
   const history = useHistory();
-  const [itemAccEdit, setitemAccEdit] = useState({});
-  const [messageJson, setMessageJson] = useState({});
-  const [fields, setField] = useState([]);
+  const [itemAccEdit, setitemAccEdit] = useState(null);
+  const [messageJson, setMessageJson] = useState(null);
+  const [fields, setField] = useState(null);
 
-  const configApp = JSON.parse(sessionStorage.getItem("config"));
-
-  useEffect(
-    () => {
+  useEffect(() => {
+    if (itemAccEdit === null || fields === null) {
       if (configApp.lang === "id") {
         setitemAccEdit(LangID);
         setField([
@@ -89,18 +79,18 @@ const AccountEdit = () => {
           { key: "isactive", label: LangID.list_isactive },
         ]);
       }
-    },
-    [itemAccEdit],
-    [fields]
-  );
+    }
+  }, [itemAccEdit, fields]);
 
   useEffect(() => {
-    if (configApp.lang === "id") {
-      setMessageJson(messageID);
-    } else if (configApp.lang == "en") {
-      setMessageJson(messageEN);
-    } else {
-      setMessageJson(messageID);
+    if (messageJson === null) {
+      if (configApp.lang === "id") {
+        setMessageJson(messageID);
+      } else if (configApp.lang == "en") {
+        setMessageJson(messageEN);
+      } else {
+        setMessageJson(messageID);
+      }
     }
   }, [messageJson]);
 
@@ -327,7 +317,7 @@ const AccountEdit = () => {
         </CRow>
       )}
 
-      {slide && (
+      {slide && itemAccEdit && fields && (
         <CRow>
           <CCol xs="12" lg="12">
             <CCard>
@@ -350,7 +340,7 @@ const AccountEdit = () => {
                   striped
                   bordered
                   columnFilter
-                  itemsPerPage={50}
+                  itemsPerPage={10}
                   pagination
                   scopedSlots={{
                     action: (items, index) => {

@@ -1,9 +1,9 @@
  [
-    { 
+    {
       "id": "mg-001",
-      "Namamenu" : "Pembuatan Jenis Jurnal",
-      "Buttonadd" : "Buat Baru",
-      "ButtonOtor" : "Otorisasi",
+      "Namamenu" : "Create New Jurnal Type",
+      "Buttonadd" : "Create New",
+      "ButtonOtor" : "Authorization",
       "Iconadd" :"cil-pencil",
       "Iconotor" : "cil-check-circle",
       "Addlink" : "/backoffice/JenisJurnal/JurnaltypeAdd",
@@ -11,60 +11,60 @@
       "Color" : "success"
     },
 
-    { 
+    {
       "id": "mg-002",
-      "Namamenu" : "Pengkinian Jenis Jurnal",
-      "Buttonadd" : "Buat Baru",
-      "ButtonOtor" : "Otorisasi",
+      "Namamenu" : "Updating Jurnal Type",
+      "Buttonadd" : "Create New",
+      "ButtonOtor" : "Authorization",
       "Iconadd" :"cil-pencil",
       "Iconotor" : "cil-check-circle",
       "Addlink" : "/backoffice/JenisJurnal/Jurnaltypeedit",
       "Otorlink" : "/backoffice/JenisJurnal/JurnaltypeeditValidasi",
       "Color" : "success"
     },
-    { 
+    {
       "id": "mg-003",
-       "Namamenu" : "Pembuatan Akun",
-       "Buttonadd" : "Buat Baru",
-       "ButtonOtor" : "Otorisasi",
+       "Namamenu" : "Create New Account",
+       "Buttonadd" : "Create New",
+       "ButtonOtor" : "Authorization",
        "Addlink" : "/backoffice/akun/AkunAdd",
        "Iconadd" :"cil-pencil",
        "Iconotor" : "cil-check-circle",
        "Otorlink" : "/backoffice/akun/AkunAddValidasi",
        "Color" : "primary"
     },
-    { 
+    {
       "id": "mg-004",
-      "Namamenu" : "Pengkinian Akun",
-      "Buttonadd" : "Buat Baru",
-      "ButtonOtor" : "Otorisasi",
+      "Namamenu" : "Updating Account",
+      "Buttonadd" : "Create New",
+      "ButtonOtor" : "Authorization",
       "Iconadd" :"cil-pencil",
       "Iconotor" : "cil-check-circle",
       "Addlink" : "/backoffice/akun/akunedit",
       "Otorlink" : "/backoffice/akun/akuneditvalidasi",
       "Color" : "primary"
     },
-    { 
+    {
       "id": "mg-005",
-      "Namamenu" : "Pembuatan Stuktur Akun",
-      "Buttonadd" : "Buat Baru",
-      "ButtonOtor" : "Otorisasi",
+      "Namamenu" : "Create New Account Structure",
+      "Buttonadd" : "Create New",
+      "ButtonOtor" : "Authorization",
       "Iconadd" :"cil-pencil",
       "Iconotor" : "cil-check-circle",
       "Addlink" : "/backoffice/strukturlaporan/reportstructureadd",
       "Otorlink" : "/backoffice/strukturlaporan/reportstructuraddvalidasi",
       "Color" : "warning"
    },
-   { 
+   {
     "id": "mg-006",
-    "Namamenu" : "Pengkinian Struktur Akun",
-    "Buttonadd" : "Buat Baru",
-    "ButtonOtor" : "Otorisasi",
+    "Namamenu" : "Updating Account Structure",
+    "Buttonadd" : "Create New",
+    "ButtonOtor" : "Authorization",
     "Iconadd" :"cil-pencil",
     "Iconotor" : "cil-check-circle",
     "Addlink" : "/backoffice/strukturlaporan/reportstructureedit",
     "Otorlink" : "/backoffice/strukturlaporan/reportstructureeditvalidasi",
     "Color" : "warning"
   }
-   
+
   ]

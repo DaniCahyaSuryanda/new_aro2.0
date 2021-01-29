@@ -1,5 +1,5 @@
  [
-    { 
+    {
       "id": "mg-001",
       "Namamenu" : "Pembuatan Jenis Jurnal",
       "Buttonadd" : "Buat Baru",
@@ -10,8 +10,7 @@
       "Otorlink" : "/backoffice/JenisJurnal/JurnaltypeAddValidasi",
       "Color" : "success"
     },
-
-    { 
+    {
       "id": "mg-002",
       "Namamenu" : "Pengkinian Jenis Jurnal",
       "Buttonadd" : "Buat Baru",
@@ -22,7 +21,7 @@
       "Otorlink" : "/backoffice/JenisJurnal/JurnaltypeeditValidasi",
       "Color" : "success"
     },
-    { 
+    {
       "id": "mg-003",
        "Namamenu" : "Pembuatan Akun",
        "Buttonadd" : "Buat Baru",
@@ -33,7 +32,7 @@
        "Otorlink" : "/backoffice/akun/AkunAddValidasi",
        "Color" : "primary"
     },
-    { 
+    {
       "id": "mg-004",
       "Namamenu" : "Pengkinian Akun",
       "Buttonadd" : "Buat Baru",
@@ -44,7 +43,7 @@
       "Otorlink" : "/backoffice/akun/akuneditvalidasi",
       "Color" : "primary"
     },
-    { 
+    {
       "id": "mg-005",
       "Namamenu" : "Pembuatan Stuktur Akun",
       "Buttonadd" : "Buat Baru",
@@ -55,7 +54,7 @@
       "Otorlink" : "/backoffice/strukturlaporan/reportstructuraddvalidasi",
       "Color" : "warning"
    },
-   { 
+   {
     "id": "mg-006",
     "Namamenu" : "Pengkinian Struktur Akun",
     "Buttonadd" : "Buat Baru",
@@ -66,5 +65,5 @@
     "Otorlink" : "/backoffice/strukturlaporan/reportstructureeditvalidasi",
     "Color" : "warning"
   }
-   
+
   ]

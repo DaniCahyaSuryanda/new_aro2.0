@@ -18,32 +18,34 @@ import {
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import Jsonjurnaladdvalidasi from "json/lang/id/Struktur Laporan/edit/reportstructureeditcreate.json";
-import messageJson from "json/lang/id/Message/message.json";
+import LangID from "json/lang/id/Struktur Laporan/edit/reportstructureeditcreate.json";
+import LangEN from "json/lang/en/Struktur Laporan/edit/reportstructureeditcreate.json";
+import messageID from "json/lang/id/Message/message.json";
+import messageEN from "json/lang/en/Message/message.json";
 import Toast from "component/Toast";
 import { useHistory } from "react-router-dom";
 import Input from "component/Input";
 
-const configApp = JSON.parse(sessionStorage.getItem("config"));
+// const configApp = JSON.parse(sessionStorage.getItem("config"));
 
-const darkMode = configApp.darktheme;
+// const darkMode = configApp.darktheme;
 
-const fields = [
-  Jsonjurnaladdvalidasi.list_new,
-  { key: "asid", label: Jsonjurnaladdvalidasi.list_asid },
-  { key: "asname", label: Jsonjurnaladdvalidasi.list_asname },
-  { key: "isactive", label: Jsonjurnaladdvalidasi.isactive },
-];
+// const fields = [
+//   Jsonjurnaladdvalidasi.list_new,
+//   { key: "asid", label: Jsonjurnaladdvalidasi.list_asid },
+//   { key: "asname", label: Jsonjurnaladdvalidasi.list_asname },
+//   { key: "isactive", label: Jsonjurnaladdvalidasi.isactive },
+// ];
 
-const fieldsDetail = [
-  Jsonjurnaladdvalidasi.action_list,
-  { key: "itemno", label: Jsonjurnaladdvalidasi.detailitem_no },
-  { key: "itemname", label: Jsonjurnaladdvalidasi.detailitem_name },
-  { key: "parentno", label: Jsonjurnaladdvalidasi.detailitem_parentno },
-  { key: "accno", label: Jsonjurnaladdvalidasi.detailitem_accno },
-  { key: "accname", label: Jsonjurnaladdvalidasi.detailitem_accname },
-  { key: "isvisible", label: Jsonjurnaladdvalidasi.detailitem_isvisible },
-];
+// const fieldsDetail = [
+//   Jsonjurnaladdvalidasi.action_list,
+//   { key: "itemno", label: Jsonjurnaladdvalidasi.detailitem_no },
+//   { key: "itemname", label: Jsonjurnaladdvalidasi.detailitem_name },
+//   { key: "parentno", label: Jsonjurnaladdvalidasi.detailitem_parentno },
+//   { key: "accno", label: Jsonjurnaladdvalidasi.detailitem_accno },
+//   { key: "accname", label: Jsonjurnaladdvalidasi.detailitem_accname },
+//   { key: "isvisible", label: Jsonjurnaladdvalidasi.detailitem_isvisible },
+// ];
 
 const ReportStrucValidasi = () => {
   const [modalEditItem, setModalEditItem] = useState(false);
@@ -58,7 +60,11 @@ const ReportStrucValidasi = () => {
   const [indexEdit, setIndexEdit] = useState(false);
   const [modal, setModal] = useState(false);
   const history = useHistory();
-
+  const [Jsonjurnaladdvalidasi, setJsonjurnaladdvalidasi] = useState({});
+  const [messageJson, setMessageJson] = useState({});
+  const [fields, setField] = useState(null);
+  const [fieldsDetail, setFieldsDetail] = useState(null);
+  const configApp = JSON.parse(sessionStorage.getItem("config"));
   const {
     register: register2,
     handleSubmit: handleSubmit2,
@@ -75,6 +81,82 @@ const ReportStrucValidasi = () => {
       getOptionAkun();
     }
   }, [dataAccountStructure, optionAcc]);
+
+  useEffect(() => {
+    //  if (messageJson === null) {
+    if (configApp.lang === "id") {
+      setMessageJson(messageID);
+    } else if (configApp.lang == "en") {
+      setMessageJson(messageEN);
+    } else {
+      setMessageJson(messageID);
+    }
+    // }
+  }, [messageJson]);
+
+  useEffect(() => {
+    if (
+      Jsonjurnaladdvalidasi == null ||
+      fields == null ||
+      fieldsDetail == null
+    ) {
+      if (configApp.lang === "id") {
+        setJsonjurnaladdvalidasi(LangID);
+        setField([
+          { key: "action", label: LangID.list_new },
+          { key: "asid", label: LangID.list_asid },
+          { key: "asname", label: LangID.list_asname },
+          { key: "isactive", label: LangID.isactive },
+        ]);
+
+        setFieldsDetail([
+          { key: "action", label: LangID.action_list },
+          { key: "itemno", label: LangID.detailitem_no },
+          { key: "itemname", label: LangID.detailitem_name },
+          { key: "parentno", label: LangID.detailitem_parentno },
+          { key: "accno", label: LangID.detailitem_accno },
+          { key: "accname", label: LangID.detailitem_accname },
+          { key: "isvisible", label: LangID.detailitem_isvisible },
+        ]);
+      } else if (configApp.lang == "en") {
+        setJsonjurnaladdvalidasi(LangEN);
+        setField([
+          { key: "action", label: LangEN.list_new },
+          { key: "asid", label: LangEN.list_asid },
+          { key: "asname", label: LangEN.list_asname },
+          { key: "isactive", label: LangEN.isactive },
+        ]);
+
+        setFieldsDetail([
+          { key: "action", label: LangEN.action_list },
+          { key: "itemno", label: LangEN.detailitem_no },
+          { key: "itemname", label: LangEN.detailitem_name },
+          { key: "parentno", label: LangEN.detailitem_parentno },
+          { key: "accno", label: LangEN.detailitem_accno },
+          { key: "accname", label: LangEN.detailitem_accname },
+          { key: "isvisible", label: LangEN.detailitem_isvisible },
+        ]);
+      } else {
+        setJsonjurnaladdvalidasi(LangID);
+        setField([
+          { key: "action", label: LangID.list_new },
+          { key: "asid", label: LangID.list_asid },
+          { key: "asname", label: LangID.list_asname },
+          { key: "isactive", label: LangID.isactive },
+        ]);
+
+        setFieldsDetail([
+          { key: "action", label: LangID.action_list },
+          { key: "itemno", label: LangID.detailitem_no },
+          { key: "itemname", label: LangID.detailitem_name },
+          { key: "parentno", label: LangID.detailitem_parentno },
+          { key: "accno", label: LangID.detailitem_accno },
+          { key: "accname", label: LangID.detailitem_accname },
+          { key: "isvisible", label: LangID.detailitem_isvisible },
+        ]);
+      }
+    }
+  }, [Jsonjurnaladdvalidasi, fieldsDetail, fields]);
 
   const getOptionAkun = () => {
     setMessage({});
@@ -185,8 +267,8 @@ const ReportStrucValidasi = () => {
 
   const simpanEditItem = handleSubmit2((data) => {
     let itemsData = { ...items };
-    let accname = undefined;
-
+    console.log(data);
+    console.log(dataAkun);
     if (data.detailitem_isgeneral) {
       itemsData.detail[indexEdit] = {
         itemno: data.detailitem_no,
@@ -198,19 +280,27 @@ const ReportStrucValidasi = () => {
         isvisible: data.detailitem_isvisible,
       };
     } else {
-      accname = dataAkun.find(({ accno }) => {
-        return accno === data.detailitem_accno.value;
-      });
-
-      accname = accname.accname;
+      let accname = {};
+      let accnoInput =
+        data.detailitem_accno.value === undefined
+          ? data.detailitem_accno
+          : data.detailitem_accno.value;
+      if (data.detailitem_accno !== undefined) {
+        accname = dataAkun.find(({ accno }) => {
+          return accno === accnoInput;
+        });
+      } else {
+        accname.accno = "";
+        accname.accname = "";
+      }
 
       itemsData.detail[indexEdit] = {
         itemno: data.detailitem_no,
         itemname: data.detailitem_name,
         parentno: data.detailitem_parentno,
         isgeneral: data.detailitem_isgeneral,
-        accno: data.detailitem_accno.value,
-        accname: accname,
+        accno: accname.accno,
+        accname: accname.accname,
         isvisible: data.detailitem_isvisible,
       };
     }
@@ -292,7 +382,7 @@ const ReportStrucValidasi = () => {
     <>
       <Toast message={message} />
 
-      {!items && (
+      {!items && Jsonjurnaladdvalidasi && fields && fieldsDetail && (
         <CRow>
           <CCol>
             <CCard>
@@ -319,11 +409,11 @@ const ReportStrucValidasi = () => {
                   striped
                   bordered
                   size="sm"
-                  itemsPerPage={15}
+                  itemsPerPage={50}
                   pagination
                   columnFilter
                   scopedSlots={{
-                    Edit: (rowData) => {
+                    action: (rowData) => {
                       return (
                         <td className="py-2">
                           <CButton
@@ -473,10 +563,10 @@ const ReportStrucValidasi = () => {
                         striped
                         bordered
                         columnFilter
-                        itemsPerPage={5}
+                        itemsPerPage={50}
                         pagination
                         scopedSlots={{
-                          Aksi: (rowData, index) => {
+                          action: (rowData, index) => {
                             return (
                               <td>
                                 <div className="btn-group">
@@ -679,7 +769,7 @@ const ReportStrucValidasi = () => {
             color="primary"
             onClick={() => simpanEditItem()}
           >
-            Simpan
+            {Jsonjurnaladdvalidasi.save_button}
           </CButton>{" "}
           <CButton
             color="danger"
@@ -688,7 +778,7 @@ const ReportStrucValidasi = () => {
               setFormEditItem(null);
             }}
           >
-            Batal
+            {Jsonjurnaladdvalidasi.cancel_button}
           </CButton>
         </CModalFooter>
       </CModal>

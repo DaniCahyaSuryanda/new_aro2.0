@@ -23,8 +23,7 @@ import {
 } from "@coreui/react";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import JsonAddKantorValidasi from "componenJson/manajemenperan/lang/id/manajemenkantoraddotor.json";
-import Select from "react-select";
+import JsonAddKantorValidasi from "json/lang/id/Menajemen Kantor/add/manajemenkantoraddotor.json";
 // import usersData from '../../users/DataAkun'
 
 const fields = [

@@ -1,6 +1,5 @@
 import CIcon from "@coreui/icons-react";
 import {
-  CAlert,
   CButton,
   CCard,
   CCardBody,
@@ -13,24 +12,21 @@ import {
   CModal,
   CModalBody,
   CModalFooter,
-  CToast,
-  CToastBody,
-  CToastHeader,
-  CToaster,
   CRow,
 } from "@coreui/react";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import JsonAddKantor from "componenJson/manajemenperan/lang/id/manajemenkantoradd.json";
-import Select from "react-select";
+import { useForm } from "react-hook-form";
+import JsonAddKantor from "json/lang/id/Menajemen Kantor/add/manajemenkantoradd.json";
+import Input from "component/Input";
+
 const jenisKantor = [
   {
-    id: "kpus",
+    id: "0",
     name: "Kantor Pusat",
   },
   {
-    id: "kcab",
+    id: "1",
     name: "Kantor Cabang",
   },
 ];
@@ -138,168 +134,98 @@ const Addnewoffice = () => {
                 onSubmit={handleSubmit(onSubmit)}
               >
                 <CRow>
-                  <CCol lg="6">
-                    <CFormGroup row>
-                      <CCol xl="12">
-                        <CLabel htmlFor="text-input">
-                          {JsonAddKantor.office_code}
-                        </CLabel>
-                      </CCol>
-                      <CCol xs="12" xl="12">
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="office_code"
-                          name="office_code"
-                          ref={register}
-                        />
-                      </CCol>
-                    </CFormGroup>
-                  </CCol>
-                  <CCol lg="6">
-                    <CFormGroup row>
-                      <CCol xl="12">
-                        <CLabel htmlFor="text-input">
-                          {JsonAddKantor.office_name}
-                        </CLabel>
-                      </CCol>
-                      <CCol xs="12" xl="12">
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="office_name"
-                          name="office_name"
-                          ref={register}
-                        />
-                      </CCol>
-                    </CFormGroup>
-                  </CCol>
+                  <Input
+                    typefield="text"
+                    label={JsonAddKantor.office_code}
+                    name="office_code"
+                    defaultValue=""
+                    ref={register}
+                    id="office_code"
+                    md="6"
+                    lg="6"
+                  />
+                  <Input
+                    typefield="text"
+                    label={JsonAddKantor.office_name}
+                    name="office_name"
+                    defaultValue=""
+                    id="office_name"
+                    md="6"
+                    ref={register}
+                    lg="6"
+                  />
                 </CRow>
 
                 <CRow>
-                  <CCol lg="6">
-                    <CFormGroup row>
-                      <CCol>
-                        <CLabel htmlFor="select">
-                          {JsonAddKantor.office_type}
-                        </CLabel>
-                      </CCol>
-                      <CCol xs="12" xl="12">
-                        <Controller
-                          control={control}
-                          options={cabang}
-                          name="office_type"
-                          defaultValue={""}
-                          id="office_type"
-                          as={Select}
-                        />
-                      </CCol>
-                    </CFormGroup>
-                  </CCol>
+                  <Input
+                    ref={control}
+                    typefield="select"
+                    label={JsonAddKantor.office_type}
+                    name="office_type"
+                    id="office_type"
+                    md="6"
+                    lg="6"
+                    options={cabang}
+                    defaultValue=""
+                  />
 
-                  <CCol lg="6">
-                    <CFormGroup row>
-                      <CCol>
-                        <CLabel htmlFor="select">
-                          {JsonAddKantor.isactive}
-                        </CLabel>
-                      </CCol>
-                      <CCol xs="12" xl="12">
-                        <CFormGroup variant="custom-checkbox" inline>
-                          <Controller
-                            name="isactive"
-                            control={control}
-                            value={true}
-                            defaultValue={true}
-                            render={(props) => (
-                              <CInputCheckbox
-                                onChange={(e) =>
-                                  props.onChange(e.target.checked)
-                                }
-                                checked={props.value}
-                              />
-                            )}
-                          />
-                        </CFormGroup>
-                      </CCol>
-                    </CFormGroup>
-                  </CCol>
+                  <Input
+                    typefield="checkbox"
+                    label={JsonAddKantor.isactive}
+                    name="isactive"
+                    id="isactive"
+                    md="1"
+                    lg="1"
+                    value={true}
+                    defaultValue={false}
+                    ref={control}
+                  />
                 </CRow>
 
                 <CRow>
-                  <CCol lg="6">
-                    <CFormGroup row>
-                      <CCol xl="12">
-                        <CLabel htmlFor="text-input">
-                          {JsonAddKantor.address}
-                        </CLabel>
-                      </CCol>
-                      <CCol xs="12" xl="12">
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="address"
-                          name="address"
-                          ref={register}
-                        />
-                      </CCol>
-                    </CFormGroup>
-                  </CCol>
-                  <CCol lg="6">
-                    <CFormGroup row>
-                      <CCol xl="12">
-                        <CLabel htmlFor="text-input">{JsonAddKantor.cp}</CLabel>
-                      </CCol>
-                      <CCol xs="12" xl="12">
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="cp"
-                          name="cp"
-                          ref={register}
-                        />
-                      </CCol>
-                    </CFormGroup>
-                  </CCol>
+                  <Input
+                    typefield="text"
+                    label={JsonAddKantor.address}
+                    name="address"
+                    defaultValue=""
+                    id="address"
+                    md="6"
+                    lg="6"
+                    ref={register}
+                  />
+                  <Input
+                    typefield="text"
+                    label={JsonAddKantor.cp}
+                    name="cp"
+                    defaultValue=""
+                    id="cp"
+                    md="6"
+                    lg="6"
+                    ref={register}
+                  />
                 </CRow>
-
                 <CRow>
-                  <CCol lg="6">
-                    <CFormGroup row>
-                      <CCol xl="12">
-                        <CLabel htmlFor="text-input">
-                          {JsonAddKantor.phone_number}
-                        </CLabel>
-                      </CCol>
-                      <CCol xs="12" xl="12">
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="phone_number"
-                          name="phone_number"
-                          ref={register}
-                        />
-                      </CCol>
-                    </CFormGroup>
-                  </CCol>
-                  <CCol lg="6">
-                    <CFormGroup row>
-                      <CCol xl="12">
-                        <CLabel htmlFor="text-input">
-                          {JsonAddKantor.email}
-                        </CLabel>
-                      </CCol>
-                      <CCol xs="12" xl="12">
-                        <input
-                          type="email"
-                          className="form-control"
-                          id="email"
-                          name="email"
-                          ref={register}
-                        />
-                      </CCol>
-                    </CFormGroup>
-                  </CCol>
+                  <Input
+                    typefield="text"
+                    label={JsonAddKantor.phone_number}
+                    name="phone_number"
+                    defaultValue=""
+                    id="phone_number"
+                    md="6"
+                    lg="6"
+                    ref={register}
+                  />
+
+                  <Input
+                    typefield="email"
+                    label={JsonAddKantor.email}
+                    name="email"
+                    defaultValue=""
+                    id="email"
+                    md="6"
+                    lg="6"
+                    ref={register}
+                  />
                 </CRow>
 
                 <hr></hr>

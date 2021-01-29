@@ -1,21 +1,19 @@
+{
+  "form": "Create New Journal",
 
-    {
-        "form": "Create New Journal",
-        
-    
-        "detail-caption" : "List Journal",
-        
-        "jrtype" : "Journal Type",
-        "description" : "Description",
-        "isactive" : "Active",
-    
-        
-        "save_button" : "Save",
-        "cancel_button": "Reset",
-        "confirm_save" : "Save a New Journal ?",
-        "confirm_yes" : "Save",
-        "confirm_no" : "Cencel",
-        "message_success" : "New Journal Was Successfully Saved"
-    
-    }
-    
+
+  "detail-caption": "List Journal",
+
+  "jrtype": "Journal Type",
+  "description": "Description",
+  "isactive": "Active",
+
+
+  "save_button": "Save",
+  "cancel_button": "Reset",
+  "confirm_save": "Save a New Journal ?",
+  "confirm_yes": "Save",
+  "confirm_no": "Cencel",
+  "message_success": "New Journal Was Successfully Saved"
+
+}

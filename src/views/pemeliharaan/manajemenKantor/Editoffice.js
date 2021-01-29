@@ -24,9 +24,8 @@ import {
 } from "@coreui/react";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import JsonAddKantorValidasi from "componenJson/manajemenperan/lang/id/manajemenkantoredit.json";
+import JsonAddKantorValidasi from "json/lang/id/Menajemen Kantor/edit/manajemenkantoredit.json";
 import Select from "react-select";
-// import usersData from '../../users/DataAkun'
 
 const fields = [
   JsonAddKantorValidasi.list_otor,
@@ -42,7 +41,7 @@ const fields = [
 
 const data = [
   {
-    trxid: "t20292h95113850",
+    // trxid: "t20292h95113850",
     office_code: "001",
     office_name: "Kantor DSI Surabaya",
     office_type: "Kantor Pusat",
@@ -53,7 +52,7 @@ const data = [
     email: "Dsi@gmail.com",
   },
   {
-    trxid: "a90292h95113859",
+    // trxid: "a90292h95113859",
     office_code: "002",
     office_name: "Kantor Bri Surabaya",
     office_type: "Kantor Cabang",
@@ -212,61 +211,18 @@ const Editoffice = () => {
                 </CButton>
               </CCardHeader>
               <CCardBody>
-                <CDataTable
-                  items={data}
-                  fields={fields}
-                  hover
-                  striped
-                  bordered
-                  size="sm"
-                  itemsPerPage={10}
-                  pagination
-                  columnFilter
-                  scopedSlots={{
-                    Otorisasi: (items) => {
-                      return (
-                        <td className="py-2">
-                          <CButton
-                            color="primary"
-                            variant="outline"
-                            shape="square"
-                            size="sm"
-                            onClick={() => {
-                              toggleDetails(items);
-                            }}
-                          >
-                            {JsonAddKantorValidasi.otor_button}
-                          </CButton>
-                        </td>
-                      );
-                    },
-                    isactive: (items) =>
-                      items.isactive ? (
-                        <td>
-                          <CBadge color={"success"}>
-                            <CIcon size={"lg"} name={"cilCheck"} />
-                          </CBadge>
-                        </td>
-                      ) : (
-                        <td>
-                          <CBadge color={"warning"}>
-                            <p
-                              style={{
-                                fontSize: "1.25rem",
-                                width: "1.25rem",
-                                height: "1.25rem",
-                                color: "#fff",
-                                margin: "0px",
-                                padding: "0px",
-                              }}
-                            >
-                              i
-                            </p>
-                          </CBadge>
-                        </td>
-                      ),
-                  }}
-                />
+              <CDataTable
+                    fields={fields}
+                    itemsPerPageSelect
+                    itemsPerPage={10}
+                    columnFilter
+                    sorter
+                    hover
+                    size={"md"}
+                    pagination
+                    tableFilter
+                    cleaner
+                  />
               </CCardBody>
             </CCard>
           </CCol>

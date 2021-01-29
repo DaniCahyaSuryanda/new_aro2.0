@@ -1,42 +1,42 @@
-{
-    "form": "Otorisasi Jurnal Umum",
 
-    "list_caption": "Daftar Jurnal Perlu Otorisasi",
-    "list_trxid" : "No Transaksi",
-    "list_journaldate" : "Tgl Jurnal",
-    "list_journaltype" : "Jenis Jurnal",
-    "list_description": "Keterangan",
+{
+    "form": "Authorization Journal",
+
+    "list_caption": "Journal List Needs Authorization",
+    "list_trxid" : "Transaction No",
+    "list_journaldate" : "Journal Date",
+    "list_journaltype" : "Journal Typel",
+    "list_description": "Description",
 
     "list_refresh" :"Refresh",
-    "list_new" : "Otorisasi",
+    "list_new" : "Authorization",
 
-    "detail_caption" : "Data Jurnal Umum perlu Otor",
-    "trxid" : "No Transaksi",
-    "journaldate" : "Tgl Jurnal",
-    "journaltype" : "Jenis Jurnal",
-    "reffid" : "No Referensi",
-    "description": "Keterangan",
-    "detailitem_caption" : "Detil Jurnal",
-    "detailitem_accno" : "No Akun",
-    "detailitem_accname" : "Nama Akun",
-    "detailitem_description": "Keterangan",
+    "detail_caption" : "ournal List Needs Authorization",
+    "trxid" : "Transaction No",
+    "journaldate" : "Journal Date",
+    "journaltype" : "Journal Type",
+    "reffid" : "Reference No",
+    "description": "Description",
+    "detailitem_caption" : "Journal Details",
+    "detailitem_accno" : "Account No",
+    "detailitem_accname" : "Account Name",
+    "detailitem_description": "Description",
     "detailitem_debit" : "Debit",
-    "detailitem_credit" : "Kredit",
+    "detailitem_credit" : "Credit",
 
-    "otor_button" : "Otorisasi",
-    "reject_button": "Tolak",
+    "otor_button" : "Authorization",
+    "reject_button": "Reject",
 
-    "confirm_otor" : "Otorisasi Jurnal Baru ?",
-    "confirm_otor_yes" : "Otorisasi",
-    "confirm_otor_no" : "Batal",
-    "message_success_otor": "Otorisasi Pembuatan Jurnal Baru Disetujui",
+    "confirm_otor" : "Authorization New Journal ?",
+    "confirm_otor_yes" : "Authorization",
+    "confirm_otor_no" : "Cencel",
+    "message_success_otor": "Authorization New Journal Approved",
 
-    "confirm_reject" : "Tolak Otorisasi Jurnal Baru ?",
-    "confirm_reject_yes" : "Tolak Otorisasi",
-    "confirm_reject_no" : "Batal",
-    "cancel_button" : "Kembali",
-    "message_success_reject": "Otorisasi Pembuatan Jurnal Baru Ditolak",
+    "confirm_reject" : "Reject New Journal ?",
+    "confirm_reject_yes" : "Reject Authorization",
+    "confirm_reject_no" : "Cencel",
+    "cancel_button" : "Cancel",
+    "message_success_reject": "Authorization New Journal Rejected",
 
-    "hide": "kembali"
-
+    "hide": "Back"
 }

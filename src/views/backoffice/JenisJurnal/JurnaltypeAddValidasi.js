@@ -20,77 +20,77 @@ import {
 } from "@coreui/react";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import LangID from "json/lang/id/Tipe Jurnal/add/journaltypeaddvalidation.json";
-import LangEN from "json/lang/en/Tipe Jurnal/add/journaltypeaddvalidation.json";
-// import messageJson from "json/lang/id/Message/message.json";
+import langID from "json/lang/id/Tipe Jurnal/add/journaltypeaddvalidation.json";
+import langEN from "json/lang/en/Tipe Jurnal/add/journaltypeaddvalidation.json";
 import messageID from "json/lang/id/Message/message.json";
 import messageEN from "json/lang/en/Message/message.json";
 import Toast from "component/Toast";
 import { useHistory } from "react-router-dom";
 
+const configApp = JSON.parse(sessionStorage.getItem("config"));
+
 const ReportStrucValidasi = () => {
   const [message, setMessage] = useState({});
+  const [Jsonjurnaladdvalidasi, setJsonjurnaladdvalidasi] = useState(null);
+  const [messageJson, setMessageJson] = useState({});
+  const [fields, setFields] = useState(null);
   const [modal, setModal] = useState(false);
   const [modal_no, setModal2] = useState(false);
   const [items, setItems] = useState(null);
   const [dataJenisJurnal, setDataJenisJurnal] = useState(null);
   const [slide, setSlide] = useState(true);
-  const [itemCreate, setItemCreate] = useState({});
-  const [fields, setField] = useState([]);
-  const [messageJson, setMessageJson] = useState({});
   const history = useHistory();
-  const configApp = JSON.parse(sessionStorage.getItem("config"));
+
+  useEffect(() => {
+    if(Jsonjurnaladdvalidasi === null || fields === null){
+      if (configApp.lang === "id") {
+        setJsonjurnaladdvalidasi(langID);
+        setFields([
+          { key: "action", label : langID.list_new},
+          { key: "trxid", label: langID.list_trxid },
+          { key: "jrtype", label: langID.jrtype },
+          { key: "description", label: langID.description },
+          { key: "isactive", label: langID.isactive },
+        ]);
+      } else if (configApp.lang === "en") {
+        setJsonjurnaladdvalidasi(langEN);
+        setFields([
+          { key: "action", label : langEN.list_new},
+          { key: "trxid", label: langEN.list_trxid },
+          { key: "jrtype", label: langEN.jrtype },
+          { key: "description", label: langEN.description },
+          { key: "isactive", label: langEN.isactive },
+        ]);
+      } else {
+        setJsonjurnaladdvalidasi(langID);
+        setFields([
+          { key: "action", label : langEN.list_new},
+          { key: "trxid", label: langID.list_trxid },
+          { key: "jrtype", label: langID.jrtype },
+          { key: "description", label: langID.description },
+          { key: "isactive", label: langID.isactive },
+        ]);
+      }
+    }
+  }, [setJsonjurnaladdvalidasi, fields]);
+
+  useEffect(() => {
+    if( messageJson === {}){
+      if (configApp.lang === "id") {
+        setMessageJson(messageID);
+      } else if (configApp.lang === "en") {
+        setMessageJson(messageEN);
+      } else {
+        setMessageJson(messageID);
+      }
+    }
+  }, [messageJson]);
 
   useEffect(() => {
     if (dataJenisJurnal == null) {
       getDataEditValidasi();
     }
   }, [dataJenisJurnal]);
-
-  useEffect(() => {
-    if (configApp.lang == "id") {
-      setMessageJson(messageID);
-    } else if (configApp.lang == "en") {
-      setMessageJson(messageEN);
-    } else {
-      setMessageJson(messageID);
-    }
-  }, [messageJson]);
-
-  useEffect(
-    () => {
-      if (configApp.lang == "id") {
-        setItemCreate(LangID);
-        setField([
-          { key: "action", label: LangID.list_new },
-          { key: "trxid", label: LangID.list_trxid },
-          { key: "jrtype", label: LangID.jrtype },
-          { key: "description", label: LangID.description },
-          { key: "isactive", label: LangID.isactive },
-        ]);
-      } else if (configApp.lang == "en") {
-        setItemCreate(LangEN);
-        setField([
-          { key: "action", label: LangEN.list_new },
-          { key: "trxid", label: LangEN.list_trxid },
-          { key: "jrtype", label: LangEN.jrtype },
-          { key: "description", label: LangEN.description },
-          { key: "isactive", label: LangEN.isactive },
-        ]);
-      } else {
-        setItemCreate(LangID);
-        setField([
-          { key: "action", label: LangID.list_new },
-          { key: "trxid", label: LangID.list_trxid },
-          { key: "jrtype", label: LangID.jrtype },
-          { key: "description", label: LangID.description },
-          { key: "isactive", label: LangID.isactive },
-        ]);
-      }
-    },
-    [itemCreate],
-    [fields]
-  );
 
   const toggleDetails = (item) => {
     // const position = details.indexOf(index)
@@ -123,13 +123,13 @@ const ReportStrucValidasi = () => {
           setItems(null);
           setMessage({
             title: messageJson.toatsheader_success,
-            body: itemCreate.otor_success,
+            body: Jsonjurnaladdvalidasi.otor_success,
             type: messageJson.toatscolor_success,
             active: true,
           });
         } else {
           setMessage({
-            title: messageJson.messagetype_err,
+            title: messageJson.toatsheader_err,
             body: res.data.errdescription,
             type: messageJson.toatscolor_err,
             active: true,
@@ -140,7 +140,7 @@ const ReportStrucValidasi = () => {
       .catch(function (error) {
         setModal(false);
         setMessage({
-          title: messageJson.messagetype_err,
+          title: messageJson.toatsheader_err,
           body: JSON.stringify(error),
           type: messageJson.toatscolor_err,
           active: true,
@@ -157,7 +157,7 @@ const ReportStrucValidasi = () => {
       })
       .catch(function (error) {
         setMessage({
-          title: messageJson.messagetype_err,
+          title: messageJson.toatsheader_err,
           body: JSON.stringify(error),
           type: messageJson.toatscolor_err,
           active: true,
@@ -184,7 +184,7 @@ const ReportStrucValidasi = () => {
           setItems(null);
           setMessage({
             title: messageJson.toatsheader_success,
-            body: itemCreate.otor_reject,
+            body: Jsonjurnaladdvalidasi.otor_reject,
             type: messageJson.toatscolor_success,
             active: true,
           });
@@ -213,12 +213,12 @@ const ReportStrucValidasi = () => {
     <>
       <Toast message={message} />
 
-      {slide && itemCreate && fields && (
+      {slide && Jsonjurnaladdvalidasi && fields && (
         <CRow>
           <CCol>
             <CCard>
               <CCardHeader>
-                {itemCreate.list_caption}
+                {Jsonjurnaladdvalidasi.list_caption}
                 <CButton
                   size="sm"
                   color="danger"
@@ -228,7 +228,8 @@ const ReportStrucValidasi = () => {
                   style={{ float: "right" }}
                   className="mr-2"
                 >
-                  <CIcon name="cil-scrubber" /> {itemCreate.list_refresh}
+                  <CIcon name="cil-scrubber" />{" "}
+                  {Jsonjurnaladdvalidasi.list_refresh}
                 </CButton>
               </CCardHeader>
               <CCardBody>
@@ -239,7 +240,7 @@ const ReportStrucValidasi = () => {
                   striped
                   bordered
                   size="sm"
-                  itemsPerPage={30}
+                  itemsPerPage={10}
                   pagination
                   columnFilter
                   scopedSlots={{
@@ -255,7 +256,7 @@ const ReportStrucValidasi = () => {
                               toggleDetails(items);
                             }}
                           >
-                            {itemCreate.list_new}
+                            {Jsonjurnaladdvalidasi.otor_button}
                           </CButton>
                         </td>
                       );
@@ -293,7 +294,7 @@ const ReportStrucValidasi = () => {
                   color="warning"
                   onClick={() => history.goBack()}
                 >
-                  <CIcon name="cil-chevron-left" /> {itemCreate.hide}
+                  <CIcon name="cil-chevron-left" /> {Jsonjurnaladdvalidasi.hide}
                 </CButton>
               </CCardFooter>
             </CCard>
@@ -306,18 +307,18 @@ const ReportStrucValidasi = () => {
           <CCol>
             <CCard>
               <CCardHeader>
-                <h6>{itemCreate.detail_caption}</h6>
+                <h6>{Jsonjurnaladdvalidasi.detail_caption}</h6>
               </CCardHeader>
               <CCardBody className="mb-4">
                 <p className="text-muted">
-                  {itemCreate.list_trxid} : {items.trxid}{" "}
+                  {Jsonjurnaladdvalidasi.list_trxid} : {items.trxid}{" "}
                 </p>
                 <CRow>
                   <CCol xs="12" md="6" xl="6">
                     <CFormGroup row>
                       <CCol>
                         <CLabel htmlFor="text-input">
-                          {itemCreate.list_jrtype}
+                          {Jsonjurnaladdvalidasi.list_jrtype}
                         </CLabel>
                       </CCol>
                       <CCol xs="12" xl="8">
@@ -334,7 +335,9 @@ const ReportStrucValidasi = () => {
                   <CCol xs="12" md="2" xl="2">
                     <CFormGroup row>
                       <CCol>
-                        <CLabel htmlFor="select">{itemCreate.isactive}</CLabel>
+                        <CLabel htmlFor="select">
+                          {Jsonjurnaladdvalidasi.isactive}
+                        </CLabel>
                       </CCol>
                       <CCol xs="12" xl="9">
                         <CFormGroup variant="custom-checkbox" inline>
@@ -359,7 +362,7 @@ const ReportStrucValidasi = () => {
                     <CFormGroup row>
                       <CCol md="2">
                         <CLabel htmlFor="textarea-input">
-                          {itemCreate.description}
+                          {Jsonjurnaladdvalidasi.description}
                         </CLabel>
                       </CCol>
                       <CCol xs="12" xl="12">
@@ -381,7 +384,7 @@ const ReportStrucValidasi = () => {
                   size="sm"
                   color="primary"
                 >
-                  <CIcon name="cil-check" /> {itemCreate.otor_button}
+                  <CIcon name="cil-check" /> {Jsonjurnaladdvalidasi.otor_button}
                 </CButton>
                 <CButton
                   onClick={() => setModal2(!modal_no)}
@@ -390,7 +393,7 @@ const ReportStrucValidasi = () => {
                   style={{ float: "right" }}
                   className="mr-3"
                 >
-                  <CIcon name="cil-ban" /> {itemCreate.reject_button}
+                  <CIcon name="cil-ban" /> {Jsonjurnaladdvalidasi.reject_button}
                 </CButton>
                 <CButton
                   onClick={() => toggleDetails2(items)}
@@ -398,12 +401,12 @@ const ReportStrucValidasi = () => {
                   color="warning"
                   float="left"
                 >
-                  <CIcon name="cil-chevron-left" /> {itemCreate.hide}{" "}
+                  <CIcon name="cil-chevron-left" /> {Jsonjurnaladdvalidasi.hide}{" "}
                 </CButton>
               </CCardBody>
               <CModal show={modal} onClose={setModal}>
                 <CModalBody>
-                  <h4>{itemCreate.confirm_otor}</h4>
+                  <h4>{Jsonjurnaladdvalidasi.confirm_otor}</h4>
                 </CModalBody>
                 <CModalFooter>
                   <CButton
@@ -411,17 +414,17 @@ const ReportStrucValidasi = () => {
                     color="primary"
                     onClick={() => setujuOtoritasi(items.trxid)}
                   >
-                    {itemCreate.confirm_otor_yes}
+                    {Jsonjurnaladdvalidasi.confirm_otor_yes}
                   </CButton>{" "}
                   <CButton color="danger" onClick={() => setModal(false)}>
-                    {itemCreate.confirm_otor_no}
+                    {Jsonjurnaladdvalidasi.confirm_otor_no}
                   </CButton>
                 </CModalFooter>
               </CModal>
 
               <CModal show={modal_no} onClose={setModal2}>
                 <CModalBody>
-                  <h4>{itemCreate.confirm_reject}</h4>
+                  <h4>{Jsonjurnaladdvalidasi.confirm_reject}</h4>
                 </CModalBody>
                 <CModalFooter>
                   <CButton
@@ -429,10 +432,10 @@ const ReportStrucValidasi = () => {
                     onClick={() => tolakOtoritasi(items.trxid)}
                     color="primary"
                   >
-                    {itemCreate.confirm_reject_yes}
+                    {Jsonjurnaladdvalidasi.confirm_reject_yes}
                   </CButton>{" "}
                   <CButton color="danger" onClick={() => setModal2(false)}>
-                    {itemCreate.confirm_reject_no}
+                    {Jsonjurnaladdvalidasi.confirm_reject_no}
                   </CButton>
                 </CModalFooter>
               </CModal>

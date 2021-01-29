@@ -1,0 +1,39 @@
+
+    {
+    "form": "Pembuatan Struktur Akun Baru",
+    
+    "list_caption": "Daftar Struktur Akun",
+    "list_asid" : "Kode",
+    "list_asname" : "Nama",
+    "list_isactive": "Aktif",
+    "action_list" : "Aksi",
+     
+    "list_refresh" :"Refresh",
+    "list_new" : "Buat Baru",
+
+    "detail_caption" : "Data Struktur Akun",
+    "asid" : "Kode",
+    "asname" : "Nama",
+    "isactive" : "Aktif",
+    "tag" : "Tag",
+    "detailitem_caption" : "Data Struktur Akun",
+    "detailitem_no" : "No Item", 
+    "detailitem_name" : "Nama Item",
+    "detailitem_parentno" : "No Induk",
+    "detailitem_accno" : "No Akun",
+    "detailitem_isgeneral" : "Item Grup",
+    "detailitem_accname" : "Nama Akun",     
+    "detailitem_isvisible" : "Ditampilkan",
+
+    "save_button" : "Simpan",
+    "cancel_button": "Batal",
+    
+    "confirm_save" : "Simpan Pembuatan Struktur Akun Baru ?",
+    "confirm_yes" : "Simpan",
+    "confirm_no" : "Batal",
+
+    "setmessage_done" : "Struktur laporan berhasil disampan",
+
+    "action_button_edit" : "Edit",
+    "action_button_delete": "Hapus"
+}

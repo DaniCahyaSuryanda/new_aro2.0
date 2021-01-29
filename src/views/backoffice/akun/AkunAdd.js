@@ -23,6 +23,8 @@ import Toast from "component/Toast";
 import { useHistory } from "react-router-dom";
 import Input from "component/Input";
 
+const configApp = JSON.parse(sessionStorage.getItem("config"));
+
 const AccAdd = () => {
   const { handleSubmit, register, reset, control } = useForm();
   const [items, setItems] = useState(null);
@@ -32,45 +34,23 @@ const AccAdd = () => {
   const [itemAccCreate, setItemCreate] = useState({});
   const [messageJson, setItemMessage] = useState({});
 
-  const configApp = JSON.parse(sessionStorage.getItem("config"));
+  useEffect(() => {
+    if (configApp.lang === "id") {
+      setItemCreate(LangID);
+      setItemMessage(messageID);
+    } else if (configApp.lang == "en") {
+      setItemCreate(LangEN);
+      setItemMessage(messageEN);
+    } else {
+      setItemCreate(LangID);
+      setItemMessage(messageID);
+    }
+  }, [itemAccCreate, messageJson]);
 
   const onSubmit = (data) => {
     setModal(true);
     setItems(data);
   };
-  useEffect(
-    () => {
-      if (configApp.lang === "id") {
-        setItemCreate(LangID);
-        setItemMessage(messageID);
-      } else if (configApp.lang == "en") {
-        setItemCreate(LangEN);
-        setItemMessage(messageEN);
-      } else {
-        setItemCreate(LangID);
-        setItemMessage(messageID);
-      }
-    },
-    [itemAccCreate],
-    [messageJson]
-  );
-
-  // useEffect(
-  //   () => {
-  //     if (configApp.lang === "id") {
-  //       setItemCreate(LangID);
-  //       setMessageJson(messageJsonID);
-  //     } else if (configApp.lang == " en") {
-  //       setItemCreate(LangEN);
-  //       setMessageJson(messageJsonEN);
-  //     } else {
-  //       setItemCreate(LangID);
-  //       setMessageJson(messageJsonID);
-  //     }
-  //   },
-  //   [itemAccCreate],
-  //   [messageJson]
-  // );
 
   const simpanData = () => {
     setMessage({});
@@ -97,14 +77,14 @@ const AccAdd = () => {
           setItems(null);
           reset();
         } else {
-          setModal(false);
           setMessage({
             title: messageJson.toatsheader_err,
             body: res.data.errdescription,
             type: messageJson.toatscolor_err,
             active: true,
           });
-          //setMessage();
+          setMessage();
+          setModal(false);
         }
       })
       .catch(function (error) {
@@ -181,7 +161,7 @@ const AccAdd = () => {
                   <Input
                     ref={control}
                     typefield="checkbox"
-                    label={itemAccCreate.normaldebit}
+                    label={itemAccCreate.rmaldebit}
                     name="normaldebit"
                     id="normaldebit"
                     md="2"

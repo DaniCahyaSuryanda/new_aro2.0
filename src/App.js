@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { HashRouter, Route, Switch } from 'react-router-dom';
 import './scss/style.scss';
+import './config/sessionConfig'
 
 const loading = (
   <div className="pt-3 text-center">
@@ -12,7 +13,11 @@ const loading = (
 const TheLayout = React.lazy(() => import('./containers/TheLayout'));
 
 class App extends Component {
-
+  componentDidMount(){
+    if(sessionStorage.getItem('config') === null){
+      sessionStorage.setItem('config', JSON.stringify(global.sessionConfig));
+    }
+  }
   render() {
     return (
       <HashRouter>

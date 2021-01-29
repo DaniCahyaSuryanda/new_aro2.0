@@ -1,44 +1,43 @@
+{
+  "form": "Create New Account Structure",
 
-    {
-    "form": "Create New Account Structure",
+  "list_caption": "List Account Structure",
+  "list_asid": "Code",
+  "list_asname": "Name",
+  "list_isactive": "Acitve",
+  "action_list": "Action",
 
-    "list_caption": "List Account Structure",
-    "list_asid" : "Code",
-    "list_asname" : "Name",
-    "list_isactive": "Acitve",
-    "action_list" : "Action",
+  "list_refresh": "Refresh",
+  "list_new": "Create New",
 
-    "list_refresh" :"Refresh",
-    "list_new" : "Create New",
+  "detail_caption": "List Account Structure",
+  "asid": "Code",
+  "asname": "Name",
+  "isactive": "Acitve",
+  "tag": "Tag",
 
-    "detail_caption" : "List Account Structure",
-    "asid" : "Code",
-    "asname" : "Name",
-    "isactive" : "Acitve",
-    "tag" : "Tag",
+  "detailitem_caption": "List Account Structure",
+  "detailitem_no": "Item No",
+  "detailitem_name": "Item Name",
+  "detailitem_parentno": "Parent No",
+  "detailitem_accno": "Account No",
+  "detailitem_isgeneral": "Item Group",
+  "detailitem_accname": "Account Name",
+  "detailitem_isvisible": "Show",
 
-    "detailitem_caption" : "List Account Structure",
-    "detailitem_no" : "Item No",
-    "detailitem_name" : "Item Name",
-    "detailitem_parentno" : "Parent No",
-    "detailitem_accno" : "Account No",
-    "detailitem_isgeneral" : "Item Group",
-    "detailitem_accname" : "Account Name",
-    "detailitem_isvisible" : "Show",
+  "save_button": "Save",
+  "cancel_button": "Cencel",
 
-    "save_button" : "Save",
-    "cancel_button": "Cencel",
+  "confirm_save": "Save Create New Account Structure ?",
+  "confirm_yes": "Simpan",
+  "confirm_no": "Batal",
 
-    "confirm_save" : "Save Create New Account Structure ?",
-    "confirm_yes" : "Simpan",
-    "confirm_no" : "Batal",
+  "setmessage_done": "Structure Account Was Successfully Save",
 
-    "setmessage_done" : "Structure Account Was Successfully Save",
+  "acctype_0": "Balance Sheet Account",
+  "acctype_1": "Non Balance Sheet Account",
 
-    "acctype_0" : "Balance Sheet Account",
-    "acctype_1" : "Non Balance Sheet Account",
-
-    "action_button_edit" : "Edit",
-    "action_button_delete": "Delete",
-    "hide" : "Back"
+  "action_button_edit": "Edit",
+  "action_button_delete": "Delete",
+  "hide": "Back"
 }

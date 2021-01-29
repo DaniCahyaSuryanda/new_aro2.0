@@ -1,0 +1,23 @@
+{
+    "add_create" : {
+        "get_list" : "/gl/params/reportstructure/list",
+        "save_new_start" : "/gl/params/reportstructure/create/start",
+        "save_new_additem" : "/gl/params/reportstructure/create/additem",
+        "save_new_end" : "/gl/params/reportstructure/create/end"        
+
+    },
+    "add_create_validation" : {
+        "get_list" : "/gl/params/reportstructure/create/listnotvalid",
+        "save_otor" : "/gl/params/reportstructure/create/validation"
+    },
+    "edit_create" : {
+        "get_list" : "/gl/params/reportstructure/list",
+        "save_new_start" : "/gl/params/reportstructure/edit/start",
+        "save_new_additem" : "/gl/params/reportstructure/edit/additem",
+        "save_new_end" : "/gl/params/reportstructure/edit/end"        
+    },
+    "edit_create_validation" : {
+        "get_list" : "/gl/params/reportstructure/edit/listnotvalid",
+        "save_otor" : "/gl/params/reportstructure/edit/validation"
+    }
+}

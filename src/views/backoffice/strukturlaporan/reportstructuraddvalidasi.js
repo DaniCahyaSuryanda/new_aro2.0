@@ -26,21 +26,7 @@ import messageEN from "json/lang/en/Message/message.json";
 import Toast from "component/Toast";
 import { useHistory } from "react-router-dom";
 
-// const fields = [
-//   Jsonjurnaladdvalidasi.list_new,
-//   { key: "asid", label: Jsonjurnaladdvalidasi.list_asid },
-//   { key: "asname", label: Jsonjurnaladdvalidasi.list_asname },
-//   { key: "isactive", label: Jsonjurnaladdvalidasi.isactive },
-// ];
-
-// const fieldsDetail = [
-//   { key: "itemno", label: Jsonjurnaladdvalidasi.detailitem_no },
-//   { key: "itemname", label: Jsonjurnaladdvalidasi.detailitem_name },
-//   { key: "parentno", label: Jsonjurnaladdvalidasi.detailitem_parentno },
-//   { key: "accno", label: Jsonjurnaladdvalidasi.detailitem_accno },
-//   { key: "accname", label: Jsonjurnaladdvalidasi.detailitem_accname },
-//   { key: "isvisible", label: Jsonjurnaladdvalidasi.detailitem_isvisible },
-// ];
+const configApp = JSON.parse(sessionStorage.getItem("config"));
 
 const ReportStrucValidasi = () => {
   const [message, setMessage] = useState({});
@@ -50,15 +36,17 @@ const ReportStrucValidasi = () => {
   const history = useHistory();
   const [dataAccountStructure, setDataAccountStructure] = useState(null);
   const [details, setDetails] = useState([]);
-  const [Jsonjurnaladdvalidasi, setJsonjurnaladdvalidasi] = useState({});
-  const [messageJson, setMessageJson] = useState({});
-  const [fields, setField] = useState([]);
-  const [fieldsDetail, setFieldsDetail] = useState([]);
+  const [Jsonjurnaladdvalidasi, setJsonjurnaladdvalidasi] = useState(null);
+  const [messageJson, setMessageJson] = useState(null);
+  const [fields, setField] = useState(null);
+  const [fieldsDetail, setFieldsDetail] = useState(null);
 
-  const configApp = JSON.parse(sessionStorage.getItem("config"));
-
-  useEffect(
-    () => {
+  useEffect(() => {
+    if (
+      Jsonjurnaladdvalidasi === null ||
+      fields === null ||
+      fieldsDetail === null
+    ) {
       if (configApp.lang === "id") {
         setJsonjurnaladdvalidasi(LangID);
         setField([
@@ -111,19 +99,18 @@ const ReportStrucValidasi = () => {
           { key: "isvisible", label: LangID.detailitem_isvisible },
         ]);
       }
-    },
-    [Jsonjurnaladdvalidasi],
-    [fields],
-    [fieldsDetail]
-  );
+    }
+  }, [Jsonjurnaladdvalidasi, fields, fieldsDetail]);
 
   useEffect(() => {
-    if (configApp.lang === "id") {
-      setMessageJson(messageID);
-    } else if (configApp.lang == "en") {
-      setMessageJson(messageEN);
-    } else {
-      setMessageJson(messageID);
+    if (messageJson === null) {
+      if (configApp.lang === "id") {
+        setMessageJson(messageID);
+      } else if (configApp.lang == "en") {
+        setMessageJson(messageEN);
+      } else {
+        setMessageJson(messageID);
+      }
     }
   }, [messageJson]);
 
@@ -282,7 +269,7 @@ const ReportStrucValidasi = () => {
     <>
       <Toast message={message} />
 
-      {items === null && (
+      {!items && Jsonjurnaladdvalidasi && fields && fieldsDetail && (
         <CRow>
           <CCol>
             <CCard>
@@ -382,9 +369,9 @@ const ReportStrucValidasi = () => {
                       ),
                     acctype: (item) =>
                       item.acctype === 0 ? (
-                        <td> {Jsonjurnaladdvalidasi.acctype_0} </td>
+                        <td> Akun Neraca </td>
                       ) : (
-                        <td> {Jsonjurnaladdvalidasi.acctype_1} </td>
+                        <td> Akun Non Neraca </td>
                       ),
                   }}
                 />

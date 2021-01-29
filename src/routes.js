@@ -47,12 +47,10 @@ const JournalAdd = React.lazy(() =>
 const Journaladdvalidasi = React.lazy(() =>
   import("./views/backoffice/Jurnalumum/JournalAddValidasi")
 );
-const LaporanUmum = React.lazy(() => import("./views/laporanumum/LaporanUmum"));
-
+const LaporanUmum = React.lazy(() => import("./views/laporan/LaporanUmum"));
 const Editorlaporan = React.lazy(() =>
   import("./views/pemeliharaan/Editorlaporan/Editorlaporan")
 );
-
 const Manajemenperan = React.lazy(() =>
   import("./views/pemeliharaan/manajemenperan_Menu/Manajemenperan")
 );
@@ -66,10 +64,17 @@ const Editoffice = React.lazy(() =>
   import("./views/pemeliharaan/manajemenKantor/Editoffice")
 );
 
-const routes = [
-  { path: "/", exact: true, name: "Home" },
-  { path: "/dashboard", name: "Dashboard", component: Dashboard },
-
+const ID = [
+  {
+    path: "/",
+    exact: true,
+    name: "",
+  },
+  {
+    path: "/dashboard",
+    name: "Beranda",
+    component: Dashboard,
+  },
   {
     path: "/backoffice",
     name: "Back Office",
@@ -206,4 +211,152 @@ const routes = [
   },
 ];
 
+const EN = [
+  {
+    path: "/",
+    exact: true,
+    name: "",
+  },
+  {
+    path: "/dashboard",
+    name: "Dashboard",
+    component: Dashboard,
+  },
+  {
+    path: "/backoffice",
+    name: "Back Office",
+    component: Parambackoffice,
+    exact: true,
+  },
+  {
+    path: "/backoffice/paramsbackoffice",
+    name: "Back Office Parameter",
+    component: Parambackoffice,
+  },
+  {
+    path: "/backoffice/transaksibackoffice",
+    name: "Back Office Transaction",
+    component: Transaksibackoffice,
+  },
+  // { path: '/akun', name: 'Back Office', component: Parambackoffice, exact: true },
+  {
+    path: "/backoffice/akun/AkunAdd",
+    name: "Create New Account",
+    component: AkunAdd,
+  },
+  {
+    path: "/backoffice/akun/AkunAddValidasi",
+    name: "Authorization New Account",
+    component: Akunaddvalidasi,
+  },
+  {
+    path: "/backoffice/akun/AkunEdit",
+    name: "Updating Account",
+    component: Akunedit,
+  },
+  {
+    path: "/backoffice/akun/AkunEditValidasi",
+    name: "Authorization Updating Account",
+    component: Akuneditvalidasi,
+  },
+  // { path: '/JenisJurnal', name: 'Parameter Back Office', component: Parambackoffice, exact: true },
+  {
+    path: "/backoffice/JenisJurnal/JurnaltypeAdd",
+    name: "Create New Journal",
+    component: JenisJurnalAdd,
+  },
+  {
+    path: "/backoffice/JenisJurnal/JurnaltypeAddValidasi",
+    name: "Authorization New Journal Type",
+    component: JJAddValidasi,
+  },
+  {
+    path: "/backoffice/JenisJurnal/Jurnaltypeedit",
+    name: "Updating Journal Type",
+    component: JJEdit,
+  },
+  {
+    path: "/backoffice/JenisJurnal/JurnaltypeeditValidasi",
+    name: "Authorization Updating Journal Type",
+    component: JJeditvalidasi,
+  },
+  {
+    path: "/backoffice/strukturlaporan/reportstructureadd",
+    name: "Create New Structure Account",
+    component: Reportstrucutreadd,
+  },
+  {
+    path: "/backoffice/strukturlaporan/reportstructuraddvalidasi",
+    name: "Authorization Structure Account",
+    component: Reportstrucutreaddvalidasi,
+  },
+  {
+    path: "/backoffice/strukturlaporan/reportstructureedit",
+    name: "Updating Structure Account",
+    component: Reportstrucutreedit,
+  },
+  {
+    path: "/backoffice/strukturlaporan/reportstructureeditvalidasi",
+    name: "Authorization Updating Structure Account",
+    component: Reportstrucutreeditvalidasi,
+  },
+
+  {
+    path: "/backoffice/Jurnalumum/JournalAdd",
+    name: "Journal Add Create",
+    component: JournalAdd,
+  },
+  {
+    path: "/backoffice/Jurnalumum/JournalAddValidasi",
+    name: "Authorization New Journal",
+    component: Journaladdvalidasi,
+  },
+
+  { path: "/users", exact: true, name: "Users", component: Users },
+  { path: "/users/:id", exact: true, name: "User Details", component: User },
+
+  { path: "/laporanumum", exact: true, component: LaporanUmum },
+  {
+    path: "/laporanumum/LaporanUmum",
+    name: "General Report",
+    component: LaporanUmum,
+  },
+
+  {
+    path: "/pemeliharaan",
+    name: "Maintenance",
+    // component: Manajemenperan,
+    exact: true,
+  },
+  {
+    path: "/pemeliharaan/Editorlaporan",
+    name: "Report Editor ",
+    component: Editorlaporan,
+  },
+  {
+    path: "/pemeliharaan/manajemenperan_Menu/Manajemenperan",
+    name: "Role Management",
+    component: Manajemenperan,
+  },
+  {
+    path: "/pemeliharaan/manajemenKantor/Addnewoffice",
+    name: "Create New Office",
+    component: Addnewoffice,
+  },
+  {
+    path: "/pemeliharaan/manajemenKantor/Addnewofficevalidasi",
+    name: "Authorization New Office",
+    component: Addnewofficevalidasi,
+  },
+  {
+    path: "/pemeliharaan/manajemenKantor/Editoffice",
+    name: "Updating Office",
+    component: Editoffice,
+  },
+];
+
+const routes = {
+  id: ID,
+  en: EN,
+};
 export default routes;

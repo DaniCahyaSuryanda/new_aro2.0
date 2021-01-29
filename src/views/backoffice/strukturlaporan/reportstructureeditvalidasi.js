@@ -19,26 +19,28 @@ import {
 } from "@coreui/react";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import Jsonjurnaladdvalidasi from "json/lang/id/Struktur Laporan/edit/reportstructureeditvalidation.json";
-import messageJson from "../../../json/lang/id/Message/message.json";
-import Toast from "../../../component/Toast";
+import LangID from "json/lang/id/Struktur Laporan/edit/reportstructureeditvalidation.json";
+import LangEN from "json/lang/en/Struktur Laporan/edit/reportstructureeditvalidation.json";
+import messageID from "json/lang/id/Message/message.json";
+import messageEN from "json/lang/en/Message/message.json";
+import Toast from "component/Toast";
 import { useHistory } from "react-router-dom";
 
-const fields = [
-  Jsonjurnaladdvalidasi.list_new,
-  { key: "asid", label: Jsonjurnaladdvalidasi.list_asid },
-  { key: "asname", label: Jsonjurnaladdvalidasi.list_asname },
-  { key: "isactive", label: Jsonjurnaladdvalidasi.isactive },
-];
+// const fields = [
+//   Jsonjurnaladdvalidasi.list_new,
+//   { key: "asid", label: Jsonjurnaladdvalidasi.list_asid },
+//   { key: "asname", label: Jsonjurnaladdvalidasi.list_asname },
+//   { key: "isactive", label: Jsonjurnaladdvalidasi.isactive },
+// ];
 
-const fieldsDetail = [
-  { key: "itemno", label: Jsonjurnaladdvalidasi.detailitem_no },
-  { key: "itemname", label: Jsonjurnaladdvalidasi.detailitem_name },
-  { key: "parentno", label: Jsonjurnaladdvalidasi.detailitem_parentno },
-  { key: "accno", label: Jsonjurnaladdvalidasi.detailitem_glcode },
-  { key: "accname", label: Jsonjurnaladdvalidasi.detailitem_parentno },
-  { key: "isvisible", label: Jsonjurnaladdvalidasi.detailitem_isvisible },
-];
+// const fieldsDetail = [
+//   { key: "itemno", label: Jsonjurnaladdvalidasi.detailitem_no },
+//   { key: "itemname", label: Jsonjurnaladdvalidasi.detailitem_name },
+//   { key: "parentno", label: Jsonjurnaladdvalidasi.detailitem_parentno },
+//   { key: "accno", label: Jsonjurnaladdvalidasi.detailitem_glcode },
+//   { key: "accname", label: Jsonjurnaladdvalidasi.detailitem_parentno },
+//   { key: "isvisible", label: Jsonjurnaladdvalidasi.detailitem_isvisible },
+// ];
 
 const ReportStrucValidasi = () => {
   const [message, setMessage] = useState({});
@@ -48,6 +50,12 @@ const ReportStrucValidasi = () => {
   const [dataAccountStructure, setDataAccountStructure] = useState(null);
   const [details, setDetails] = useState([]);
   const history = useHistory();
+  const [Jsonjurnaladdvalidasi, setJsonjurnaladdvalidasi] = useState({});
+  const [messageJson, setMessageJson] = useState({});
+  const [fields, setField] = useState(null);
+  const [fieldsDetail, setFieldsDetail] = useState(null);
+
+  const configApp = JSON.parse(sessionStorage.getItem("config"));
 
   useEffect(() => {
     if (dataAccountStructure === null) {
@@ -55,8 +63,79 @@ const ReportStrucValidasi = () => {
     }
   }, [dataAccountStructure]);
 
+  useEffect(() => {
+    if (
+      Jsonjurnaladdvalidasi == null ||
+      fields == null ||
+      fieldsDetail == null
+    ) {
+      if (configApp.lang == "id") {
+        setJsonjurnaladdvalidasi(LangID);
+        setField([
+          { key: "action", label: LangID.list_new },
+          { key: "asid", label: LangID.list_asid },
+          { key: "asname", label: LangID.list_asname },
+          { key: "isactive", label: LangID.isactive },
+        ]);
+
+        setFieldsDetail([
+          { key: "itemno", label: LangID.detailitem_no },
+          { key: "itemname", label: LangID.detailitem_name },
+          { key: "parentno", label: LangID.detailitem_parentno },
+          { key: "accno", label: LangID.detailitem_accno },
+          { key: "accname", label: LangID.detailitem_accname },
+          { key: "isvisible", label: LangID.detailitem_isvisible },
+        ]);
+      } else if (configApp.lang == "en") {
+        setJsonjurnaladdvalidasi(LangEN);
+        setField([
+          { key: "action", label: LangEN.list_new },
+          { key: "asid", label: LangEN.list_asid },
+          { key: "asname", label: LangEN.list_asname },
+          { key: "isactive", label: LangEN.isactive },
+        ]);
+
+        setFieldsDetail([
+          { key: "itemno", label: LangEN.detailitem_no },
+          { key: "itemname", label: LangEN.detailitem_name },
+          { key: "parentno", label: LangEN.detailitem_parentno },
+          { key: "accno", label: LangEN.detailitem_accno },
+          { key: "accname", label: LangEN.detailitem_accname },
+          { key: "isvisible", label: LangEN.detailitem_isvisible },
+        ]);
+      } else {
+        setJsonjurnaladdvalidasi(LangID);
+        setField([
+          { key: "action", label: LangID.list_new },
+          { key: "asid", label: LangID.list_asid },
+          { key: "asname", label: LangID.list_asname },
+          { key: "isactive", label: LangID.isactive },
+        ]);
+
+        setFieldsDetail([
+          { key: "itemno", label: LangID.detailitem_no },
+          { key: "itemname", label: LangID.detailitem_name },
+          { key: "parentno", label: LangID.detailitem_parentno },
+          { key: "accno", label: LangID.detailitem_accno },
+          { key: "accname", label: LangID.detailitem_accname },
+          { key: "isvisible", label: LangID.detailitem_isvisible },
+        ]);
+      }
+    }
+  }, [Jsonjurnaladdvalidasi, fields, fieldsDetail]);
+
+  useEffect(() => {
+    if (configApp.lang == "id") {
+      setMessageJson(messageID);
+    } else if (configApp.lang == "en") {
+      setMessageJson(messageEN);
+    } else {
+      setMessageJson(messageID);
+    }
+  });
+
   const getDataEditValidasi = () => {
-    setMessage({})
+    setMessage({});
     axios
       .get(`${global.config.API_URL}gl/params/accountstructure/edit/list`)
       .then((res) => {
@@ -81,7 +160,7 @@ const ReportStrucValidasi = () => {
   };
 
   const toggleDetails = (item) => {
-    setMessage({})
+    setMessage({});
     setItems(item);
     axios
       .get(
@@ -91,7 +170,7 @@ const ReportStrucValidasi = () => {
         if (res.data.rescode === 0) {
           setDetails(res.data.data.detail);
           console.log(res.data.data.detail);
-        }else{
+        } else {
           setMessage({
             title: messageJson.toatsheader_err,
             body: res.data.errdescription,
@@ -111,7 +190,7 @@ const ReportStrucValidasi = () => {
   };
 
   const setujuOtoritasi = (trxid) => {
-    setMessage({})
+    setMessage({});
     let data = {
       trxid: trxid,
       validstate: 1,
@@ -142,7 +221,8 @@ const ReportStrucValidasi = () => {
             active: true,
           });
         }
-      }).catch(function (error) {
+      })
+      .catch(function (error) {
         setMessage({
           title: messageJson.messagetype_err,
           body: JSON.stringify(error),
@@ -153,7 +233,7 @@ const ReportStrucValidasi = () => {
   };
 
   const tolakOtoritasi = (trxid) => {
-    setMessage({})
+    setMessage({});
     let data = {
       trxid: trxid,
       validstate: 2,
@@ -182,7 +262,8 @@ const ReportStrucValidasi = () => {
             active: true,
           });
         }
-      }).catch(function (error) {
+      })
+      .catch(function (error) {
         setMessage({
           title: messageJson.messagetype_err,
           body: JSON.stringify(error),
@@ -196,7 +277,7 @@ const ReportStrucValidasi = () => {
     <>
       <Toast message={message} />
 
-      {items === null && (
+      {!items && Jsonjurnaladdvalidasi && fields && fieldsDetail && (
         <CRow>
           <CCol>
             <CCard>
@@ -223,11 +304,11 @@ const ReportStrucValidasi = () => {
                   striped
                   bordered
                   size="sm"
-                  itemsPerPage={10}
+                  itemsPerPage={50}
                   pagination
                   columnFilter
                   scopedSlots={{
-                    Otorisasi: (items) => {
+                    action: (items) => {
                       return (
                         <td className="py-2">
                           <CButton
@@ -239,7 +320,7 @@ const ReportStrucValidasi = () => {
                               toggleDetails(items);
                             }}
                           >
-                            Otorisasi
+                            {Jsonjurnaladdvalidasi.otor_button}
                           </CButton>
                         </td>
                       );
@@ -296,9 +377,9 @@ const ReportStrucValidasi = () => {
                       ),
                     acctype: (item) =>
                       item.acctype === 0 ? (
-                        <td> Akun Neraca </td>
+                        <td> {Jsonjurnaladdvalidasi.acctype_0} </td>
                       ) : (
-                        <td> Akun Non Neraca </td>
+                        <td> {Jsonjurnaladdvalidasi.acctype_1} </td>
                       ),
                   }}
                 />
@@ -369,7 +450,6 @@ const ReportStrucValidasi = () => {
                         </CCol>
                       </CFormGroup>
                     </CCol>
-
                   </CRow>
                   <CRow>
                     <CCol lg="6" md="6" sm="12">

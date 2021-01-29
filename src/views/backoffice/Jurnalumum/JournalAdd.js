@@ -24,23 +24,13 @@ import axios from "axios";
 import Select from "react-select";
 import CIcon from "@coreui/icons-react";
 import { useForm, Controller } from "react-hook-form";
-import JurnalTypeAdd from "json/lang/id/Jurnal Umum/add/journaladdcreate.json";
-import messageJson from "json/lang/id/Message/message.json";
+import LangID from "json/lang/id/Jurnal Umum/add/journaladdcreate.json";
+import LangEN from "json/lang/en/Jurnal Umum/add/journaladdcreate.json";
+import messageID from "json/lang/id/Message/message.json";
+import messageEN from "json/lang/en/Message/message.json";
 import Toast from "component/Toast";
 import { useHistory } from "react-router-dom";
 import Input from "component/Input";
-
-const fields = [
-  JurnalTypeAdd.action_list,
-  { key: "detailitem_accno", label: JurnalTypeAdd.detailitem_accno },
-  { key: "detailitem_accname", label: JurnalTypeAdd.detailitem_accname },
-  {
-    key: "detailitem_description",
-    label: JurnalTypeAdd.detailitem_description,
-  },
-  { key: "detailitem_debit", label: JurnalTypeAdd.detailitem_debit },
-  { key: "detailitem_credit", label: JurnalTypeAdd.detailitem_credit },
-];
 
 const configApp = JSON.parse(sessionStorage.getItem("config"));
 
@@ -60,6 +50,87 @@ const JenisJurnalAdd = () => {
   const [optionAcc, setOptionAcc] = useState([]);
   const [optionJurnal, setOptionJurnal] = useState([]);
   const history = useHistory();
+  const [JurnalTypeAdd, setJurnalTypeAdd] = useState({});
+  const [messageJson, setMessageJson] = useState({});
+  const [fields, setField] = useState(null);
+
+  useEffect(() => {
+    if (Object.keys(messageJson).length === 0) {
+      if (configApp.lang == "id") {
+        setMessageJson(messageID);
+      } else if (configApp.lang == "en") {
+        setMessageJson(messageEN);
+      } else {
+        setMessageJson(messageID);
+      }
+    } else {
+      if (accNo == null && jurnal == null) {
+        getDataJurnal();
+        getDataAkun();
+      }
+    }
+  }, [messageJson, accNo, jurnal]);
+
+  // useEffect(() => {
+  //   if (accNo == null && jurnal == null) {
+  //     getDataJurnal();
+  //     getDataAkun();
+  //   }
+  // }, [accNo, jurnal]);
+
+  useEffect(() => {
+    if (JurnalTypeAdd == null || fields == null) {
+      if (configApp.lang == "id") {
+        setJurnalTypeAdd(LangID);
+        setField([
+          { key: "action", label: LangID.action_list },
+          { key: "detailitem_accno", label: LangID.detailitem_accno },
+          {
+            key: "detailitem_accname",
+            label: LangID.detailitem_accname,
+          },
+          {
+            key: "detailitem_description",
+            label: LangID.detailitem_description,
+          },
+          { key: "detailitem_debit", label: LangID.detailitem_debit },
+          { key: "detailitem_credit", label: LangID.detailitem_credit },
+        ]);
+      } else if (configApp.lang == "en") {
+        setJurnalTypeAdd(LangEN);
+        setField([
+          { key: "action", label: LangEN.action_list },
+          { key: "detailitem_accno", label: LangEN.detailitem_accno },
+          {
+            key: "detailitem_accname",
+            label: LangEN.detailitem_accname,
+          },
+          {
+            key: "detailitem_description",
+            label: LangEN.detailitem_description,
+          },
+          { key: "detailitem_debit", label: LangEN.detailitem_debit },
+          { key: "detailitem_credit", label: LangEN.detailitem_credit },
+        ]);
+      } else {
+        setJurnalTypeAdd(LangID);
+        setField([
+          { key: "action", label: LangID.action_list },
+          { key: "detailitem_accno", label: LangID.detailitem_accno },
+          {
+            key: "detailitem_accname",
+            label: LangID.detailitem_accname,
+          },
+          {
+            key: "detailitem_description",
+            label: LangID.detailitem_description,
+          },
+          { key: "detailitem_debit", label: LangID.detailitem_debit },
+          { key: "detailitem_credit", label: LangID.detailitem_credit },
+        ]);
+      }
+    }
+  }, [JurnalTypeAdd, fields]);
 
   const {
     register: register2,
@@ -76,6 +147,7 @@ const JenisJurnalAdd = () => {
   const { handleSubmit, register, reset, control } = useForm();
 
   const onSubmit = (data) => {
+    console.log(data);
     let detail = [];
     dataAkun.map((row) => {
       return detail.push({
@@ -89,18 +161,21 @@ const JenisJurnalAdd = () => {
     let sendData = {
       journaldate: getFormattedDate(data.journaldate),
       reffid: data.reffid,
-      journaltype: data.journaltype.value,
+      journaltype: data.journaltype,
       description: data.description,
       detail: detail,
       validstate: 0,
       lang: JSON.parse(sessionStorage.getItem("config")).lang,
     };
+    console.log(sendData);
     setDataSend(sendData);
     setModal(true);
   };
 
   const confirmSave = () => {
     setMessage({});
+    console.log(dataSend);
+    //console.log(sendData);
     axios
       .post(
         `${global.config.API_URL}gl/transaction/journal/add/create`,
@@ -120,6 +195,9 @@ const JenisJurnalAdd = () => {
           });
         } else {
           setModal(false);
+          console.log(res.data.errdescription);
+          setDataSend(null);
+          setDataAkun([]);
           setMessage({
             title: messageJson.toatsheader_err,
             body: res.data.errdescription,
@@ -130,6 +208,9 @@ const JenisJurnalAdd = () => {
       })
       .catch(function (error) {
         setModal(false);
+        setDataSend(null);
+        setDataAkun([]);
+        console.log(error);
         setMessage({
           title: messageJson.messagetype_err,
           body: JSON.stringify(error),
@@ -142,14 +223,14 @@ const JenisJurnalAdd = () => {
   const saveDetail = (param) => {
     let data = [...dataAkun];
     let accname = {};
-      if (param.detailitem_accno !== undefined) {
-        accname = accNo.find(({ accno }) => {
-          return accno === param.detailitem_accno;
-        });
-      } else {
-        accname.accno = "";
-        accname.accname = "";
-      }
+    if (param.detailitem_accno !== undefined) {
+      accname = accNo.find(({ accno }) => {
+        return accno === param.detailitem_accno;
+      });
+    } else {
+      accname.accno = "";
+      accname.accname = "";
+    }
     data.push({
       detailitem_debit: param.detailitem_debit,
       detailitem_description: param.detailitem_description,
@@ -194,13 +275,6 @@ const JenisJurnalAdd = () => {
     setEditFormItem(param);
     setIndexEdit(index);
   };
-
-  useEffect(() => {
-    if (accNo == null && jurnal == null) {
-      getDataJurnal();
-      getDataAkun();
-    }
-  }, [accNo, jurnal]);
 
   const getDataJurnal = () => {
     setMessage({});
@@ -386,7 +460,7 @@ const JenisJurnalAdd = () => {
                                   </CBadge>
                                 </td>
                               ),
-                            Aksi: (param, index) => {
+                            action: (param, index) => {
                               return (
                                 <td>
                                   <div className="btn-group">
@@ -453,6 +527,7 @@ const JenisJurnalAdd = () => {
                       color="danger"
                       style={{ float: "right" }}
                       className="m-2"
+                      onClick={() => reset()}
                     >
                       <CIcon name="cil-x" /> {JurnalTypeAdd.reset_button}
                     </CButton>

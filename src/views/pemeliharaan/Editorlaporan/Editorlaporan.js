@@ -6,18 +6,15 @@ import {
   CCardHeader,
   CCardBody,
   CForm,
-  CFormGroup,
-  CLabel,
   CButton,
   CCardFooter,
   CDataTable,
-  CInputCheckbox,
 } from "@coreui/react";
-import JsonEditorLaporan from "laporan/lang/id/editorlaporan.json";
+import JsonEditorLaporan from "json/lang/id/Editor Laporan/editorlaporan.json";
 import axios from "axios";
-import Select from "react-select";
 import { useForm, Controller } from "react-hook-form";
 import CIcon from "@coreui/icons-react";
+import Input from "component/Input";
 
 const waktu = [
   {
@@ -98,103 +95,38 @@ const EditorLaporan = () => {
             </CCardHeader>
             <CCardBody>
               <CRow>
-                <CCol lg="6">
-                  <CFormGroup row>
-                    <CCol xl="12">
-                      <CLabel htmlFor="text-input">
-                        {JsonEditorLaporan.category}
-                      </CLabel>
-                    </CCol>
-                    <CCol xs="12" xl="12">
-                      {/* <Controller
-                        control={control}
-                        name="category"
-                        defaultValue={""}
-                        id="category"
-                        render={({ onChange }) => (
-                          <Select
-                            onChange={(e) => {
-                              onChange(e.value);
-                              setOptionNama(e.value);
-                            }}
-                            options={dataKategori}
-                          />
-                        )}
-                      /> */}
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="category"
-                        name="category"
-                      />
-                    </CCol>
-                  </CFormGroup>
-                </CCol>
-                <CCol lg="6">
-                  <CFormGroup row>
-                    <CCol xl="12">
-                      <CLabel htmlFor="text-input">
-                        {JsonEditorLaporan.name}
-                      </CLabel>
-                    </CCol>
-                    <CCol xs="12" xl="12">
-                      {/* <Controller
-                        control={control}
-                        name="name"
-                        defaultValue={""}
-                        id="name"
-                        render={({ onChange }) => (
-                          <Select
-                            onChange={(e) => {
-                              onChange(e.value);
-                              showFilter();
-                            }}
-                            options={dataNama}
-                          />
-                        )}
-                      /> */}
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="name"
-                        name="name"
-                      />
-                    </CCol>
-                  </CFormGroup>
-                </CCol>
+                <Input
+                  typefield="text"
+                  type="text"
+                  label={JsonEditorLaporan.category}
+                  name="category"
+                  defaultValue=""
+                  id="category"
+                  md="6"
+                  lg="6"
+                />
+                <Input
+                  typefield="text"
+                  type="text"
+                  label={JsonEditorLaporan.name}
+                  name="name"
+                  defaultValue=""
+                  id="name"
+                  md="6"
+                  lg="6"
+                />
               </CRow>
               <CRow>
                 <CCol>
-                  <CButton
-                    //   key={key}
-                    size="sm"
-                    color={"warning"}
-                    className="mr-3"
-                    //  disabled={row.value}
-                    // style={{ float: "right" }}
-                  >
+                  <CButton size="sm" color={"warning"} className="mr-3">
                     <CIcon name="cil-envelope-letter" />
                     {JsonEditorLaporan.button_downloadcsv}
                   </CButton>
-                  <CButton
-                    //   key={key}
-                    size="sm"
-                    color={"success"}
-                    className="mr-3"
-                    //  disabled={row.value}
-                    // style={{ float: "right" }}
-                  >
+                  <CButton size="sm" color={"success"} className="mr-3">
                     <CIcon name="cil-envelope-letter" />
                     {JsonEditorLaporan.button_downloadxlsx}
                   </CButton>
-                  <CButton
-                    //   key={key}
-                    size="sm"
-                    color={"primary"}
-                    className="mr-3"
-                    //  disabled={row.value}
-                    // style={{ float: "right" }}
-                  >
+                  <CButton size="sm" color={"primary"} className="mr-3">
                     <CIcon name="cil-envelope-letter" />
                     {JsonEditorLaporan.button_preview}
                   </CButton>
@@ -208,81 +140,60 @@ const EditorLaporan = () => {
       <CRow>
         <CCol>
           <CCard>
-            <CCardHeader></CCardHeader>
             <CCardBody>
               <CRow>
-                <CCol xl="6" xl="6" md="6">
-                  <CFormGroup row>
-                    <CCol className="ml-3">
-                      <Controller
-                        name="start_periode"
-                        control={control}
-                        defaultValue={false}
-                        value="true"
-                        render={(props) => (
-                          <CInputCheckbox
-                            onChange={(e) => props.onChange(e.target.checked)}
-                            // onClick={(e) => itemGroup(e.target.checked)}
-                            checked={props.value}
-                          />
-                        )}
-                      />
-                      <CCol>
-                        <CLabel htmlFor="text-input">
-                          {JsonEditorLaporan.start_periode}
-                        </CLabel>
-                        <Controller
-                          control={control}
-                          options={dataWaktu}
-                          name="periode"
-                          defaultValue={""}
-                          id="periode"
-                          as={Select}
-                          // render={({ onChange }) => (
-                          //   <Select
-                          //     onChange={(e) => {
-                          //       onChange(e);
-                          //       setOptionKota(e);
-                          //     }}
-                          //     options={dataWaktu}
-                          //   />
-                          // )}
-                        />
-                      </CCol>
-                    </CCol>
-                  </CFormGroup>
+                <CCol lg="6" md="6">
+                  <CRow>
+                    <Input
+                      typefield="checkbox"
+                      label={""}
+                      name="start_periode"
+                      id="start_periode"
+                      md="1"
+                      lg="1"
+                      value={true}
+                      defaultValue={false}
+                      ref={control}
+                    />
+
+                    <Input
+                      ref={control}
+                      typefield="select"
+                      label={JsonEditorLaporan.start_periode}
+                      name="periode"
+                      id="periode"
+                      md="11"
+                      lg="11"
+                      options={dataWaktu}
+                      defaultValue=""
+                    />
+                  </CRow>
                 </CCol>
-                <CCol xl="6" md="6">
-                  <CFormGroup row>
-                    <CCol className="ml-3">
-                      <Controller
-                        name="end_periode"
-                        control={control}
-                        defaultValue={false}
-                        value="true"
-                        render={(props) => (
-                          <CInputCheckbox
-                            onChange={(e) => props.onChange(e.target.checked)}
-                            // onClick={(e) => itemGroup(e.target.checked)}
-                            checked={props.value}
-                          />
-                        )}
-                      />
-                      <CCol>
-                        <CLabel htmlFor="text-input">
-                          {JsonEditorLaporan.end_periode}
-                        </CLabel>
-                        <Controller
-                          control={control}
-                          options={dataWaktu}
-                          name="periode"
-                          defaultValue={""}
-                          id="periode"
-                          as={Select}
-                        />
-                      </CCol>
-                    </CCol>
-                  </CFormGroup>
+                <CCol lg="6" md="6">
+                  <CRow>
+                    <Input
+                      typefield="checkbox"
+                      label={""}
+                      name="end_periode"
+                      id="end_periode"
+                      md="1"
+                      lg="1"
+                      value={true}
+                      ref={control}
+                      defaultValue={false}
+                    />
+                    <Input
+                      ref={control}
+                      typefield="select"
+                      label={JsonEditorLaporan.end_periode}
+                      name="periode"
+                      id="periode"
+                      md="11"
+                      lg="11"
+                      options={dataWaktu}
+                      defaultValue=""
+                    />
+                  </CRow>
                 </CCol>
               </CRow>
             </CCardBody>
@@ -321,79 +232,43 @@ const EditorLaporan = () => {
             <CCardHeader></CCardHeader>
             <CCardBody>
               <CRow>
-                <CCol lg="6">
-                  <CFormGroup row>
-                    <CCol xl="12">
-                      <CLabel htmlFor="text-input">
-                        {JsonEditorLaporan.data_source}
-                      </CLabel>
-                    </CCol>
-                    <CCol xs="12" xl="12">
-                      <Controller
-                        control={control}
-                        name="category"
-                        defaultValue={""}
-                        id="category"
-                        as={Select}
-                        // render={({ onChange }) => (
-                        //   <Select
-                        //     onChange={(e) => {
-                        //       onChange(e.value);
-                        //       setOptionNama(e.value);
-                        //     }}
-                        //     options={dataKategori}
-                        //   />
-                        // )}
-                      />
-                    </CCol>
-                  </CFormGroup>
-                </CCol>
-                <CCol lg="6">
-                  <CFormGroup row>
-                    <CCol xl="12">
-                      <CLabel htmlFor="text-input">
-                        {JsonEditorLaporan.data_source_filter}
-                      </CLabel>
-                    </CCol>
-                    <CCol xs="12" xl="12">
-                      <Controller
-                        control={control}
-                        as={Select}
-                        name="name"
-                        defaultValue={""}
-                        id="name"
-                        // render={({ onChange }) => (
-                        //   <Select
-                        //     onChange={(e) => {
-                        //       onChange(e.value);
-                        //       showFilter();
-                        //     }}
-                        //     options={dataNama}
-                        //   />
-                        // )}
-                      />
-                    </CCol>
-                  </CFormGroup>
-                </CCol>
+                <Input
+                  ref={control}
+                  typefield="select"
+                  label={JsonEditorLaporan.data_source}
+                  name="category"
+                  id="category"
+                  md="6"
+                  lg="6"
+                  options={[]}
+                  defaultValue=""
+                />
+                <Input
+                  ref={control}
+                  typefield="select"
+                  label={JsonEditorLaporan.data_source_filter}
+                  name="name"
+                  id="name"
+                  md="6"
+                  lg="6"
+                  options={dataWaktu}
+                  defaultValue=""
+                />
               </CRow>
               <CRow>
-                <CCol>
-                  <CFormGroup row>
-                    <CCol xl="12">
-                      <CLabel htmlFor="text-input">
-                        {JsonEditorLaporan.description}
-                      </CLabel>
-                    </CCol>
-                    <CCol xs="12" xl="6">
-                      <textarea
-                        className="form-control"
-                        name="description"
-                        rows="4"
-                        ref={register}
-                      ></textarea>
-                    </CCol>
-                  </CFormGroup>
-                </CCol>
+                <Input
+                  ref={register}
+                  typefield="textarea"
+                  type="text"
+                  label={JsonEditorLaporan.description}
+                  name="description"
+                  id="description"
+                  rows="4"
+                  md="12"
+                  lg="12"
+                  options={dataWaktu}
+                  defaultValue=""
+                />
               </CRow>
             </CCardBody>
           </CCard>
@@ -406,44 +281,31 @@ const EditorLaporan = () => {
             <CCardHeader></CCardHeader>
             <CCardBody>
               <CRow>
-                <CCol lg="6">
-                  <CFormGroup row>
-                    <CCol xl="12">
-                      <CLabel htmlFor="text-input">
-                        {JsonEditorLaporan.template}
-                      </CLabel>
-                    </CCol>
-                    <CCol xs="12" xl="12">
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="category"
-                        name="category"
-                      />
-                    </CCol>
-                  </CFormGroup>
-                </CCol>
+              <Input
+                  typefield="text"
+                  type="text"
+                  label={JsonEditorLaporan.template}
+                  name="category"
+                  defaultValue=""
+                  id="category"
+                  md="6"
+                  lg="6"
+                />
               </CRow>
               <CRow>
                 <CCol>
                   <CButton
-                    //   key={key}
                     size="sm"
                     color={"warning"}
                     className="mr-3"
-                    //  disabled={row.value}
-                    // style={{ float: "right" }}
                   >
                     <CIcon name="cil-envelope-letter" />
                     {JsonEditorLaporan.button_download_template}
                   </CButton>
                   <CButton
-                    //   key={key}
                     size="sm"
                     color={"success"}
                     className="mr-3"
-                    //  disabled={row.value}
-                    // style={{ float: "right" }}
                   >
                     <CIcon name="cil-envelope-letter" />
 
@@ -461,39 +323,21 @@ const EditorLaporan = () => {
           <CCard>
             <CCardBody>
               <CRow>
-                <CCol lg="6">
-                  <CFormGroup row>
-                    <CCol xl="12">
-                      <CLabel htmlFor="text-input">
-                        {JsonEditorLaporan.category}
-                      </CLabel>
-                    </CCol>
-                    <CCol xs="12" xl="12">
-                      <Controller
-                        control={control}
-                        options={dataLang}
-                        name="category"
-                        defaultValue={""}
-                        id="category"
-                        as={Select}
-                        // render={({ onChange }) => (
-                        //   <Select
-                        //     onChange={(e) => {
-                        //       onChange(e.value);
-                        //       setOptionNama(e.value);
-                        //     }}
-                        //     options={dataKategori}
-                        //   />
-                        // )}
-                      />
-                    </CCol>
-                  </CFormGroup>
-                </CCol>
+              <Input
+                  ref={control}
+                  typefield="select"
+                  label={JsonEditorLaporan.category}
+                  name="category"
+                  id="category"
+                  md="3"
+                  lg="3"
+                  options={dataLang}
+                  defaultValue=""
+                />
               </CRow>
               <CRow>
                 <CCol>
                   <CDataTable
-                    //items={dataGrid.data}
                     fields={fieldlang}
                     itemsPerPageSelect
                     itemsPerPage={20}

@@ -1,29 +1,29 @@
 {
 
-   "form": "Laporan Umum",
+   "form": "General Report",
 
-   "category" : "Kelompok Laporan",
-   "name" : "Nama Laporan",
+   "category" : "Report Group",
+   "name" : "Report Name",
    "branchid" : "Branch ID",
-   "rptmounth" : "Bulan",
-   "rptyear" : "Tahun",
-   "structureid" : "Nama Akun",
+   "rptmounth" : "Monthly",
+   "rptyear" : "Yearly ",
+   "structureid" : "Account Name",
 
-   "end_date" : "Tanggal Akhir",
+   "end_date" : "End Date",
    "button_downloadcsv" : "Download CSV",
    "button_downloadxlsx" : "Download Xlsx",
-   "button_preview" : "Lihat Data",
+   "button_preview" : "View Data",
 
-   "filter" : "Detail Data Laporan",
-   "detail_kategori" : "Kategori",
-   "detail_name" : "Nama",
-   "detail_startdate" : "Tanggal Mulai",
-   "detail_enddate" : "Tanggal Akhir",
-   "form_filter" : "Filter Data",
-   "message_downloadcsv" : "Berhasil Mendownload CSV",
-   "message_downloadxlsx" : "Berhasil Mendownload XLSX",
-   "back" : "kembali",
-   "column_type_bool_true" : "Ya",
-   "column_type_bool_false" : "Tidak"
+   "filter" : "Detail Report",
+   "detail_kategori" : "Category",
+   "detail_name" : "Name",
+   "detail_startdate" : "Start Date",
+   "detail_enddate" : "End Date",
+   "form_filter" : "Data Filter",
+   "message_downloadcsv" : "Success Download CSV",
+   "message_downloadxlsx" : "Success Download XLSX",
+   "back" : "Back",
+   "column_type_bool_true" : "Yes",
+   "column_type_bool_false" : "No"
 
 }

@@ -27,14 +27,12 @@ const _nav = [
       },
     ],
   },
-
   {
     _tag: "CSidebarNavItem",
     name: "Laporan Umum",
     to: "/laporanumum/LaporanUmum",
     icon: <CIcon name="cil-notes" customClasses="c-sidebar-nav-icon" />,
   },
-
   {
     _tag: "CSidebarNavDropdown",
     name: "Pemeliharaan",

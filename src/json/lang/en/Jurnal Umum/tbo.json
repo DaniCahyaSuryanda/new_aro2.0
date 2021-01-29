@@ -1,0 +1,14 @@
+ [
+    {
+      "id": "mg-001",
+      "Namamenu" : "Create New Jurnal",
+      "Buttonadd" : "Create New",
+      "ButtonOtor" : "Authorization",
+      "Iconadd" :"cil-pencil",
+      "Iconotor" : "cil-check-circle",
+      "Addlink" : "/backoffice/Jurnalumum/JournalAdd",
+      "Otorlink" : "/backoffice/Jurnalumum/JournalAddValidasi",
+      "Color" : "primary"
+    }
+
+  ]

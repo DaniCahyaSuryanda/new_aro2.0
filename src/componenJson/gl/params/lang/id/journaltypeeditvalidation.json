@@ -1,0 +1,32 @@
+[{
+    "form": "Otorisasi Pengkinian Jenis Jurnal",
+    
+    "list_caption": "Daftar Pengkinian Jenis Jurnal Perlu Otorisasi",
+    "list_trxid" : "No Transaksi",
+    "list_jrtype" : "Jenis Jurnal",
+    "list_description" : "Keterangan",
+    "list_isactive": "Aktif",
+    "list_refresh" :"Refresh",
+    "list_new" : "Otorisasi",
+
+    "detail_caption" : "Data Otorisasi Pengkinian Jenis Jurnal",
+    "trxid" : "No Transaksi",
+    "jrtype" : "Jenis Jurnal",
+    "description" : "Keterangan",
+    "isactive" : "Aktif",
+    "otor_button" : "Otorisasi",
+    "reject_button": "Tolak",
+
+    "confirm_otor" : "Otorisasi Pengkinian Jenis Jurnal ?",
+    "confirm_otor_yes" : "Otorisasi",
+    "confirm_otor_no" : "Batal",
+    
+    "confirm_reject" : "Tolak Otorisasi Pengkinian Jenis Jurnal ?",
+    "confirm_reject_yes" : "Tolak Otorisasi",
+    "confirm_reject_no" : "Batal",
+    "hide" : "Kembali",
+
+    "otor_success" : "Pengkinian Jurnal Berhasil Disetujui",
+    "otor_reject" : "Pengkinian Jurnal Ditolak"
+
+}]

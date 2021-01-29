@@ -1,0 +1,31 @@
+[{
+    "form": "Updating Account",
+    
+    "list_caption": "List Account",
+    "list_trxid" : "Transaction ID",
+    "list_accno" : "Account Number",
+    "list_accname" : "Account Name",
+    "list_acctype" : "Account Type",
+    "list_normaldebit" : "Normal Discharge",
+    "list_description": "Description",
+    "list_isactive": "Active",
+
+    "list_refresh" :"Refresh",
+    "list_new" : "Edit",
+
+    "detail_caption" : "List Account",
+    "trxid" : "Transaction ID",
+    "accno" : "Account Number",
+    "accname" : "Account Name",
+    "acctype" : "Account Type",
+    "rmaldebit" : "Normal Discharge",
+    "description": "Description",
+    "isactive": "Active",
+
+    "save_button" : "Save",
+    "cancel_button": "Cencel",
+    
+    "confirm_save" : "Save Updating Account ?",
+    "confirm_yes" : "Save",
+    "confirm_no" : "Cencel"
+}]

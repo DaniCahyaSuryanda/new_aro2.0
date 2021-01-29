@@ -1,35 +1,35 @@
 {
-    "form": "Pembuatan Jurnal Umum Baru",
+    "form": "Journal Add Create",
 
-    "detail_caption" : "Pembuatan Jurnal Umum",
-    "journaldate" : "Tgl Jurnal",
-    "journaltype" : "Jenis Jurnal",
+    "detail_caption" : "Journal Add Create",
+    "journaldate" : "Journal Date",
+    "journaltype" : "Journal Type",
 
     "list_refresh" :"Refresh",
-    "list_new" : "Buat Baru",
+    "list_new" : "Create New",
 
-    "reffid" : "No Referensi",
-    "description": "Keterangan",
+    "reffid" : "Reference No",
+    "description": "Description",
 
-    "detailitem_caption" : "Detil Jurnal",
+    "detailitem_caption" : "Journal Details",
 
-    "detailitem_accno" : "No Akun",
-    "detailitem_accname" : "Nama Akun",
-    "detailitem_description": "Keterangan",
+    "detailitem_accno" : "Account No",
+    "detailitem_accname" : "Account Name",
+    "detailitem_description": "Description",
     "detailitem_debit" : "Debit",
-    "detailitem_credit" : "Kredit",
+    "detailitem_credit" : "Credit",
 
-    "save_button" : "Simpan",
-    "cancel_button": "Batal",
+    "save_button" : "Save",
+    "cancel_button": "Cencel",
     "reset_button" : "Reset",
-    "hide": "kembali",
+    "hide": "Back",
 
-    "action_list" : "Aksi",
-    "action_button_delete" : "Hapus",
-    "action_button_edit" : "Ubah",
-    "message_success": "Pembuatan Jurnal Baru Berhasil",
+    "action_list" : "Action",
+    "action_button_delete" : "Delete",
+    "action_button_edit" : "Edit",
+    "message_success": "New Journal Successfully Saved",
 
-    "confirm_save" : "Simpan Jurnal Umum Baru ?",
-    "confirm_yes" : "Simpan",
-    "confirm_no" : "Batal"
+    "confirm_save" : "Save New Journal ?",
+    "confirm_yes" : "Save",
+    "confirm_no" : "Cencel"
 }

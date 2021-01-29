@@ -1,40 +1,47 @@
 {
-    "form": "Otorisasi Pengkinian Struktur Akun",
-
-    "list_caption": "Daftar Pengkinian Struktur Akun Perlu Otorisasi",
-    "list_asid" : "Kode",
-    "list_asname" : "Nama",
-    "list_isactive": "Aktif",
-
+    "form": "Authorization Updating Account Structure",
+    "action_list" : "Action",
+  
+    "list_caption": "List Account Structure Needs Authorization",
+    "list_asid" : "Code",
+    "list_asname" : "Name",
+    "list_isactive": "Active",
+  
     "list_refresh" :"Refresh",
-    "list_new" : "Otorisasi",
-
-    "detail_caption" : "Pengkinian Struktur Akun",
-    "trxid" : "No Transaksi",
-    "asid" : "Kode",
-    "asname" : "Nama",
-    "isactive" : "Aktif",
+    "list_new" : "Authorization",
+  
+    "detail_caption" : "List Account Structure",
+    "trxid" : "Transaction No",
+    "asid" : "Code",
+    "asname" : "Name",
+    "isactive" : "Active",
     "tag" : "Tag",
-    "detailitem_caption" : "Detil Struktur Akun",
-    "detailitem_no" : "No Item",
-    "detailitem_name" : "Nama Item",
-    "detailitem_parentno" : "No Induk",
-    "detailitem_isgeneral" : "Item Grup",
-    "detailitem_accno" : "No Akun",
-    "detailitem_accname" : "Nama Akun",
-    "detailitem_isvisible" : "Ditampilkan",
+  
+    "detailitem_caption" : "List Account Structure",
+    "detailitem_no" : "Item N",
+    "detailitem_name" : "Item Name",
+    "detailitem_parentno" : "Parent No",
+    "detailitem_accno" : "Account No",
+    "detailitem_accname" : "Account Name",
+    "detailitem_isvisible" : "Show",
+    "detailitem_isgeneral" : "Item Group",
+  
+    "acctype_0" : "Balance Sheet Account",
+    "acctype_1" : "Non Balance Sheet Account",
+  
+    "otor_button" : "Authorization",
+    "reject_button": "Reject",
+  
+    "confirm_otor" : " Authorization Updating Account Structure ?",
+    "confirm_otor_yes" : "Authorization",
+    "confirm_otor_no" : "Cencel",
+  
+    "confirm_reject" : "Reject Updating Account Structure ?",
+    "confirm_reject_yes" : "Reject Authorization",
+    "confirm_reject_no" : "Cencel",
+    "hide" : "Back",
 
-    "otor_button" : "Otorisasi",
-    "reject_button": "Tolak",
-
-    "confirm_otor" : "Otorisasi Pengkinian Struktur Akun ?",
-    "confirm_otor_yes" : "Otorisasi",
-    "confirm_otor_no" : "Batal",
-
-    "confirm_reject" : "Tolak Otorisasi Pengkinian Struktur Akun ?",
-    "confirm_reject_yes" : "Tolak Otorisasi",
-    "confirm_reject_no" : "Batal",
-    "hide" : "Kembali",
-    "message_reject" : "Berhasil Menolak Struktur Akun Baru",
-    "message_otor" : "Berhasil Otorisasi Struktur Akun Baru"
-}
+    "message_reject" : "Updating Structure Account Rejected",
+    "message_otor" : "Updating Structure Account Authorized Successfully"
+  }
+  
