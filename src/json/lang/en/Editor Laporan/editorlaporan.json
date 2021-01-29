@@ -1,19 +1,16 @@
 {
 
     "title": "Editor Laporan",
- 
+
     "category" : "Kelompok Laporan",
     "name" : "Nama Laporan",
     "start_periode" : "Awal Periode",
     "end_periode" : "Akhir Periode",
 
-
-
-    
     "button_downloadcsv" : "Download CSV",
     "button_downloadxlsx" : "Download Xlsx",
     "button_preview" : "Lihat Data",
- 
+
     "filter" : "Detail Data Laporan",
     "detail_kategori" : "Kategori",
     "detail_name" : "Nama",
@@ -24,6 +21,6 @@
     "branchid" : "Branch ID",
     "structureid" : "Nama Akun",
 
- 
+
     "back" : "kembali"
  }

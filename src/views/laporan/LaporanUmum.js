@@ -30,19 +30,10 @@ const LaporanUmum = () => {
   const [message, setMessage] = useState({});
   const [dataGrid, setDataGrid] = useState(null);
   const [dataButton, setDataButton] = useState(null);
-
   const [JsonLaporanUmum, setJsonLaporanUmum] = useState(null);
   const [messageJson, setMessageJson] = useState({});
-  const configApp = JSON.parse(sessionStorage.getItem("config"));
 
   useEffect(() => {
-    if (dataKategori === null) {
-      SetDataKategori();
-    }
-  }, [dataKategori]);
-
-  useEffect(
-    () => {
       if (Object.keys(messageJson).length === 0) {
         if (configApp.lang == "id") {
           setMessageJson(messageID);
@@ -56,10 +47,7 @@ const LaporanUmum = () => {
           SetDataKategori();
         }
       }
-    },
-    [messageJson],
-    [dataKategori]
-  );
+    }, [messageJson, dataKategori]);
 
   useEffect(() => {
     if (JsonLaporanUmum == null) {

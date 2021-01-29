@@ -27,10 +27,25 @@ import { useHistory } from "react-router-dom";
 
 const configApp = JSON.parse(sessionStorage.getItem("config"));
 
+const fieldsID = [
+  { key: "action", label: LangID.list_new },
+  // { key: "trxid", label: LangEN.list_trxid },
+  { key: "jrtype", label: LangID.jrtype },
+  { key: "description", label: LangID.description },
+  { key: "isactive", label: LangID.isactive },
+]
+
+const fieldsEN = [
+  { key: "action", label: LangEN.list_new },
+  // { key: "trxid", label: LangEN.list_trxid },
+  { key: "jrtype", label: LangEN.jrtype },
+  { key: "description", label: LangEN.description },
+  { key: "isactive", label: LangEN.isactive },
+]
+
 const JJEditCreate = () => {
   const [message, setMessage] = useState("");
   const [modal, setModal] = useState(false);
-  // const [modal_no, setModal2] = useState(false);
   const [items, setItems] = useState(null);
   const [dataPengkinian, setdataPengkinian] = useState(null);
   const {
@@ -43,44 +58,26 @@ const JJEditCreate = () => {
   const [slide, setSlide] = useState(true);
   const [JsonjurnalEdit, setJsonjurnalEdit] = useState({});
   const [fields, setField] = useState(null);
-  const [messageJson, setMessageJson] = useState(null);
+  const [messageJson, setMessageJson] = useState({});
   const history = useHistory();
 
   useEffect(() => {
     if (JsonjurnalEdit === null || fields === null) {
       if (configApp.lang == "id") {
         setJsonjurnalEdit(LangID);
-        setField([
-          { key: "action", label: LangID.list_new },
-          // { key: "trxid", label: LangEN.list_trxid },
-          { key: "jrtype", label: LangID.jrtype },
-          { key: "description", label: LangID.description },
-          { key: "isactive", label: LangID.isactive },
-        ]);
+        setField(fieldsID);
       } else if (configApp.lang == "en") {
         setJsonjurnalEdit(LangEN);
-        setField([
-          { key: "action", label: LangEN.list_new },
-          // { key: "trxid", label: LangEN.list_trxid },
-          { key: "jrtype", label: LangEN.jrtype },
-          { key: "description", label: LangEN.description },
-          { key: "isactive", label: LangEN.isactive },
-        ]);
+        setField(fieldsEN);
       } else {
         setJsonjurnalEdit(LangID);
-        setField([
-          { key: "action", label: LangID.list_new },
-          // { key: "trxid", label: LangID.list_trxid },
-          { key: "jrtype", label: LangID.jrtype },
-          { key: "description", label: LangID.description },
-          { key: "isactive", label: LangID.isactive },
-        ]);
+        setField(fieldsID);
       }
     }
   }, [JsonjurnalEdit, fields]);
 
   useEffect(() => {
-    if (messageJson === null) {
+    if (Object.keys(messageJson).length === 0) {
       if (configApp.lang == "id") {
         setMessageJson(messageJsonID);
       } else if (configApp.lang == "en") {
@@ -88,14 +85,12 @@ const JJEditCreate = () => {
       } else {
         setMessageJson(messageJsonID);
       }
+    } else {
+      if (dataPengkinian == null) {
+        getDataAddValidasi();
+      }
     }
-  }, [messageJson]);
-
-  useEffect(() => {
-    if (dataPengkinian == null) {
-      getDataAddValidasi();
-    }
-  }, [dataPengkinian]);
+  }, [messageJson, dataPengkinian]);
 
   const toggleDetails = (item) => {
     // console.log(item)

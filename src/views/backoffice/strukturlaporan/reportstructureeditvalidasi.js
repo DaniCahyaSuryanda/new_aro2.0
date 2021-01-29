@@ -26,21 +26,37 @@ import messageEN from "json/lang/en/Message/message.json";
 import Toast from "component/Toast";
 import { useHistory } from "react-router-dom";
 
-// const fields = [
-//   Jsonjurnaladdvalidasi.list_new,
-//   { key: "asid", label: Jsonjurnaladdvalidasi.list_asid },
-//   { key: "asname", label: Jsonjurnaladdvalidasi.list_asname },
-//   { key: "isactive", label: Jsonjurnaladdvalidasi.isactive },
-// ];
+const fieldsID = [
+  { key: "action", label: LangID.list_new },
+  { key: "asid", label: LangID.list_asid },
+  { key: "asname", label: LangID.list_asname },
+  { key: "isactive", label: LangID.isactive },
+];
 
-// const fieldsDetail = [
-//   { key: "itemno", label: Jsonjurnaladdvalidasi.detailitem_no },
-//   { key: "itemname", label: Jsonjurnaladdvalidasi.detailitem_name },
-//   { key: "parentno", label: Jsonjurnaladdvalidasi.detailitem_parentno },
-//   { key: "accno", label: Jsonjurnaladdvalidasi.detailitem_glcode },
-//   { key: "accname", label: Jsonjurnaladdvalidasi.detailitem_parentno },
-//   { key: "isvisible", label: Jsonjurnaladdvalidasi.detailitem_isvisible },
-// ];
+const detailFieldID = [
+  { key: "itemno", label: LangID.detailitem_no },
+  { key: "itemname", label: LangID.detailitem_name },
+  { key: "parentno", label: LangID.detailitem_parentno },
+  { key: "accno", label: LangID.detailitem_glcode },
+  { key: "accname", label: LangID.detailitem_parentno },
+  { key: "isvisible", label: LangID.detailitem_isvisible },
+];
+
+const fieldsEN = [
+  { key: "action", label: LangEN.list_new },
+  { key: "asid", label: LangEN.list_asid },
+  { key: "asname", label: LangEN.list_asname },
+  { key: "isactive", label: LangEN.isactive },
+];
+
+const detailFieldEN = [
+  { key: "itemno", label: LangEN.detailitem_no },
+  { key: "itemname", label: LangEN.detailitem_name },
+  { key: "parentno", label: LangEN.detailitem_parentno },
+  { key: "accno", label: LangEN.detailitem_glcode },
+  { key: "accname", label: LangEN.detailitem_parentno },
+  { key: "isvisible", label: LangEN.detailitem_isvisible },
+];
 
 const ReportStrucValidasi = () => {
   const [message, setMessage] = useState({});
@@ -58,12 +74,6 @@ const ReportStrucValidasi = () => {
   const configApp = JSON.parse(sessionStorage.getItem("config"));
 
   useEffect(() => {
-    if (dataAccountStructure === null) {
-      getDataEditValidasi();
-    }
-  }, [dataAccountStructure]);
-
-  useEffect(() => {
     if (
       Jsonjurnaladdvalidasi == null ||
       fields == null ||
@@ -71,68 +81,35 @@ const ReportStrucValidasi = () => {
     ) {
       if (configApp.lang == "id") {
         setJsonjurnaladdvalidasi(LangID);
-        setField([
-          { key: "action", label: LangID.list_new },
-          { key: "asid", label: LangID.list_asid },
-          { key: "asname", label: LangID.list_asname },
-          { key: "isactive", label: LangID.isactive },
-        ]);
-
-        setFieldsDetail([
-          { key: "itemno", label: LangID.detailitem_no },
-          { key: "itemname", label: LangID.detailitem_name },
-          { key: "parentno", label: LangID.detailitem_parentno },
-          { key: "accno", label: LangID.detailitem_accno },
-          { key: "accname", label: LangID.detailitem_accname },
-          { key: "isvisible", label: LangID.detailitem_isvisible },
-        ]);
+        setField(fieldsID);
+        setFieldsDetail(detailFieldID);
       } else if (configApp.lang == "en") {
         setJsonjurnaladdvalidasi(LangEN);
-        setField([
-          { key: "action", label: LangEN.list_new },
-          { key: "asid", label: LangEN.list_asid },
-          { key: "asname", label: LangEN.list_asname },
-          { key: "isactive", label: LangEN.isactive },
-        ]);
-
-        setFieldsDetail([
-          { key: "itemno", label: LangEN.detailitem_no },
-          { key: "itemname", label: LangEN.detailitem_name },
-          { key: "parentno", label: LangEN.detailitem_parentno },
-          { key: "accno", label: LangEN.detailitem_accno },
-          { key: "accname", label: LangEN.detailitem_accname },
-          { key: "isvisible", label: LangEN.detailitem_isvisible },
-        ]);
+        setField(fieldsEN);
+        setFieldsDetail(detailFieldEN);
       } else {
         setJsonjurnaladdvalidasi(LangID);
-        setField([
-          { key: "action", label: LangID.list_new },
-          { key: "asid", label: LangID.list_asid },
-          { key: "asname", label: LangID.list_asname },
-          { key: "isactive", label: LangID.isactive },
-        ]);
-
-        setFieldsDetail([
-          { key: "itemno", label: LangID.detailitem_no },
-          { key: "itemname", label: LangID.detailitem_name },
-          { key: "parentno", label: LangID.detailitem_parentno },
-          { key: "accno", label: LangID.detailitem_accno },
-          { key: "accname", label: LangID.detailitem_accname },
-          { key: "isvisible", label: LangID.detailitem_isvisible },
-        ]);
+        setField(fieldsID);
+        setFieldsDetail(detailFieldID);
       }
     }
   }, [Jsonjurnaladdvalidasi, fields, fieldsDetail]);
 
   useEffect(() => {
-    if (configApp.lang == "id") {
-      setMessageJson(messageID);
-    } else if (configApp.lang == "en") {
-      setMessageJson(messageEN);
-    } else {
-      setMessageJson(messageID);
+    if (Object.keys(messageJson).length === 0) {
+      if (configApp.lang == "id") {
+        setMessageJson(messageID);
+      } else if (configApp.lang == "en") {
+        setMessageJson(messageEN);
+      } else {
+        setMessageJson(messageID);
+      }
+    }else{
+      if (dataAccountStructure === null) {
+        getDataEditValidasi();
+      }
     }
-  });
+  }, [messageJson, dataAccountStructure]);
 
   const getDataEditValidasi = () => {
     setMessage({});

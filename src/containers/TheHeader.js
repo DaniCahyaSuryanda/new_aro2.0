@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import {
   CHeader,
   CToggler,
@@ -9,7 +11,6 @@ import {
   CHeaderNavLink,
   CSubheader,
   CBreadcrumbRouter,
-  CLink,
   CBadge,
   CImg,
 } from "@coreui/react";
@@ -28,7 +29,14 @@ import { TheHeaderUser } from "./index";
 
 const configApp = JSON.parse(sessionStorage.getItem("config"));
 
-const isLogin = configApp.isLogin === true ? configApp.lang === "id" ? "Keluar" : "Logout" : configApp.lang === "id" ? "Masuk" : "Login";
+const isLogin =
+  configApp.isLogin === true
+    ? configApp.lang === "id"
+      ? "Keluar"
+      : "Logout"
+    : configApp.lang === "id"
+    ? "Masuk"
+    : "Login";
 
 const langSwicth = configApp.lang === "id" ? "Pilih Bahasa" : "Choose Language";
 
@@ -37,7 +45,8 @@ const TheHeader = () => {
   const sidebarShow = useSelector((state) => state.sidebarShow);
   const darkMode = useSelector((state) => state.darkMode);
   const [routes, setRoutes] = useState(null);
-
+  const location = useLocation();
+  const [isAuth, setAuth] = useState(null);
   useEffect(() => {
     if (routes === null) {
       // console.log(DataRoutes)
@@ -50,6 +59,15 @@ const TheHeader = () => {
       }
     }
   }, [routes]);
+
+  useEffect(() => {
+    if (isAuth === null) {
+      console.log(location.pathname);
+      if (location.pathname.search("auth") !== -1) {
+        setAuth(true);
+      }
+    }
+  }, [isAuth]);
 
   const toggleSidebar = () => {
     const val = [true, "responsive"].includes(sidebarShow)
@@ -115,49 +133,50 @@ const TheHeader = () => {
           <CHeaderNav className="px-1">
             <TheHeaderUser />
           </CHeaderNav>
-          <CSubheader className="px-3 justify-content-between">
-            <CBreadcrumbRouter
-              className="border-0 c-subheader-nav m-0 px-0 px-md-3"
-              routes={routes}
-            />
-            <div className="d-md-down-none mfe-2 c-subheader-nav">
-              <CToggler
-                inHeader
-                className="ml-3 d-md-down-none c-d-legacy-none"
-                onClick={() => {
-                  toggleTheme(!darkMode);
-                }}
-                title="Toggle Light/Dark Mode"
-              >
-                <CIcon
-                  name="cil-moon"
-                  className="c-d-dark-none"
-                  alt="CoreUI Icons Moon"
-                />
-                <CIcon
-                  name="cil-sun"
-                  className="c-d-default-none"
-                  alt="CoreUI Icons Sun"
-                />
-              </CToggler>
-
-              <CLink className="c-subheader-nav-link" href="#">
-                <CIcon name="cil-lock-locked" alt="Logout" />
-                &nbsp;{isLogin}
-              </CLink>
-              <CDropdown>
-                <CDropdownToggle>{langSwicth}</CDropdownToggle>
-                <CDropdownMenu>
-                  <CDropdownItem onClick={() => changeLang("id")}>
-                    Indonesia
-                  </CDropdownItem>
-                  <CDropdownItem onClick={() => changeLang("en")}>
-                    Inggris
-                  </CDropdownItem>
-                </CDropdownMenu>
-              </CDropdown>
-            </div>
-          </CSubheader>
+          {!isAuth && (
+            <CSubheader className="px-3 justify-content-between">
+              <CBreadcrumbRouter
+                className="border-0 c-subheader-nav m-0 px-0 px-md-3"
+                routes={routes}
+              />
+              <div className="d-md-down-none mfe-2 c-subheader-nav">
+                <CToggler
+                  inHeader
+                  className="ml-3 d-md-down-none c-d-legacy-none"
+                  onClick={() => {
+                    toggleTheme(!darkMode);
+                  }}
+                  title="Toggle Light/Dark Mode"
+                >
+                  <CIcon
+                    name="cil-moon"
+                    className="c-d-dark-none"
+                    alt="CoreUI Icons Moon"
+                  />
+                  <CIcon
+                    name="cil-sun"
+                    className="c-d-default-none"
+                    alt="CoreUI Icons Sun"
+                  />
+                </CToggler>
+                <Link to="/auth/login" className="c-subheader-nav-link">
+                  <CIcon name="cil-lock-locked" alt="Logout" />
+                  &nbsp;{isLogin}
+                </Link>
+                <CDropdown>
+                  <CDropdownToggle>{langSwicth}</CDropdownToggle>
+                  <CDropdownMenu>
+                    <CDropdownItem onClick={() => changeLang("id")}>
+                      Indonesia
+                    </CDropdownItem>
+                    <CDropdownItem onClick={() => changeLang("en")}>
+                      Inggris
+                    </CDropdownItem>
+                  </CDropdownMenu>
+                </CDropdown>
+              </div>
+            </CSubheader>
+          )}
         </CHeader>
       )}
     </>

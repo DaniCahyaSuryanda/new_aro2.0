@@ -30,6 +30,22 @@ import { useHistory } from "react-router-dom";
 
 const configApp = JSON.parse(sessionStorage.getItem("config"));
 
+const fieldsID = [
+  { key: "action", label: LangID.list_new },
+  { key: "trxid", label: LangID.list_trxid },
+  { key: "jrtype", label: LangID.jrtype },
+  { key: "description", label: LangID.description },
+  { key: "isactive", label: LangID.isactive },
+];
+
+const fieldsEN = [
+  { key: "action", label: LangEN.list_new },
+  { key: "trxid", label: LangEN.list_trxid },
+  { key: "jrtype", label: LangEN.jrtype },
+  { key: "description", label: LangEN.description },
+  { key: "isactive", label: LangEN.isactive },
+]
+
 const JurnalEditValidasi = () => {
   const [message, setMessage] = useState({});
   const [modal, setModal] = useState(false);
@@ -39,44 +55,26 @@ const JurnalEditValidasi = () => {
   const [slide, setSlide] = useState(true);
   const history = useHistory();
   const [JsoneditValidasi, setJsoneditValidasi] = useState(null);
-  const [messageJson, setMessageJson] = useState(null);
+  const [messageJson, setMessageJson] = useState({});
   const [fields, setField] = useState(null);
 
   useEffect(() => {
     if (JsoneditValidasi === null || fields === null) {
       if (configApp.lang === "id") {
         setJsoneditValidasi(LangID);
-        setField([
-          { key: "action", label: LangID.list_new },
-          { key: "trxid", label: LangID.list_trxid },
-          { key: "jrtype", label: LangID.jrtype },
-          { key: "description", label: LangID.description },
-          { key: "isactive", label: LangID.isactive },
-        ]);
+        setField(fieldsID);
       } else if (configApp.lang == "en") {
         setJsoneditValidasi(LangEN);
-        setField([
-          { key: "action", label: LangEN.list_new },
-          { key: "trxid", label: LangEN.list_trxid },
-          { key: "jrtype", label: LangEN.jrtype },
-          { key: "description", label: LangEN.description },
-          { key: "isactive", label: LangEN.isactive },
-        ]);
+        setField(fieldsEN);
       } else {
         setJsoneditValidasi(LangID);
-        setField([
-          { key: "action", label: LangID.list_new },
-          { key: "trxid", label: LangID.list_trxid },
-          { key: "jrtype", label: LangID.jrtype },
-          { key: "description", label: LangID.description },
-          { key: "isactive", label: LangID.isactive },
-        ]);
+        setField(fieldsID);
       }
     }
   }, [JsoneditValidasi, fields]);
 
   useEffect(() => {
-    if (messageJson === null) {
+    if (Object.keys(messageJson).length === 0) {
       if (configApp.lang == "id") {
         setMessageJson(messageID);
       } else if (configApp.lang == "en") {
@@ -84,14 +82,12 @@ const JurnalEditValidasi = () => {
       } else {
         setMessageJson(messageID);
       }
+    } else {
+      if (dataPengkinian == null) {
+        getDataAddValidasi();
+      }
     }
-  }, [messageJson]);
-
-  useEffect(() => {
-    if (dataPengkinian == null) {
-      getDataAddValidasi();
-    }
-  }, [dataPengkinian]);
+  }, [messageJson, dataPengkinian]);
 
   const toggleDetails = (item) => {
     // console.log(item)
@@ -135,7 +131,7 @@ const JurnalEditValidasi = () => {
       )
       .then((res) => {
         // console.log(res);
-        console.log("tes", res.data);
+        // console.log("tes", res.data);
         if (res.data.rescode === 0) {
           setModal(false);
           setSlide(true);

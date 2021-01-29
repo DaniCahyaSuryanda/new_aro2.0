@@ -29,6 +29,22 @@ import { useHistory } from "react-router-dom";
 
 const configApp = JSON.parse(sessionStorage.getItem("config"));
 
+const fieldsID = [
+  { key: "action", label: langID.list_new },
+  { key: "trxid", label: langID.list_trxid },
+  { key: "jrtype", label: langID.jrtype },
+  { key: "description", label: langID.description },
+  { key: "isactive", label: langID.isactive },
+]
+
+const fieldEN = [
+  { key: "action", label: langEN.list_new },
+  { key: "trxid", label: langEN.list_trxid },
+  { key: "jrtype", label: langEN.jrtype },
+  { key: "description", label: langEN.description },
+  { key: "isactive", label: langEN.isactive },
+]
+
 const ReportStrucValidasi = () => {
   const [message, setMessage] = useState({});
   const [Jsonjurnaladdvalidasi, setJsonjurnaladdvalidasi] = useState(null);
@@ -42,40 +58,22 @@ const ReportStrucValidasi = () => {
   const history = useHistory();
 
   useEffect(() => {
-    if(Jsonjurnaladdvalidasi === null || fields === null){
+    if (Jsonjurnaladdvalidasi === null || fields === null) {
       if (configApp.lang === "id") {
         setJsonjurnaladdvalidasi(langID);
-        setFields([
-          { key: "action", label : langID.list_new},
-          { key: "trxid", label: langID.list_trxid },
-          { key: "jrtype", label: langID.jrtype },
-          { key: "description", label: langID.description },
-          { key: "isactive", label: langID.isactive },
-        ]);
+        setFields(fieldsID);
       } else if (configApp.lang === "en") {
         setJsonjurnaladdvalidasi(langEN);
-        setFields([
-          { key: "action", label : langEN.list_new},
-          { key: "trxid", label: langEN.list_trxid },
-          { key: "jrtype", label: langEN.jrtype },
-          { key: "description", label: langEN.description },
-          { key: "isactive", label: langEN.isactive },
-        ]);
+        setFields(fieldEN);
       } else {
         setJsonjurnaladdvalidasi(langID);
-        setFields([
-          { key: "action", label : langEN.list_new},
-          { key: "trxid", label: langID.list_trxid },
-          { key: "jrtype", label: langID.jrtype },
-          { key: "description", label: langID.description },
-          { key: "isactive", label: langID.isactive },
-        ]);
+        setFields(fieldsID);
       }
     }
   }, [setJsonjurnaladdvalidasi, fields]);
 
   useEffect(() => {
-    if( messageJson === {}){
+    if (Object.keys(messageJson).length === 0) {
       if (configApp.lang === "id") {
         setMessageJson(messageID);
       } else if (configApp.lang === "en") {
@@ -83,14 +81,12 @@ const ReportStrucValidasi = () => {
       } else {
         setMessageJson(messageID);
       }
+    }else{
+      if (dataJenisJurnal == null) {
+        getDataEditValidasi();
+      }
     }
-  }, [messageJson]);
-
-  useEffect(() => {
-    if (dataJenisJurnal == null) {
-      getDataEditValidasi();
-    }
-  }, [dataJenisJurnal]);
+  }, [messageJson, dataJenisJurnal]);
 
   const toggleDetails = (item) => {
     // const position = details.indexOf(index)

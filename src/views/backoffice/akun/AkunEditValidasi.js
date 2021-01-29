@@ -30,6 +30,28 @@ import { useHistory } from "react-router-dom";
 
 const configApp = JSON.parse(sessionStorage.getItem("config"));
 
+const fieldsID = [
+  { key: "action", label: LangID.list_new },
+  { key: "trxid", label: LangID.list_trxid },
+  { key: "accno", label: LangID.list_accno },
+  { key: "accname", label: LangID.list_accname },
+  { key: "acctype", label: LangID.list_acctype },
+  { key: "normaldebit", label: LangID.list_normaldebit },
+  { key: "description", label: LangID.list_description },
+  { key: "isactive", label: LangID.list_isactive },
+];
+
+const fieldEN = [
+  { key: "action", label: LangEN.list_new },
+  { key: "trxid", label: LangEN.list_trxid },
+  { key: "accno", label: LangEN.list_accno },
+  { key: "accname", label: LangEN.list_accname },
+  { key: "acctype", label: LangEN.list_acctype },
+  { key: "normaldebit", label: LangEN.list_normaldebit },
+  { key: "description", label: LangEN.list_description },
+  { key: "isactive", label: LangEN.list_isactive },
+]
+
 const AccAddValidation = () => {
   const [message, setMessage] = useState({});
   const [modal, setModal] = useState(false);
@@ -40,67 +62,38 @@ const AccAddValidation = () => {
   const history = useHistory();
   const [JsonAccAddValidasi, setJsonAccAddValidasi] = useState(null);
   const [fields, setField] = useState(null);
-  const [messageJson, setMessageJson] = useState(null);
+  const [messageJson, setMessageJson] = useState({});
 
   useEffect(() => {
     if (JsonAccAddValidasi === null || fields === null) {
       if (configApp.lang === "id") {
         setJsonAccAddValidasi(LangID);
-        setField([
-          { key: "action", label: LangID.list_new },
-          { key: "trxid", label: LangID.list_trxid },
-          { key: "accno", label: LangID.list_accno },
-          { key: "accname", label: LangID.list_accname },
-          { key: "acctype", label: LangID.list_acctype },
-          { key: "normaldebit", label: LangID.list_normaldebit },
-          { key: "description", label: LangID.list_description },
-          { key: "isactive", label: LangID.list_isactive },
-        ]);
-      } else if (configApp.lang == "en") {
+        setField(fieldsID);
+      } else if (configApp.lang === "en") {
         setJsonAccAddValidasi(LangEN);
-        setField([
-          { key: "action", label: LangEN.list_new },
-          { key: "trxid", label: LangEN.list_trxid },
-          { key: "accno", label: LangEN.list_accno },
-          { key: "accname", label: LangEN.list_accname },
-          { key: "acctype", label: LangEN.list_acctype },
-          { key: "normaldebit", label: LangEN.list_normaldebit },
-          { key: "description", label: LangEN.list_description },
-          { key: "isactive", label: LangEN.list_isactive },
-        ]);
+        setField(fieldEN);
       } else {
         setJsonAccAddValidasi(LangID);
-        setField([
-          { key: "action", label: LangID.list_new },
-          { key: "trxid", label: LangID.list_trxid },
-          { key: "accno", label: LangID.list_accno },
-          { key: "accname", label: LangID.list_accname },
-          { key: "acctype", label: LangID.list_acctype },
-          { key: "normaldebit", label: LangID.list_normaldebit },
-          { key: "description", label: LangID.list_description },
-          { key: "isactive", label: LangID.list_isactive },
-        ]);
+        setField(fieldsID);
       }
     }
   }, [JsonAccAddValidasi, fields]);
 
   useEffect(() => {
-    if (messageJson === null) {
+    if (Object.keys(messageJson).length === 0) {
       if (configApp.lang === "id") {
         setMessageJson(messageID);
-      } else if (configApp.lang == "en") {
+      } else if (configApp.lang === "en") {
         setMessageJson(messageEN);
       } else {
         setMessageJson(messageID);
       }
+    }else{
+      if (dataAkun === null) {
+        getDataAddValidasi();
+      }
     }
-  }, [messageJson]);
-
-  useEffect(() => {
-    if (dataAkun === null) {
-      getDataAddValidasi();
-    }
-  }, [dataAkun]);
+  }, [messageJson, dataAkun]);
 
   const toggleDetails = (item) => {
     setItems(item);

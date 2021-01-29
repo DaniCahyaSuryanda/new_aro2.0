@@ -40,7 +40,7 @@ const AccAddValidation = () => {
   const history = useHistory();
   const [JsonAccEditValidasi, setJsonAccEditValidasi] = useState(null);
   const [fields, setField] = useState(null);
-  const [messageJson, setMessageJson] = useState(null);
+  const [messageJson, setMessageJson] = useState({});
 
   useEffect(() => {
     if (JsonAccEditValidasi === null || fields === null) {
@@ -56,7 +56,7 @@ const AccAddValidation = () => {
           { key: "description", label: LangID.list_description },
           { key: "isactive", label: LangID.list_isactive },
         ]);
-      } else if (configApp.lang == "en") {
+      } else if (configApp.lang === "en") {
         setJsonAccEditValidasi(LangEN);
         setField([
           { key: "action", label: LangEN.list_new },
@@ -85,22 +85,20 @@ const AccAddValidation = () => {
   }, [JsonAccEditValidasi, fields]);
 
   useEffect(() => {
-    if (messageJson === null) {
+    if (Object.keys(messageJson).length === 0) {
       if (configApp.lang === "id") {
         setMessageJson(messageID);
-      } else if (configApp.lang == "en") {
+      } else if (configApp.lang === "en") {
         setMessageJson(messageEN);
       } else {
         setMessageJson(messageID);
       }
+    }else{
+      if (dataAkun === null) {
+        getDataEditValidasi()
+      }
     }
-  }, [messageJson]);
-
-  useEffect(() => {
-    if (dataAkun == null) {
-      getDataEditValidasi();
-    }
-  }, [dataAkun]);
+  }, [messageJson, dataAkun]);
 
   const toggleDetails2 = (item) => {
     setSlide(true);

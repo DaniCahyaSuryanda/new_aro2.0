@@ -27,6 +27,64 @@ import Input from "component/Input";
 
 const configApp = JSON.parse(sessionStorage.getItem("config"));
 
+const fieldsID = [
+  { key: "action", label: LangID.action_list },
+  { key: "detailitem_no", label: LangID.detailitem_no },
+  {
+    key: "detailitem_name",
+    label: LangID.detailitem_name,
+  },
+  {
+    key: "detailitem_parentno",
+    label: LangID.detailitem_parentno,
+  },
+  {
+    key: "detailitem_isgeneral",
+    label: LangID.detailitem_isgeneral,
+  },
+  {
+    key: "detailitem_accno",
+    label: LangID.detailitem_accno,
+  },
+  {
+    key: "detailitem_accname",
+    label: LangID.detailitem_accname,
+  },
+  {
+    key: "detailitem_isvisible",
+    label: LangID.detailitem_isvisible,
+  },
+]
+
+const fieldsEN = [
+  { key: "action", label: LangEN.action_list },
+  { key: "detailitem_no", label: LangEN.detailitem_no },
+  {
+    key: "detailitem_name",
+    label: LangEN.detailitem_name,
+  },
+  {
+    key: "detailitem_parentno",
+    label: LangEN.detailitem_parentno,
+  },
+  {
+    key: "detailitem_isgeneral",
+    label: LangEN.detailitem_isgeneral,
+  },
+  {
+    key: "detailitem_accno",
+    label: LangEN.detailitem_accno,
+  },
+  {
+    key: "detailitem_accname",
+    label: LangEN.detailitem_accname,
+  },
+  {
+    key: "detailitem_isvisible",
+    label: LangEN.detailitem_isvisible,
+  },
+]
+
 const Reportstrucutreadd = () => {
   const [modal, setModal] = useState(false);
   const [dataAkun, setDataAkun] = useState([]);
@@ -43,99 +101,31 @@ const Reportstrucutreadd = () => {
   const [messageJson, setMessageJson] = useState(null);
   const [fields, setField] = useState(null);
   const history = useHistory();
+  const {
+    register: register2,
+    handleSubmit: handleSubmit2,
+    reset: reset2,
+    control: control2,
+  } = useForm();
+  const {
+    register: register3,
+    handleSubmit: handleSubmit3,
+    reset: reset3,
+    control: control3,
+  } = useForm();
+  const { handleSubmit, register, reset, control } = useForm();
 
   useEffect(() => {
     if (JsonReportstructureadd === null || fields === null) {
       if (configApp.lang === "id") {
         setJsonReportstructureadd(LangID);
-        setField([
-          { key: "action", label: LangID.action_list },
-          { key: "detailitem_no", label: LangID.detailitem_no },
-          {
-            key: "detailitem_name",
-            label: LangID.detailitem_name,
-          },
-          {
-            key: "detailitem_parentno",
-            label: LangID.detailitem_parentno,
-          },
-          {
-            key: "detailitem_isgeneral",
-            label: LangID.detailitem_isgeneral,
-          },
-          {
-            key: "detailitem_accno",
-            label: LangID.detailitem_accno,
-          },
-          {
-            key: "detailitem_accname",
-            label: LangID.detailitem_accname,
-          },
-          {
-            key: "detailitem_isvisible",
-            label: LangID.detailitem_isvisible,
-          },
-        ]);
+        setField(fieldsID);
       } else if (configApp.lang == "en") {
         setJsonReportstructureadd(LangEN);
-        setField([
-          { key: "action", label: LangEN.action_list },
-          { key: "detailitem_no", label: LangEN.detailitem_no },
-          {
-            key: "detailitem_name",
-            label: LangEN.detailitem_name,
-          },
-          {
-            key: "detailitem_parentno",
-            label: LangEN.detailitem_parentno,
-          },
-          {
-            key: "detailitem_isgeneral",
-            label: LangEN.detailitem_isgeneral,
-          },
-          {
-            key: "detailitem_accno",
-            label: LangEN.detailitem_accno,
-          },
-          {
-            key: "detailitem_accname",
-            label: LangEN.detailitem_accname,
-          },
-          {
-            key: "detailitem_isvisible",
-            label: LangEN.detailitem_isvisible,
-          },
-        ]);
+        setField(fieldsEN);
       } else {
         setJsonReportstructureadd(LangID);
-        setField([
-          { key: "action", label: LangID.action_list },
-          { key: "detailitem_no", label: LangID.detailitem_no },
-          {
-            key: "detailitem_name",
-            label: LangID.detailitem_name,
-          },
-          {
-            key: "detailitem_parentno",
-            label: LangID.detailitem_parentno,
-          },
-          {
-            key: "detailitem_isgeneral",
-            label: LangID.detailitem_isgeneral,
-          },
-          {
-            key: "detailitem_accno",
-            label: LangID.detailitem_accno,
-          },
-          {
-            key: "detailitem_accname",
-            label: LangID.detailitem_accname,
-          },
-          {
-            key: "detailitem_isvisible",
-            label: LangID.detailitem_isvisible,
-          },
-        ]);
+        setField(fieldsID);
       }
     }
   }, [JsonReportstructureadd, fields]);
@@ -151,20 +141,6 @@ const Reportstrucutreadd = () => {
       }
     }
   }, [messageJson]);
-
-  const {
-    register: register2,
-    handleSubmit: handleSubmit2,
-    reset: reset2,
-    control: control2,
-  } = useForm();
-  const {
-    register: register3,
-    handleSubmit: handleSubmit3,
-    reset: reset3,
-    control: control3,
-  } = useForm();
-  const { handleSubmit, register, reset, control } = useForm();
 
   const onSubmit = (data) => {
     // alert(JSON.stringify(data))

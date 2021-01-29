@@ -23,6 +23,48 @@ import messageEN from "json/lang/en/Message/message.json";
 import Toast from "component/Toast";
 import { useHistory } from "react-router-dom";
 
+const configApp = JSON.parse(sessionStorage.getItem("config"));
+
+const fieldsID = [
+  { key: "action", label: LangID.list_new },
+  { key: "trxid", label: LangID.trxid },
+  { key: "journaldate", label: LangID.journaldate },
+  { key: "journaltype", label: LangID.journaltype },
+  { key: "reffid", label: LangID.reffid },
+  { key: "description", label: LangID.description },
+]
+
+const detailFieldID = [
+  { key: "accno", label: LangID.detailitem_accno },
+  { key: "accname", label: LangID.detailitem_accname },
+  {
+    key: "description",
+    label: LangID.detailitem_description,
+  },
+  { key: "debit", label: LangID.detailitem_debit },
+  { key: "credit", label: LangID.detailitem_credit },
+]
+
+const fieldsEN = [
+  { key: "action", label: LangEN.list_new },
+  { key: "trxid", label: LangEN.trxid },
+  { key: "journaldate", label: LangEN.journaldate },
+  { key: "journaltype", label: LangEN.journaltype },
+  { key: "reffid", label: LangEN.reffid },
+  { key: "description", label: LangEN.description },
+]
+
+const detailFieldEN = [
+  { key: "accno", label: LangEN.detailitem_accno },
+  { key: "accname", label: LangEN.detailitem_accname },
+  {
+    key: "description",
+    label: LangEN.detailitem_description,
+  },
+  { key: "debit", label: LangEN.detailitem_debit },
+  { key: "credit", label: LangEN.detailitem_credit },
+]
+
 const JenisJurnalAdd = () => {
   const [modal, setModal] = useState(false);
   const [modal_no, setModal2] = useState(false);
@@ -37,15 +79,6 @@ const JenisJurnalAdd = () => {
   const [fields, setField] = useState(null);
   const [fieldsDetail, setFieldsDetail] = useState(null);
 
-  const configApp = JSON.parse(sessionStorage.getItem("config"));
-
-  // useEffect(() => {
-  //   if (accNo == null) {
-  //     // getDataJurnal();
-  //     SetDataJurnal();
-  //     // console.log(data)
-  //   }
-  // }, [accNo]);
 
   useEffect(() => {
     if (Object.keys(messageJson).length === 0) {
@@ -58,9 +91,7 @@ const JenisJurnalAdd = () => {
       }
     } else {
       if (accNo == null) {
-        //  getDataJurnal();
         SetDataJurnal();
-        // getDataAkun();
       }
     }
   }, [messageJson, accNo]);
@@ -69,66 +100,16 @@ const JenisJurnalAdd = () => {
     if (JurnalAddValidasi == null || fields == null || fieldsDetail == null) {
       if (configApp.lang === "id") {
         setJurnalAddValidasi(LangID);
-        setField([
-          { key: "action", label: LangID.list_new },
-          { key: "trxid", label: LangID.trxid },
-          { key: "journaldate", label: LangID.journaldate },
-          { key: "journaltype", label: LangID.journaltype },
-          { key: "reffid", label: LangID.reffid },
-          { key: "description", label: LangID.description },
-        ]);
-        setFieldsDetail([
-          { key: "accno", label: LangID.detailitem_accno },
-          { key: "accname", label: LangID.detailitem_accname },
-          {
-            key: "description",
-            label: LangID.detailitem_description,
-          },
-          { key: "debit", label: LangID.detailitem_debit },
-          { key: "credit", label: LangID.detailitem_credit },
-        ]);
+        setField(fieldsID);
+        setFieldsDetail(detailFieldID);
       } else if (configApp.lang == "en") {
         setJurnalAddValidasi(LangEN);
-        setField([
-          { key: "action", label: LangEN.list_new },
-          { key: "trxid", label: LangEN.trxid },
-          { key: "journaldate", label: LangEN.journaldate },
-          { key: "journaltype", label: LangEN.journaltype },
-          { key: "reffid", label: LangEN.reffid },
-          { key: "description", label: LangEN.description },
-        ]);
-        setFieldsDetail([
-          { key: "accno", label: LangEN.detailitem_accno },
-          { key: "accname", label: LangEN.detailitem_accname },
-          {
-            key: "description",
-            label: LangEN.detailitem_description,
-          },
-          { key: "debit", label: LangEN.detailitem_debit },
-          { key: "credit", label: LangEN.detailitem_credit },
-        ]);
-      }
-    } else {
-      if (configApp.lang === "id") {
+        setField(fieldsEN);
+        setFieldsDetail(detailFieldEN);
+      }else {
         setJurnalAddValidasi(LangID);
-        setField([
-          { key: "action", label: LangID.list_new },
-          { key: "trxid", label: LangID.trxid },
-          { key: "journaldate", label: LangID.journaldate },
-          { key: "journaltype", label: LangID.journaltype },
-          { key: "reffid", label: LangID.reffid },
-          { key: "description", label: LangID.description },
-        ]);
-        setFieldsDetail([
-          { key: "accno", label: LangID.detailitem_accno },
-          { key: "accname", label: LangID.detailitem_accname },
-          {
-            key: "description",
-            label: LangID.detailitem_description,
-          },
-          { key: "debit", label: LangID.detailitem_debit },
-          { key: "credit", label: LangID.detailitem_credit },
-        ]);
+        setField(fieldsID);
+        setFieldsDetail(detailFieldID);
       }
     }
   }, [JurnalAddValidasi, fieldsDetail, fields]);

@@ -31,19 +31,21 @@ const AccAdd = () => {
   const [message, setMessage] = useState({});
   const [modal, setModal] = useState(false);
   const history = useHistory();
-  const [itemAccCreate, setItemCreate] = useState({});
+  const [itemAccCreate, setItemCreate] = useState(null);
   const [messageJson, setItemMessage] = useState({});
 
   useEffect(() => {
-    if (configApp.lang === "id") {
-      setItemCreate(LangID);
-      setItemMessage(messageID);
-    } else if (configApp.lang == "en") {
-      setItemCreate(LangEN);
-      setItemMessage(messageEN);
-    } else {
-      setItemCreate(LangID);
-      setItemMessage(messageID);
+    if (itemAccCreate === null || Object.keys(messageJson).length === 0) {
+      if (configApp.lang === "id") {
+        setItemCreate(LangID);
+        setItemMessage(messageID);
+      } else if (configApp.lang === "en") {
+        setItemCreate(LangEN);
+        setItemMessage(messageEN);
+      } else {
+        setItemCreate(LangID);
+        setItemMessage(messageID);
+      }
     }
   }, [itemAccCreate, messageJson]);
 
@@ -108,138 +110,140 @@ const AccAdd = () => {
   return (
     <>
       <Toast message={message} />
-      <CRow>
-        <CCol xl="12">
-          <CCard>
-            <CCardHeader>{itemAccCreate.form}</CCardHeader>
-            <CForm
-              encType="multipart/form-data"
-              className="form-horizontal"
-              onSubmit={handleSubmit(onSubmit)}
-            >
-              <CCardBody>
-                <CRow>
-                  <Input
-                    ref={register}
-                    typefield="text"
-                    type="text"
-                    label={itemAccCreate.accno}
-                    name="accno"
-                    defaultValue=""
-                    id="accno"
-                    md="6"
-                    lg="6"
-                  />
-                  <Input
-                    ref={register}
-                    typefield="text"
-                    type="text"
-                    label={itemAccCreate.accname}
-                    name="accname"
-                    id="accname"
-                    defaultValue=""
-                    md="6"
-                    lg="6"
-                  />
-                </CRow>
-                <CRow>
-                  <Input
-                    ref={control}
-                    typefield="select"
-                    label={itemAccCreate.acctype}
-                    name="acctype"
-                    id="acctype"
-                    md="6"
-                    lg="6"
-                    options={[
-                      { value: "0", label: itemAccCreate.acctype_0 },
-                      { value: "1", label: itemAccCreate.acctype_1 },
-                    ]}
-                    defaultValue=""
-                    // eventSelect={eventSelect}
-                  />
-                  <Input
-                    ref={control}
-                    typefield="checkbox"
-                    label={itemAccCreate.rmaldebit}
-                    name="normaldebit"
-                    id="normaldebit"
-                    md="2"
-                    lg="2"
-                    value="true"
-                    defaultValue={false}
-                    // eventCheckbox={eventCheckbox}
-                  />
-                  <Input
-                    ref={control}
-                    typefield="checkbox"
-                    label={itemAccCreate.isactive}
-                    name="isactive"
-                    id="isactive"
-                    md="2"
-                    lg="2"
-                    value={true}
-                    defaultValue={false}
-                    // eventCheckbox={eventCheckbox}
-                  />
-                </CRow>
-                <CRow>
-                  <Input
-                    ref={register}
-                    typefield="textarea"
-                    label={itemAccCreate.description}
-                    name="description"
-                    id="description"
-                    md="12"
-                    lg="12"
-                    rows="4"
-                    defaultValue={""}
-                  />
-                </CRow>
-              </CCardBody>
-              <CCardFooter>
-                <CButton
-                  type="reset"
-                  size={35}
-                  color="warning"
-                  onClick={() => history.goBack()}
-                >
-                  <CIcon name="cil-chevron-left" /> {itemAccCreate.confirm_no}
-                </CButton>
-                <CButton
-                  type="submit"
-                  className={"float-right"}
-                  size={35}
-                  color="primary"
-                >
-                  <CIcon name="cil-save" /> {itemAccCreate.save_button}
-                </CButton>
-                <CButton
-                  type="reset"
-                  size={35}
-                  className={"float-right mr-3"}
-                  color="danger"
-                >
-                  <CIcon name="cil-scrubber" /> {itemAccCreate.cancel_button}
-                </CButton>
-              </CCardFooter>
-            </CForm>
-            <CModal show={modal} onClose={setModal}>
-              <CModalBody>
-                <h3>{itemAccCreate.confirm_save}</h3>
-              </CModalBody>
-              <CModalFooter>
-                <CButton onClick={() => simpanData()} color="primary">
-                  {itemAccCreate.confirm_yes}
-                </CButton>{" "}
-                <CButton color="danger" onClick={() => setModal(false)}>
-                  {itemAccCreate.confirm_no}
-                </CButton>
-              </CModalFooter>
-            </CModal>
-          </CCard>
-        </CCol>
-      </CRow>
+      {itemAccCreate && (
+        <CRow>
+          <CCol xl="12">
+            <CCard>
+              <CCardHeader>{itemAccCreate.form}</CCardHeader>
+              <CForm
+                encType="multipart/form-data"
+                className="form-horizontal"
+                onSubmit={handleSubmit(onSubmit)}
+              >
+                <CCardBody>
+                  <CRow>
+                    <Input
+                      ref={register}
+                      typefield="text"
+                      type="text"
+                      label={itemAccCreate.accno}
+                      name="accno"
+                      defaultValue=""
+                      id="accno"
+                      md="6"
+                      lg="6"
+                    />
+                    <Input
+                      ref={register}
+                      typefield="text"
+                      type="text"
+                      label={itemAccCreate.accname}
+                      name="accname"
+                      id="accname"
+                      defaultValue=""
+                      md="6"
+                      lg="6"
+                    />
+                  </CRow>
+                  <CRow>
+                    <Input
+                      ref={control}
+                      typefield="select"
+                      label={itemAccCreate.acctype}
+                      name="acctype"
+                      id="acctype"
+                      md="6"
+                      lg="6"
+                      options={[
+                        { value: "0", label: itemAccCreate.acctype_0 },
+                        { value: "1", label: itemAccCreate.acctype_1 },
+                      ]}
+                      defaultValue=""
+                      // eventSelect={eventSelect}
+                    />
+                    <Input
+                      ref={control}
+                      typefield="checkbox"
+                      label={itemAccCreate.rmaldebit}
+                      name="normaldebit"
+                      id="normaldebit"
+                      md="2"
+                      lg="2"
+                      value="true"
+                      defaultValue={false}
+                      // eventCheckbox={eventCheckbox}
+                    />
+                    <Input
+                      ref={control}
+                      typefield="checkbox"
+                      label={itemAccCreate.isactive}
+                      name="isactive"
+                      id="isactive"
+                      md="2"
+                      lg="2"
+                      value={true}
+                      defaultValue={false}
+                      // eventCheckbox={eventCheckbox}
+                    />
+                  </CRow>
+                  <CRow>
+                    <Input
+                      ref={register}
+                      typefield="textarea"
+                      label={itemAccCreate.description}
+                      name="description"
+                      id="description"
+                      md="12"
+                      lg="12"
+                      rows="4"
+                      defaultValue={""}
+                    />
+                  </CRow>
+                </CCardBody>
+                <CCardFooter>
+                  <CButton
+                    type="reset"
+                    size={35}
+                    color="warning"
+                    onClick={() => history.goBack()}
+                  >
+                    <CIcon name="cil-chevron-left" /> {itemAccCreate.confirm_no}
+                  </CButton>
+                  <CButton
+                    type="submit"
+                    className={"float-right"}
+                    size={35}
+                    color="primary"
+                  >
+                    <CIcon name="cil-save" /> {itemAccCreate.save_button}
+                  </CButton>
+                  <CButton
+                    type="reset"
+                    size={35}
+                    className={"float-right mr-3"}
+                    color="danger"
+                  >
+                    <CIcon name="cil-scrubber" /> {itemAccCreate.cancel_button}
+                  </CButton>
+                </CCardFooter>
+              </CForm>
+              <CModal show={modal} onClose={setModal}>
+                <CModalBody>
+                  <h3>{itemAccCreate.confirm_save}</h3>
+                </CModalBody>
+                <CModalFooter>
+                  <CButton onClick={() => simpanData()} color="primary">
+                    {itemAccCreate.confirm_yes}
+                  </CButton>{" "}
+                  <CButton color="danger" onClick={() => setModal(false)}>
+                    {itemAccCreate.confirm_no}
+                  </CButton>
+                </CModalFooter>
+              </CModal>
+            </CCard>
+          </CCol>
+        </CRow>
+      )}
     </>
   );
 };

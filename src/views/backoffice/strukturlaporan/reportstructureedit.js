@@ -26,26 +26,41 @@ import Toast from "component/Toast";
 import { useHistory } from "react-router-dom";
 import Input from "component/Input";
 
-// const configApp = JSON.parse(sessionStorage.getItem("config"));
+const configApp = JSON.parse(sessionStorage.getItem("config"));
 
-// const darkMode = configApp.darktheme;
+const fieldsID = [
+  { key: "action", label: LangID.list_new },
+  { key: "asid", label: LangID.list_asid },
+  { key: "asname", label: LangID.list_asname },
+  { key: "isactive", label: LangID.isactive },
+];
 
-// const fields = [
-//   Jsonjurnaladdvalidasi.list_new,
-//   { key: "asid", label: Jsonjurnaladdvalidasi.list_asid },
-//   { key: "asname", label: Jsonjurnaladdvalidasi.list_asname },
-//   { key: "isactive", label: Jsonjurnaladdvalidasi.isactive },
-// ];
+const detailFieldID = [
+  { key: "action", label: LangID.action_list },
+  { key: "itemno", label: LangID.detailitem_no },
+  { key: "itemname", label: LangID.detailitem_name },
+  { key: "parentno", label: LangID.detailitem_parentno },
+  { key: "accno", label: LangID.detailitem_accno },
+  { key: "accname", label: LangID.detailitem_accname },
+  { key: "isvisible", label: LangID.detailitem_isvisible },
+];
 
-// const fieldsDetail = [
-//   Jsonjurnaladdvalidasi.action_list,
-//   { key: "itemno", label: Jsonjurnaladdvalidasi.detailitem_no },
-//   { key: "itemname", label: Jsonjurnaladdvalidasi.detailitem_name },
-//   { key: "parentno", label: Jsonjurnaladdvalidasi.detailitem_parentno },
-//   { key: "accno", label: Jsonjurnaladdvalidasi.detailitem_accno },
-//   { key: "accname", label: Jsonjurnaladdvalidasi.detailitem_accname },
-//   { key: "isvisible", label: Jsonjurnaladdvalidasi.detailitem_isvisible },
-// ];
+const fieldsEN = [
+  { key: "action", label: LangEN.list_new },
+  { key: "asid", label: LangEN.list_asid },
+  { key: "asname", label: LangEN.list_asname },
+  { key: "isactive", label: LangEN.isactive },
+]
+
+const detailFieldEN = [
+  { key: "action", label: LangEN.action_list },
+  { key: "itemno", label: LangEN.detailitem_no },
+  { key: "itemname", label: LangEN.detailitem_name },
+  { key: "parentno", label: LangEN.detailitem_parentno },
+  { key: "accno", label: LangEN.detailitem_accno },
+  { key: "accname", label: LangEN.detailitem_accname },
+  { key: "isvisible", label: LangEN.detailitem_isvisible },
+]
 
 const ReportStrucValidasi = () => {
   const [modalEditItem, setModalEditItem] = useState(false);
@@ -64,7 +79,6 @@ const ReportStrucValidasi = () => {
   const [messageJson, setMessageJson] = useState({});
   const [fields, setField] = useState(null);
   const [fieldsDetail, setFieldsDetail] = useState(null);
-  const configApp = JSON.parse(sessionStorage.getItem("config"));
   const {
     register: register2,
     handleSubmit: handleSubmit2,
@@ -74,25 +88,23 @@ const ReportStrucValidasi = () => {
   const { handleSubmit, register, reset, control } = useForm();
 
   useEffect(() => {
-    if (dataAccountStructure === null) {
-      getDataValidasi();
-    }
-    if (optionAcc === null) {
-      getOptionAkun();
-    }
-  }, [dataAccountStructure, optionAcc]);
-
-  useEffect(() => {
-    //  if (messageJson === null) {
-    if (configApp.lang === "id") {
-      setMessageJson(messageID);
-    } else if (configApp.lang == "en") {
-      setMessageJson(messageEN);
+    if (Object.keys(messageJson).length === 0) {
+      if (configApp.lang === "id") {
+        setMessageJson(messageID);
+      } else if (configApp.lang == "en") {
+        setMessageJson(messageEN);
+      } else {
+        setMessageJson(messageID);
+      }
     } else {
-      setMessageJson(messageID);
+      if (dataAccountStructure === null) {
+        getDataValidasi();
+      }
+      if (optionAcc === null) {
+        getOptionAkun();
+      }
     }
-    // }
-  }, [messageJson]);
+  }, [messageJson, dataAccountStructure, optionAcc]);
 
   useEffect(() => {
     if (
@@ -102,58 +114,16 @@ const ReportStrucValidasi = () => {
     ) {
       if (configApp.lang === "id") {
         setJsonjurnaladdvalidasi(LangID);
-        setField([
-          { key: "action", label: LangID.list_new },
-          { key: "asid", label: LangID.list_asid },
-          { key: "asname", label: LangID.list_asname },
-          { key: "isactive", label: LangID.isactive },
-        ]);
-
-        setFieldsDetail([
-          { key: "action", label: LangID.action_list },
-          { key: "itemno", label: LangID.detailitem_no },
-          { key: "itemname", label: LangID.detailitem_name },
-          { key: "parentno", label: LangID.detailitem_parentno },
-          { key: "accno", label: LangID.detailitem_accno },
-          { key: "accname", label: LangID.detailitem_accname },
-          { key: "isvisible", label: LangID.detailitem_isvisible },
-        ]);
+        setField(fieldsID);
+        setFieldsDetail(detailFieldID);
       } else if (configApp.lang == "en") {
         setJsonjurnaladdvalidasi(LangEN);
-        setField([
-          { key: "action", label: LangEN.list_new },
-          { key: "asid", label: LangEN.list_asid },
-          { key: "asname", label: LangEN.list_asname },
-          { key: "isactive", label: LangEN.isactive },
-        ]);
-
-        setFieldsDetail([
-          { key: "action", label: LangEN.action_list },
-          { key: "itemno", label: LangEN.detailitem_no },
-          { key: "itemname", label: LangEN.detailitem_name },
-          { key: "parentno", label: LangEN.detailitem_parentno },
-          { key: "accno", label: LangEN.detailitem_accno },
-          { key: "accname", label: LangEN.detailitem_accname },
-          { key: "isvisible", label: LangEN.detailitem_isvisible },
-        ]);
+        setField(fieldsEN);
+        setFieldsDetail(detailFieldEN);
       } else {
         setJsonjurnaladdvalidasi(LangID);
-        setField([
-          { key: "action", label: LangID.list_new },
-          { key: "asid", label: LangID.list_asid },
-          { key: "asname", label: LangID.list_asname },
-          { key: "isactive", label: LangID.isactive },
-        ]);
-
-        setFieldsDetail([
-          { key: "action", label: LangID.action_list },
-          { key: "itemno", label: LangID.detailitem_no },
-          { key: "itemname", label: LangID.detailitem_name },
-          { key: "parentno", label: LangID.detailitem_parentno },
-          { key: "accno", label: LangID.detailitem_accno },
-          { key: "accname", label: LangID.detailitem_accname },
-          { key: "isvisible", label: LangID.detailitem_isvisible },
-        ]);
+        setField(fieldsID);
+        setFieldsDetail(detailFieldID);
       }
     }
   }, [Jsonjurnaladdvalidasi, fieldsDetail, fields]);
@@ -267,8 +237,8 @@ const ReportStrucValidasi = () => {
 
   const simpanEditItem = handleSubmit2((data) => {
     let itemsData = { ...items };
-    console.log(data);
-    console.log(dataAkun);
+    // console.log(data);
+    // console.log(dataAkun);
     if (data.detailitem_isgeneral) {
       itemsData.detail[indexEdit] = {
         itemno: data.detailitem_no,
@@ -304,9 +274,7 @@ const ReportStrucValidasi = () => {
         isvisible: data.detailitem_isvisible,
       };
     }
-
     reset2();
-
     // console.log(itemsData);
     setItems(itemsData);
 
@@ -752,6 +720,10 @@ const ReportStrucValidasi = () => {
                   md="4"
                   lg="4"
                   options={optionAcc}
+                  defaultValue={{
+                    value: formEditItem.accno,
+                    label: formEditItem.accno + " - " + formEditItem.accname,
+                  }}
                   selectDefaultValue={{
                     value: formEditItem.accno,
                     label: formEditItem.accno + " - " + formEditItem.accname,

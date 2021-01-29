@@ -7,8 +7,6 @@ import {
   CCardHeader,
   CCol,
   CForm,
-  CFormGroup,
-  CLabel,
   CRow,
   CModal,
   CModalBody,
@@ -21,9 +19,8 @@ import {
 import getFormattedDate from "utils/utils";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
-import Select from "react-select";
 import CIcon from "@coreui/icons-react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import LangID from "json/lang/id/Jurnal Umum/add/journaladdcreate.json";
 import LangEN from "json/lang/en/Jurnal Umum/add/journaladdcreate.json";
 import messageID from "json/lang/id/Message/message.json";
@@ -35,6 +32,36 @@ import Input from "component/Input";
 const configApp = JSON.parse(sessionStorage.getItem("config"));
 
 const darkMode = configApp.darktheme;
+
+const fieldsID = [
+  { key: "action", label: LangID.action_list },
+  { key: "detailitem_accno", label: LangID.detailitem_accno },
+  {
+    key: "detailitem_accname",
+    label: LangID.detailitem_accname,
+  },
+  {
+    key: "detailitem_description",
+    label: LangID.detailitem_description,
+  },
+  { key: "detailitem_debit", label: LangID.detailitem_debit },
+  { key: "detailitem_credit", label: LangID.detailitem_credit },
+];
+
+const fieldsEN = [
+  { key: "action", label: LangEN.action_list },
+  { key: "detailitem_accno", label: LangEN.detailitem_accno },
+  {
+    key: "detailitem_accname",
+    label: LangEN.detailitem_accname,
+  },
+  {
+    key: "detailitem_description",
+    label: LangEN.detailitem_description,
+  },
+  { key: "detailitem_debit", label: LangEN.detailitem_debit },
+  { key: "detailitem_credit", label: LangEN.detailitem_credit },
+];
 
 const JenisJurnalAdd = () => {
   const [modal, setModal] = useState(false);
@@ -50,88 +77,9 @@ const JenisJurnalAdd = () => {
   const [optionAcc, setOptionAcc] = useState([]);
   const [optionJurnal, setOptionJurnal] = useState([]);
   const history = useHistory();
-  const [JurnalTypeAdd, setJurnalTypeAdd] = useState({});
+  const [JurnalTypeAdd, setJurnalTypeAdd] = useState(null);
   const [messageJson, setMessageJson] = useState({});
   const [fields, setField] = useState(null);
-
-  useEffect(() => {
-    if (Object.keys(messageJson).length === 0) {
-      if (configApp.lang == "id") {
-        setMessageJson(messageID);
-      } else if (configApp.lang == "en") {
-        setMessageJson(messageEN);
-      } else {
-        setMessageJson(messageID);
-      }
-    } else {
-      if (accNo == null && jurnal == null) {
-        getDataJurnal();
-        getDataAkun();
-      }
-    }
-  }, [messageJson, accNo, jurnal]);
-
-  // useEffect(() => {
-  //   if (accNo == null && jurnal == null) {
-  //     getDataJurnal();
-  //     getDataAkun();
-  //   }
-  // }, [accNo, jurnal]);
-
-  useEffect(() => {
-    if (JurnalTypeAdd == null || fields == null) {
-      if (configApp.lang == "id") {
-        setJurnalTypeAdd(LangID);
-        setField([
-          { key: "action", label: LangID.action_list },
-          { key: "detailitem_accno", label: LangID.detailitem_accno },
-          {
-            key: "detailitem_accname",
-            label: LangID.detailitem_accname,
-          },
-          {
-            key: "detailitem_description",
-            label: LangID.detailitem_description,
-          },
-          { key: "detailitem_debit", label: LangID.detailitem_debit },
-          { key: "detailitem_credit", label: LangID.detailitem_credit },
-        ]);
-      } else if (configApp.lang == "en") {
-        setJurnalTypeAdd(LangEN);
-        setField([
-          { key: "action", label: LangEN.action_list },
-          { key: "detailitem_accno", label: LangEN.detailitem_accno },
-          {
-            key: "detailitem_accname",
-            label: LangEN.detailitem_accname,
-          },
-          {
-            key: "detailitem_description",
-            label: LangEN.detailitem_description,
-          },
-          { key: "detailitem_debit", label: LangEN.detailitem_debit },
-          { key: "detailitem_credit", label: LangEN.detailitem_credit },
-        ]);
-      } else {
-        setJurnalTypeAdd(LangID);
-        setField([
-          { key: "action", label: LangID.action_list },
-          { key: "detailitem_accno", label: LangID.detailitem_accno },
-          {
-            key: "detailitem_accname",
-            label: LangID.detailitem_accname,
-          },
-          {
-            key: "detailitem_description",
-            label: LangID.detailitem_description,
-          },
-          { key: "detailitem_debit", label: LangID.detailitem_debit },
-          { key: "detailitem_credit", label: LangID.detailitem_credit },
-        ]);
-      }
-    }
-  }, [JurnalTypeAdd, fields]);
-
   const {
     register: register2,
     handleSubmit: handleSubmit2,
@@ -145,6 +93,38 @@ const JenisJurnalAdd = () => {
     control: control3,
   } = useForm();
   const { handleSubmit, register, reset, control } = useForm();
+
+  useEffect(() => {
+    if (Object.keys(messageJson).length === 0) {
+      if (configApp.lang === "id") {
+        setMessageJson(messageID);
+      } else if (configApp.lang === "en") {
+        setMessageJson(messageEN);
+      } else {
+        setMessageJson(messageID);
+      }
+    } else {
+      if (accNo === null && jurnal === null) {
+        getDataJurnal();
+        getDataAkun();
+      }
+    }
+  }, [messageJson, accNo, jurnal]);
+
+  useEffect(() => {
+    if (JurnalTypeAdd === null || fields === null) {
+      if (configApp.lang === "id") {
+        setJurnalTypeAdd(LangID);
+        setField(fieldsID);
+      } else if (configApp.lang === "en") {
+        setJurnalTypeAdd(LangEN);
+        setField(fieldsEN);
+      } else {
+        setJurnalTypeAdd(LangID);
+        setField(fieldsID);
+      }
+    }
+  }, [JurnalTypeAdd, fields]);
 
   const onSubmit = (data) => {
     console.log(data);
@@ -167,14 +147,14 @@ const JenisJurnalAdd = () => {
       validstate: 0,
       lang: JSON.parse(sessionStorage.getItem("config")).lang,
     };
-    console.log(sendData);
+    // console.log(sendData);
     setDataSend(sendData);
     setModal(true);
   };
 
   const confirmSave = () => {
     setMessage({});
-    console.log(dataSend);
+    // console.log(dataSend);
     //console.log(sendData);
     axios
       .post(
@@ -221,9 +201,10 @@ const JenisJurnalAdd = () => {
   };
 
   const saveDetail = (param) => {
+    // console.log(param);
     let data = [...dataAkun];
     let accname = {};
-    if (param.detailitem_accno !== undefined) {
+    if (param.detailitem_accno !== "") {
       accname = accNo.find(({ accno }) => {
         return accno === param.detailitem_accno;
       });
@@ -244,8 +225,12 @@ const JenisJurnalAdd = () => {
   };
 
   const saveEditDetail = (param) => {
+    // console.log(param);
     let data = [...dataAkun];
-    let accnoValue = param.detailitem_accno.value;
+    let accnoValue =
+      param.detailitem_accno.value === undefined
+        ? param.detailitem_accno
+        : param.detailitem_accno.value;
     let accname = accNo.find(({ accno }) => {
       return accno === accnoValue;
     });
@@ -253,7 +238,7 @@ const JenisJurnalAdd = () => {
     data[indexEdit] = {
       detailitem_debit: param.detailitem_debit,
       detailitem_description: param.detailitem_description,
-      detailitem_accno: param.detailitem_accno.value,
+      detailitem_accno: accnoValue,
       detailitem_accname: accname.accname,
       detailitem_credit: param.detailitem_credit,
     };
@@ -343,7 +328,7 @@ const JenisJurnalAdd = () => {
     <>
       <Toast message={message} />
 
-      {accNo && jurnal && (
+      {accNo && jurnal && JurnalTypeAdd && fields && (
         <>
           <CRow>
             <CCol xl="12">
@@ -604,7 +589,7 @@ const JenisJurnalAdd = () => {
                       type="number"
                       label={JurnalTypeAdd.detailitem_debit}
                       name="detailitem_debit"
-                      defaultValue=""
+                      defaultValue="0"
                       id="detailitem_debit"
                       md="6"
                       lg="6"
@@ -615,7 +600,7 @@ const JenisJurnalAdd = () => {
                       type="number"
                       label={JurnalTypeAdd.detailitem_credit}
                       name="detailitem_credit"
-                      defaultValue=""
+                      defaultValue="0"
                       id="detailitem_credit"
                       md="6"
                       lg="6"
@@ -646,156 +631,116 @@ const JenisJurnalAdd = () => {
               </CModalBody>
             )}
           </CModal>
+
+          <CModal
+            size="lg"
+            show={modalEditItem}
+            onClose={() => {
+              setModalEditItem(false);
+              setEditFormItem(null);
+            }}
+          >
+            <CModalHeader>
+              <h6>{JurnalTypeAdd.detail_caption}</h6>
+            </CModalHeader>
+
+            {editFormItem && (
+              <CModalBody>
+                <CForm
+                  encType="multipart/form-data"
+                  className="form-horizontal"
+                  color="light"
+                  onSubmit={handleSubmit3(saveEditDetail)}
+                >
+                  <CRow>
+                    <Input
+                      ref={control3}
+                      typefield="select"
+                      label={JurnalTypeAdd.detailitem_accno}
+                      name="detailitem_accno"
+                      id="detailitem_accno"
+                      md="6"
+                      lg="6"
+                      options={optionAcc}
+                      defaultValue={{
+                        value: editFormItem.detailitem_accno,
+                        label:
+                          editFormItem.detailitem_accno +
+                          " - " +
+                          editFormItem.detailitem_accname,
+                      }}
+                      selectDefaultValue={{
+                        value: editFormItem.detailitem_accno,
+                        label:
+                          editFormItem.detailitem_accno +
+                          " - " +
+                          editFormItem.detailitem_accname,
+                      }}
+                    />
+                    <Input
+                      ref={register3}
+                      typefield="text"
+                      type="text"
+                      label={JurnalTypeAdd.detailitem_description}
+                      name="detailitem_description"
+                      id="detailitem_description"
+                      md="6"
+                      lg="6"
+                      defaultValue={editFormItem.detailitem_description}
+                    />
+                  </CRow>
+                  <CRow>
+                    <Input
+                      ref={register3({ valueAsNumber: true })}
+                      typefield="number"
+                      type="number"
+                      label={JurnalTypeAdd.detailitem_debit}
+                      name="detailitem_debit"
+                      id="detailitem_debit"
+                      md="6"
+                      lg="6"
+                      defaultValue={editFormItem.detailitem_debit}
+                    />
+                    <Input
+                      ref={register3({ valueAsNumber: true })}
+                      typefield="number"
+                      type="number"
+                      label={JurnalTypeAdd.detailitem_credit}
+                      name="detailitem_credit"
+                      id="detailitem_credit"
+                      md="6"
+                      lg="6"
+                      defaultValue={editFormItem.detailitem_credit}
+                    />
+                  </CRow>
+                  <CRow>
+                    <CCol>
+                      <CButton
+                        size="sm"
+                        color="danger"
+                        onClick={() => setModalEditItem(false)}
+                        className="mr-3"
+                      >
+                        <CIcon name="cil-scrubber" />{" "}
+                        {JurnalTypeAdd.cancel_button}
+                      </CButton>
+                      <CButton
+                        size="sm"
+                        type="submit"
+                        className="float-right"
+                        color="primary"
+                      >
+                        <CIcon name="cil-scrubber" />{" "}
+                        {JurnalTypeAdd.save_button}
+                      </CButton>
+                    </CCol>
+                  </CRow>
+                </CForm>
+              </CModalBody>
+            )}
+          </CModal>
         </>
       )}
-
-      <CModal
-        size="lg"
-        show={modalEditItem}
-        onClose={() => {
-          setModalEditItem(false);
-          setEditFormItem(null);
-        }}
-      >
-        <CModalHeader>
-          <h6>{JurnalTypeAdd.detail_caption}</h6>
-        </CModalHeader>
-
-        {editFormItem && (
-          <CModalBody>
-            <CForm
-              encType="multipart/form-data"
-              className="form-horizontal"
-              color="light"
-              onSubmit={handleSubmit3(saveEditDetail)}
-            >
-              <CRow>
-                <CCol lg="6" md="6" sm="12">
-                  <CFormGroup row>
-                    <CCol>
-                      <CLabel htmlFor="text-input">
-                        {JurnalTypeAdd.detailitem_accno}
-                      </CLabel>
-                    </CCol>
-                    <CCol xs="12" xl="9">
-                      <Controller
-                        name="detailitem_accno"
-                        as={Select}
-                        options={optionAcc}
-                        theme={(theme) => ({
-                          ...theme,
-                          borderRadius: "4px",
-                          colors: {
-                            ...theme.colors,
-                            neutral0: darkMode
-                              ? "#2a2b36"
-                              : theme.colors.neutral0,
-                            neutral80: darkMode
-                              ? "#fff"
-                              : theme.colors.neutral80,
-                            primary25: darkMode
-                              ? theme.colors.primary75
-                              : theme.colors.primary25,
-                          },
-                        })}
-                        control={control3}
-                        defaultValue={{
-                          value: editFormItem.detailitem_accno,
-                          label:
-                            editFormItem.detailitem_accno +
-                            " - " +
-                            editFormItem.detailitem_accname,
-                        }}
-                        id="detailitem_accno"
-                      />
-                    </CCol>
-                  </CFormGroup>
-                </CCol>
-                <CCol lg="6" md="6" sm="12">
-                  <CFormGroup row>
-                    <CCol>
-                      <CLabel htmlFor="text-input">
-                        {JurnalTypeAdd.detailitem_description}
-                      </CLabel>
-                    </CCol>
-                    <CCol xs="12" xl="9">
-                      <textarea
-                        className="form-control"
-                        id="detailitem_description"
-                        name="detailitem_description"
-                        ref={register3}
-                        defaultValue={editFormItem.detailitem_description}
-                        rows="4"
-                      ></textarea>
-                    </CCol>
-                  </CFormGroup>
-                </CCol>
-              </CRow>
-              <CRow>
-                <CCol lg="6" md="6" sm="12">
-                  <CFormGroup row>
-                    <CCol>
-                      <CLabel htmlFor="text-input">
-                        {JurnalTypeAdd.detailitem_debit}
-                      </CLabel>
-                    </CCol>
-                    <CCol xs="12" xl="9">
-                      <input
-                        type="number"
-                        className="form-control"
-                        id="detailitem_debit"
-                        name="detailitem_debit"
-                        ref={register3({ valueAsNumber: true })}
-                        defaultValue={editFormItem.detailitem_debit}
-                      />
-                    </CCol>
-                  </CFormGroup>
-                </CCol>
-                <CCol lg="6" md="6" sm="12">
-                  <CFormGroup row>
-                    <CCol>
-                      <CLabel htmlFor="text-input">
-                        {JurnalTypeAdd.detailitem_credit}
-                      </CLabel>
-                    </CCol>
-                    <CCol xs="12" xl="9">
-                      <input
-                        type="number"
-                        className="form-control"
-                        id="detailitem_credit"
-                        name="detailitem_credit"
-                        ref={register3({ valueAsNumber: true })}
-                        defaultValue={editFormItem.detailitem_credit}
-                      />
-                    </CCol>
-                  </CFormGroup>
-                </CCol>
-              </CRow>
-              <CRow>
-                <CCol>
-                  <CButton
-                    size="sm"
-                    color="danger"
-                    style={{ float: "rigth" }}
-                    onClick={() => setModalEditItem(false)}
-                    className="mr-3"
-                  >
-                    <CIcon name="cil-scrubber" /> {JurnalTypeAdd.cancel_button}
-                  </CButton>
-                  <CButton
-                    size="sm"
-                    type="submit"
-                    style={{ float: "rigth" }}
-                    color="primary"
-                  >
-                    <CIcon name="cil-scrubber" /> {JurnalTypeAdd.save_button}
-                  </CButton>
-                </CCol>
-              </CRow>
-            </CForm>
-          </CModalBody>
-        )}
-      </CModal>
     </>
   );
 };

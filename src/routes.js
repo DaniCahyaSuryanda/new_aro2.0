@@ -63,6 +63,9 @@ const Addnewofficevalidasi = React.lazy(() =>
 const Editoffice = React.lazy(() =>
   import("./views/pemeliharaan/manajemenKantor/Editoffice")
 );
+const LoginPage = React.lazy(() =>
+  import("./views/auth/Login")
+);
 
 const ID = [
   {
@@ -91,7 +94,6 @@ const ID = [
     name: "Transaksi Back Office",
     component: Transaksibackoffice,
   },
-
   // { path: '/akun', name: 'Back Office', component: Parambackoffice, exact: true },
   {
     path: "/backoffice/akun/AkunAdd",
@@ -113,7 +115,6 @@ const ID = [
     name: "Otorisasi Pengkinian Akun",
     component: Akuneditvalidasi,
   },
-
   // { path: '/JenisJurnal', name: 'Parameter Back Office', component: Parambackoffice, exact: true },
   {
     path: "/backoffice/JenisJurnal/JurnaltypeAdd",
@@ -135,7 +136,6 @@ const ID = [
     name: "Otorisasi Pengkinian Jenis Jurnal",
     component: JJeditvalidasi,
   },
-
   {
     path: "/backoffice/strukturlaporan/reportstructureadd",
     name: "Pembuatan Struktur Akun",
@@ -156,7 +156,6 @@ const ID = [
     name: "Otorisasi Pengkinian Struktur Akun",
     component: Reportstrucutreeditvalidasi,
   },
-
   {
     path: "/backoffice/Jurnalumum/JournalAdd",
     name: "Pembuatan Jurnal Umum",
@@ -167,17 +166,14 @@ const ID = [
     name: "Otorisasi Pembuatan Jurnal Umum",
     component: Journaladdvalidasi,
   },
-
   { path: "/users", exact: true, name: "Users", component: Users },
   { path: "/users/:id", exact: true, name: "User Details", component: User },
-
   { path: "/laporanumum", exact: true, component: LaporanUmum },
   {
     path: "/laporanumum/LaporanUmum",
     name: "Laporan Umum",
     component: LaporanUmum,
   },
-
   {
     path: "/pemeliharaan",
     name: "Pemeliharaan",
@@ -208,6 +204,11 @@ const ID = [
     path: "/pemeliharaan/manajemenKantor/Editoffice",
     name: "Otorisasi Pembuatan Kantor Baru",
     component: Editoffice,
+  },
+  {
+    path: "/auth/login",
+    name: "Masuk",
+    component: LoginPage,
   },
 ];
 
@@ -352,6 +353,12 @@ const EN = [
     path: "/pemeliharaan/manajemenKantor/Editoffice",
     name: "Updating Office",
     component: Editoffice,
+  },
+  {
+    path: "/auth/login",
+    name: "Login",
+    component: LoginPage,
+    tipe: "auth"
   },
 ];
 

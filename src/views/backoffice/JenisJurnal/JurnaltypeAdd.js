@@ -26,7 +26,7 @@ const configApp = JSON.parse(sessionStorage.getItem("config"));
 
 const JenisJurnalAdd = () => {
   const [itemCreate, setItemCreate] = useState(null);
-  const [messageJson, setMessageJson] = useState(null);
+  const [messageJson, setMessageJson] = useState({});
   const { handleSubmit, register, reset, control } = useForm();
   const [items, setItems] = useState(null);
   const [message, setMessage] = useState({});
@@ -46,14 +46,14 @@ const JenisJurnalAdd = () => {
   }, [itemCreate]);
 
   useEffect(() => {
-    // if (Object.keys(messageJson).length === 0) {
-    if (configApp.lang === "id") {
-      setMessageJson(messageID);
-    } else if (configApp.lang === "en") {
-      setMessageJson(messageEN);
-    } else {
-      setMessageJson(messageID);
-      //  }
+    if (Object.keys(messageJson).length === 0) {
+      if (configApp.lang === "id") {
+        setMessageJson(messageID);
+      } else if (configApp.lang === "en") {
+        setMessageJson(messageEN);
+      } else {
+        setMessageJson(messageID);
+      }
     }
   }, [messageJson]);
 
